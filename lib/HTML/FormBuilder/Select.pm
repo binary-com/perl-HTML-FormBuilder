@@ -1,19 +1,19 @@
 
 =head1 NAME
 
-BOM::View::Form::Select - Select Element Handling for BOM Forms
+HTML::FormBuilder::Select - Select Element Handling for BOM Forms
 
 =cut
 
-package BOM::View::Form::Select;
+package HTML::FormBuilder::Select;
 
-use Moose;
+use Moo;
 use namespace::autoclean;
 use Carp;
 
 =head1 Synopsis
 
- my $select = BOM::View::Form::Select->new(
+ my $select = HTML::FormBuilder::Select->new(
      id => 'my-select',
      name => 'my_select',
      options => [{value => 'foo', text => 'Foo'}, {value => 'bar', text => 'Bar'}],
@@ -32,8 +32,9 @@ use Carp;
 
 has id => (
     is      => 'ro',
-    isa     => 'Str',
-    lazy    => 1,
+    #isa     => 'Str',
+    isa     => \&is_str,
+		lazy    => 1,
     builder => '_build_id'
 );
 
@@ -48,7 +49,7 @@ sub _build_id {
 
 has name => (
     is       => 'ro',
-    isa      => 'Str',
+    isa      => \&is_str,
     required => '1'
 );
 
@@ -58,7 +59,8 @@ has name => (
 
 has options => (
     is  => 'rw',
-    isa => 'ArrayRef[HashRef[Any]]'
+								isa => sub{die "$_[0] is not ArrayRef[HashRef[Any]]"
+														 unless(ref($_[0]) eq 'ARRAY' && ref($_[0][0]) eq 'HASH')},
 );
 
 =head2 values - values (by value) selected
@@ -67,7 +69,7 @@ has options => (
 
 has values => (
     is      => 'rw',
-    isa     => 'ArrayRef[Any]',
+    isa     => sub{ die "$_[0] is not a Arrayref" unless (ref($_[0]) eq 'ARRAY')},
     default => sub { [] },
 );
 
@@ -117,6 +119,10 @@ sub _option_html {
 sub hidden_html {
     my $self = shift;
     return '<input type="hidden" id="' . $self->id . '" name="' . $self->name . '" value="' . ($self->value // '') . '" />';
+}
+
+sub is_str{
+	die "$_[0] is not a string" unless defined($_[0]) && !ref($_[0]);
 }
 
 __PACKAGE__->meta->make_immutable;

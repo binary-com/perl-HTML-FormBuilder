@@ -1,9 +1,9 @@
 
-use BOM::View::Form::Select;
+use HTML::FormBuilder::Select;
 use Test::More tests => 24;
 use strict;
 
-my $basicselect = BOM::View::Form::Select->new(
+my $basicselect = HTML::FormBuilder::Select->new(
     id      => 'basic',
     name    => 'Basic',
     options => [{
