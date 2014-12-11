@@ -6,8 +6,8 @@ use warnings;
 use Test::More;
 use Test::FailWarnings;
 use Test::Exception;
-use BOM::View::Form;
-use BOM::View::Form::Select;
+use HTML::FormBuilder;
+use HTML::FormBuilder::Select;
 
 my $form_obj;
 
@@ -114,10 +114,10 @@ sub create_form_object {
     };
 
     # Create new form object
-    Test::Exception::lives_ok { $form_obj = BOM::View::Form->new($form_attributes); } 'Create Form';
+    Test::Exception::lives_ok { $form_obj = HTML::FormBuilder->new($form_attributes); } 'Create Form';
 
     # Test object type
-    Test::More::isa_ok($form_obj, 'BOM::View::Form');
+    Test::More::isa_ok($form_obj, 'HTML::FormBuilder');
 
     my $fieldset_index = $form_obj->add_fieldset({});
 
@@ -173,7 +173,7 @@ sub create_form_object {
             'for'      => 'gender',
             'optional' => '0',
         },
-        'input' => BOM::View::Form::Select->new(
+        'input' => HTML::FormBuilder::Select->new(
             'id'      => 'gender',
             'name'    => 'gender',
             'options' => [{value => 'male'}, {value => 'female'}],
@@ -186,7 +186,7 @@ sub create_form_object {
         },
     };
 
-    my $select_curr = BOM::View::Form::Select->new(
+    my $select_curr = HTML::FormBuilder::Select->new(
         'id'      => 'select_text_curr',
         'name'    => 'select_text_curr',
         'options' => [{value => 'USD'}, {value => "EUR"}],
