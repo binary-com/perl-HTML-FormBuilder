@@ -26,8 +26,10 @@ sub new {
     croak("Form must be given an id when instantiating a BOM::View::Form->new object in $0.") if !defined $_args->{'id'};
 
     my $self = $_args;
+		$self->{method} ||= 'get';
     $self->{'method'} = ($self->{'method'} eq 'post') ? 'post' : 'get';
 
+		$self->{fieldset} ||= [];
     bless $self, $class;
 
     return $self;
@@ -57,9 +59,7 @@ sub add_fieldset {
 
     #get the last index of the ref array of fieldset by dereferrencing it
     my @fieldsets;
-    if (defined $self->{'fieldset'}) {
-        @fieldsets = @{$self->{'fieldset'}};
-    }
+
     push @fieldsets, $_args;
     $self->{'fieldset'} = \@fieldsets;
 
@@ -337,7 +337,7 @@ sub build {
         }
     }
 
-    my $fieldsets_html;
+    my $fieldsets_html = '';
     foreach my $fieldset_group (sort keys %grouped_fieldset) {
         if ($fieldset_group ne 'no-group') {
             $fieldsets_html .= '<div id="' . $fieldset_group . '" class="toggle-content">';
@@ -646,7 +646,7 @@ sub _build_element_and_attributes {
 
     my $html;
     $html = '<' . $element_tag;
-    foreach my $key (keys %{$attributes}) {
+    foreach my $key (sort keys %{$attributes}) {
         next if (ref($attributes->{$key}) eq 'HASH' or ref($attributes->{$key}) eq 'ARRAY');
         next if ($key ne 'value' and $attributes->{$key} and $attributes->{$key} eq '');
 
