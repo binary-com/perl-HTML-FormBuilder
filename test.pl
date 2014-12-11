@@ -1,114 +1,12 @@
-#!/usr/bin/perl
-
 use strict;
 use warnings;
 
-use Test::More;
-use Test::FailWarnings;
-use Test::Exception;
 use HTML::FormBuilder;
 use HTML::FormBuilder::Select;
 
-my $form_obj;
-
-
-
-
-lives_ok(sub {$form_obj = HTML::FormBuilder->new({id => 'form1'})}, 'create form ok');
-is($form_obj->{method}, 'get', 'default method of form');
-is_deeply($form_obj->{fieldset}, [], 'default fieldset');
-is($form_obj->build, '<form id="form1" method="get"></form>', 'generate a blank form');
-lives_ok(sub{create_form_object()->build}, 'build ok');
-
-{
-    $form_obj = create_form_object();
-
-    # Test set_field_value and get_field_value
-    $form_obj->set_field_value('amount', 100);
-    Test::More::is($form_obj->get_field_value('amount'), 100, 'Test accessor of fields of form object. [set_field_value, get_field_value]');
-
-    # Test set_field_value and get_field_value [before select]
-    Test::More::is($form_obj->get_field_value('gender'),
-        'male', 'Test accessor of fields of form object [Select - male]. [set_field_value, get_field_value]');
-
-    # Test set_field_value and get_field_value
-    $form_obj->set_field_value('gender', 'female');
-    Test::More::is($form_obj->get_field_value('gender'),
-        'female', 'Test accessor of fields of form object [Select - female]. [set_field_value, get_field_value]');
-
-    # Test set_field_value and get_field_value
-    $form_obj->set_field_value('select_text_curr', 'EUR');
-    Test::More::is($form_obj->get_field_value('select_text_curr'),
-        'EUR', 'Test accessor of array fields of form object [Select - EUR]. [set_field_value, get_field_value]');
-
-    # Test set_field_value and get_field_value
-    Test::More::is($form_obj->get_field_value('select_text_amount'),
-        20, 'Test accessor of array fields of form object [text - 20(default value)]. [set_field_value, get_field_value]');
-    # Test set_field_value and get_field_value
-    $form_obj->set_field_value('select_text_amount', 50);
-    Test::More::is($form_obj->get_field_value('select_text_amount'),
-        50, 'Test accessor of array fields of form object [text - 50]. [set_field_value, get_field_value]');
-
-    # Test set_field_value and get_field_value
-    Test::More::is(
-        $form_obj->get_field_value('Textarea'),
-        'This is default value of textarea',
-        'Test accessor of fields of form object [textarea - \'This is default value of textarea\'(default value)]. [set_field_value, get_field_value]'
-    );
-    # Test set_field_value and get_field_value
-    $form_obj->set_field_value('Textarea', 'It should be changed now...');
-    Test::More::is(
-        $form_obj->get_field_value('Textarea'),
-        'It should be changed now...',
-        'Test accessor of fields of form object [text - \'It should be changed now...\']. [set_field_value, get_field_value]'
-    );
-
-    # Test set_field_value and get_field_value
-    Test::More::is($form_obj->get_field_value('Password'),
-        'pa$$w0rd', 'Test accessor of fields of form object [password - pa$$w0rd(default value)]. [set_field_value, get_field_value]');
-    # Test set_field_value and get_field_value
-    $form_obj->set_field_value('Password', 'Baghali');
-    Test::More::is($form_obj->get_field_value('Password'),
-        'Baghali', 'Test accessor of fields of form object [password - Baghali]. [set_field_value, get_field_value]');
-
-    # Test set_field_value and get_field_value
-    Test::More::is($form_obj->get_field_value('single_checkbox'),
-        undef, 'Test accessor of fields of form object [single_checkbox - (Not checked)]. [set_field_value, get_field_value]');
-    # Test set_field_value and get_field_value
-    $form_obj->set_field_value('single_checkbox', 'SGLBOX');
-    Test::More::is($form_obj->get_field_value('single_checkbox'),
-        'SGLBOX', 'Test accessor of fields of form object [single_checkbox - SGLBOX]. [set_field_value, get_field_value]');
-
-    # Test set_field_value and get_field_value
-    Test::More::is($form_obj->get_field_value('checkbox1'),
-        undef, 'Test accessor of fields of form object [checkbox1 - (Not checked)]. [set_field_value, get_field_value]');
-    Test::More::is($form_obj->get_field_value('checkbox2'),
-        undef, 'Test accessor of fields of form object [checkbox2 - (Not checked)]. [set_field_value, get_field_value]');
-    # Test set_field_value and get_field_value
-    $form_obj->set_field_value('checkbox1', 'BOX1');
-    $form_obj->set_field_value('checkbox2', 'BOX2');
-    Test::More::is($form_obj->get_field_value('checkbox1'),
-        'BOX1', 'Test accessor of fields of form object [checkbox1 - BOX1]. [set_field_value, get_field_value]');
-    Test::More::is($form_obj->get_field_value('checkbox2'),
-        'BOX2', 'Test accessor of fields of form object [checkbox2 - BOX2]. [set_field_value, get_field_value]');
-
-    # Test set_field_error_message
-    $form_obj->set_field_error_message('amount', 'It is not good');
-    Test::More::is(
-        $form_obj->get_field_error_message('amount'),
-        'It is not good',
-        'Test accessor of fields of form object. [set_field_error_message, get_field_error_message]'
-    );
-
-    # Test set_field_error_message
-    $form_obj->set_field_error_message('error_general', 'There is a general error.');
-    Test::More::is(
-        $form_obj->get_field_error_message('error_general'),
-        'There is a general error.',
-        'Test accessor of general error of form object . [set_field_error_message, get_field_error_message]'
-    );
-
-}
+my $obj = create_form_object();
+my $html = $obj->build();
+print $html;
 
 
 sub create_form_object {
@@ -124,10 +22,7 @@ sub create_form_object {
     };
 
     # Create new form object
-    Test::Exception::lives_ok { $form_obj = HTML::FormBuilder->new($form_attributes); } 'Create Form';
-
-    # Test object type
-    Test::More::isa_ok($form_obj, 'HTML::FormBuilder');
+    $form_obj = HTML::FormBuilder->new($form_attributes);
 
     my $fieldset_index = $form_obj->add_fieldset({});
 
@@ -313,15 +208,3 @@ sub create_form_object {
 
     return $form_obj;
 }
-
-sub check_existance_on_builded_html {
-    my $arg_ref = shift;
-
-    my $form_object = $arg_ref->{'form_obj'};
-    my $reg_exp     = $arg_ref->{'reg_exp'};
-
-    return $form_object->build() =~ /$reg_exp/;
-
-}
-
-done_testing;

@@ -6,7 +6,7 @@ use 5.008_005;
 our $VERSION = '0.01';
 
 use Carp;
-
+use Template;
 
 #####################################################################
 # Usage      : Instantiate a Form object.
@@ -321,15 +321,7 @@ sub build {
             )
             and (not $fieldset->{'class'} or $fieldset->{'class'} !~ /no-wrap|invisible/))
         {
-            my $wrapped_fieldset;
-            BOM::Platform::Context::template->process(
-                'container/rounded_box.html.tt',
-                {
-                    'content'     => $fieldset_html,
-                    'extra_class' => 'form'
-                },
-                \$wrapped_fieldset
-            ) || die BOM::Platform::Context::template->error();
+            my $wrapped_fieldset = $self->_wrap_fieldset($fieldset_html);
 
             push @{$grouped_fieldset{$fieldset_group}}, $wrapped_fieldset;
         } else {
@@ -761,6 +753,54 @@ sub _build_input_field {
     return $html;
 }
 
+sub _wrap_fieldset{
+	my ($self, $fieldset_html)= @_;
+	my $output = '';
+	my $fieldset_template = <<EOF;
+<div[% IF id %] id="[% id %]"[% END %] class="[% IF extra_class %]rbox [% extra_class %][% ELSE %]rbox[% END %][% IF expandable %] expandable[% END %][% IF collapsible %] collapsible[% END %]">
+    <div class="rbox-wrap">
+        [% IF heading %]
+            <div class="rbox-heading">
+                <h4 class="[% IF class %][% class %][% END %]">[% heading %]</h4>
+            </div>
+        [% END %]
+        [% content %]
+        <span class="tl">&nbsp;</span><span class="tr">&nbsp;</span><span class="bl">&nbsp;</span><span class="br">&nbsp;</span>
+        [% IF expandable OR collapsible %]
+            <div class="arrow-expand-collapse">
+                <div class="arrow-expand-collapse-text">
+                    <span class="show-all[% IF collapsible %] invisible[% END%]">show all</span>
+                    <span class="hide-all[% IF expandable %] invisible[% END%]">hide bets</span>
+                </div>
+            </div>
+        [% END %]
+        [% IF close_button %]<div class="close_button"></div>[% END %]
+    </div>
+</div>
+
+EOF
+
+	$self->_template->process(
+														\$fieldset_template,
+														{
+														 content => $fieldset_html,
+														 extra_class => 'form'
+														},
+														\$output
+													 );
+	return $output;
+}
+
+sub _template{
+	return Template->new(
+            ENCODING     => 'utf8',
+            INTERPOLATE  => 1,
+            PRE_CHOMP    => $Template::CHOMP_GREEDY,
+            POST_CHOMP   => $Template::CHOMP_GREEDY,
+            TRIM         => 1,
+											);
+}
+
 1;
 
 =head1 NAME
@@ -969,3 +1009,5 @@ it under the same terms as Perl itself.
 =head1 SEE ALSO
 
 =cut
+
+__DATA__
