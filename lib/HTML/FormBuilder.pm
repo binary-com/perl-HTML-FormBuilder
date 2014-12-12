@@ -8,6 +8,7 @@ our $VERSION = '0.01';
 use Carp;
 use Template;
 
+our %LOCALIZE;
 #####################################################################
 # Usage      : Instantiate a Form object.
 # Purpose    : Ensure Statement object is been instantiate with an id
@@ -21,7 +22,9 @@ use Template;
 sub new {
     my $class = shift;
     my $_args = shift;
+		my $options = shift;
 
+		
     # fields & id must be given when instantiating a new object
     croak("Form must be given an id when instantiating a BOM::View::Form->new object in $0.") if !defined $_args->{'id'};
 
@@ -32,6 +35,14 @@ sub new {
 		$self->{fieldset} ||= [];
     bless $self, $class;
 
+		# store localize function, default is this modules's _localize
+		# the previous version if this module depend on another localize module
+		# I must remove this dependence. so I should receive the dependences from
+		# the new args and store it to the global enviroment. I cannot store it into
+		# $self because other function like 'build' will travel on $self and output
+		# all attribute.
+		$LOCALIZE{$self} = $options->{localize} || sub {return @_};
+		
     return $self;
 }
 
@@ -396,13 +407,13 @@ sub build_confirmation_button_with_all_inputs_hidden {
     }
 
     $html .= '<input type="hidden" name="process" value="1"/>';
-    $html .= BOM::View::Utility::link_button({
-        value => BOM::Platform::Context::localize('Back'),
+    $html .= _link_button({
+        value => $self->_localize('Back'),
         class => 'backbutton',
         href  => 'javascript:history.go(-1)',
     });
     $html .=
-        ' <span class="button"><button id="submit" class="button" type="submit">' . BOM::Platform::Context::localize('Confirm') . '</button></span>';
+        ' <span class="button"><button id="submit" class="button" type="submit">' . $self->_localize('Confirm') . '</button></span>';
     $html .= '</form>';
 
     return $html;
@@ -753,6 +764,33 @@ sub _build_input_field {
 
     return $html;
 }
+
+sub _localize{
+	my $self = shift;
+	$LOCALIZE{$self}->(@_);
+}
+
+sub _link_button {
+    my $args = shift;
+
+    my $myclass = $args->{'class'} ? 'button ' . $args->{'class'} : 'button';
+
+    my $myid     = $args->{'id'} ? 'id="' . $args->{'id'} . '"'      : '';
+    my $myspanid = $args->{'id'} ? 'id="span_' . $args->{'id'} . '"' : '';
+
+    return
+          '<a class="'
+        . $myclass
+        . '" href="'
+        . $args->{'href'} . '" '
+        . $myid . '>'
+        . '<span class="'
+        . $myclass . '" '
+        . $myspanid . '>'
+        . $args->{'value'}
+        . '</span>' . '</a>';
+}
+
 
 sub _tooltip {
 	my $content = shift;

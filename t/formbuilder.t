@@ -42,7 +42,14 @@ my $input_field_amount = {
 												 };
 
 $form_obj->add_field($fieldset_index, $input_field_amount);
-lives_ok(sub{$form_obj->build}, 'build ok');
+lives_ok(sub{$form_obj->build}, 'build tooltip ok');
+
+
+$form_obj = HTML::FormBuilder->new({id => 'testid'},{localize => sub{"will " . shift}});
+my $result;
+my $expect_result = '<form id="testid" method="get"><input type="hidden" name="process" value="1"/><a class="button backbutton" href="javascript:history.go(-1)" ><span class="button backbutton" >will Back</span></a> <span class="button"><button id="submit" class="button" type="submit">will Confirm</button></span></form>';
+lives_ok(sub{$result = $form_obj->build_confirmation_button_with_all_inputs_hidden}, 'build confirmation_button_with_all_inputs_hidden  ok');
+is($result, $expect_result, 'the result of build confirmation_button_with_all_inputs_hidden with arg localize');
 
 {
     $form_obj = create_form_object();
@@ -348,7 +355,7 @@ sub check_existance_on_builded_html {
 
 }
 
-my $result = <<'EOF';
+$expect_result = <<'EOF';
 <form action="http://localhost/some/where/test.cgi" class="formObject" id="id_test_form" method="post" name="name_test_form"><div class="rbox form">
     <div class="rbox-wrap">
         
@@ -359,8 +366,8 @@ my $result = <<'EOF';
     </div>
 </div></form>
 EOF
-chomp($result);
-is(create_form_object()->build(), $result, ' the result is right');
+chomp($expect_result);
+is(create_form_object()->build(), $expect_result, ' the result is right');
 
 
 done_testing;
