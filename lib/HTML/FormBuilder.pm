@@ -97,9 +97,6 @@ sub add_field {
     my $fieldset_index = shift;
     my $_args          = shift;
 
-    #check if the Form object is created
-    croak("Please instantiate the Form object first in $0.") if (!defined $self->{'id'});
-
     #get the fieldset index if exist
     $fieldset_index = (defined $self->{$fieldset_index}) ? $self->{$fieldset_index} : $fieldset_index;
 
