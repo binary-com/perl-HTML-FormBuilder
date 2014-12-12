@@ -8,6 +8,9 @@ use Carp;
 use Class::Std::Utils;
 use Text::Trim;
 
+use Encode;
+use URI::Escape;
+
 my %has_error_of;
 my %custom_server_side_check_of;
 
