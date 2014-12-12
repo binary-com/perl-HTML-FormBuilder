@@ -235,7 +235,8 @@ sub build {
                         })
                         . $label_text
                         . '</label>'
-                        . BOM::View::Utility::tooltip($input_field->{'label'}->{'tooltip'}->{'desc'})
+												# img_url is the url of question mark picture
+                        . _tooltip($input_field->{'label'}{'tooltip'}{'desc'}, $input_field->{'label'}{tooltip}{img_url})
                         . '</div>';
                 } else {
 
@@ -753,6 +754,25 @@ sub _build_input_field {
     return $html;
 }
 
+sub _tooltip {
+	my $content = shift;
+	my $url = shift;
+    $content =~ s/\'/&apos;/g;    # Escape for quoting below
+
+    return " <a href='#' title='" . $content . "' rel='tooltip'><img src=\"" . $url . "\" /></a>";
+}
+
+sub _template{
+	return Template->new(
+            ENCODING     => 'utf8',
+            INTERPOLATE  => 1,
+            PRE_CHOMP    => $Template::CHOMP_GREEDY,
+            POST_CHOMP   => $Template::CHOMP_GREEDY,
+            TRIM         => 1,
+											);
+}
+
+
 sub _wrap_fieldset{
 	my ($self, $fieldset_html)= @_;
 	my $output = '';
@@ -791,15 +811,6 @@ EOF
 	return $output;
 }
 
-sub _template{
-	return Template->new(
-            ENCODING     => 'utf8',
-            INTERPOLATE  => 1,
-            PRE_CHOMP    => $Template::CHOMP_GREEDY,
-            POST_CHOMP   => $Template::CHOMP_GREEDY,
-            TRIM         => 1,
-											);
-}
 
 1;
 
