@@ -11,9 +11,8 @@ use HTML::FormBuilder::Select;
 
 my $form_obj;
 
-
-
-
+################################################################################
+# test new
 lives_ok(sub {$form_obj = HTML::FormBuilder->new({id => 'form1'})}, 'create form ok');
 is($form_obj->{method}, 'get', 'default method of form');
 is_deeply($form_obj->{fieldset}, [], 'default fieldset');
@@ -55,6 +54,16 @@ $form_obj = HTML::FormBuilder->new({id => 'testid', has_required_field => 1, has
 lives_ok(sub{$result = $form_obj->build}, 'build form with some args');
 like($result, qr/REQUIRED/, 'has_required_field branch executed');
 like($result, qr/CHANGE YOUR NAME/, 'has_call_customer_support_field branch executed');
+
+
+################################################################################
+# test add_field
+$form_obj = HTML::FormBuilder->new({id => 'testid'});
+throws_ok(sub{$form_obj->add_field('0abc')}, qr/fieldset_index should be a number/, 'fieldset_index should be a number');
+
+
+
+
 
 {
     $form_obj = create_form_object();

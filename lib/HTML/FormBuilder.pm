@@ -97,10 +97,10 @@ sub add_field {
     my $fieldset_index = shift;
     my $_args          = shift;
 
-    #get the fieldset index if exist
-    $fieldset_index = (defined $self->{$fieldset_index}) ? $self->{$fieldset_index} : $fieldset_index;
+    #check if the fieldset_index is number
+		croak("The fieldset_index should be a number") unless ($fieldset_index =~ /^\d+$/);
 
-    #check if the fieldset array is already created
+		#check if the fieldset array is already created
     croak("The fieldset does not exist in $0. form_id[$self->{'id'}]") if (!defined $self->{'fieldset'}->[$fieldset_index]);
 
 		push @{$self->{'fieldset'}[$fieldset_index]{'fields'}}, $_args;
