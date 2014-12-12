@@ -44,13 +44,13 @@ $form_obj->add_field($fieldset_index, $input_field_amount);
 lives_ok(sub{$form_obj->build}, 'build tooltip ok');
 
 
-$form_obj = HTML::FormBuilder->new({id => 'testid'},{localize => sub{"will " . shift}});
+$form_obj = HTML::FormBuilder->new({id => 'testid',localize => sub{"will " . shift}});
 my $result;
 my $expect_result = '<form id="testid" method="get"><input type="hidden" name="process" value="1"/><a class="button backbutton" href="javascript:history.go(-1)" ><span class="button backbutton" >will Back</span></a> <span class="button"><button id="submit" class="button" type="submit">will Confirm</button></span></form>';
 lives_ok(sub{$result = $form_obj->build_confirmation_button_with_all_inputs_hidden}, 'build confirmation_button_with_all_inputs_hidden  ok');
 is($result, $expect_result, 'the result of build confirmation_button_with_all_inputs_hidden with arg localize');
 
-$form_obj = HTML::FormBuilder->new({id => 'testid', has_required_field => 1, has_call_customer_support_field => 1},{localize => sub{uc(shift)}});
+$form_obj = HTML::FormBuilder->new({id => 'testid', has_required_field => 1, has_call_customer_support_field => 1, localize => sub{uc(shift)}});
 lives_ok(sub{$result = $form_obj->build}, 'build form with some args');
 like($result, qr/REQUIRED/, 'has_required_field branch executed');
 like($result, qr/CHANGE YOUR NAME/, 'has_call_customer_support_field branch executed');

@@ -8,7 +8,6 @@ our $VERSION = '0.01';
 use Carp;
 use Template;
 
-our %LOCALIZE;
 #####################################################################
 # Usage      : Instantiate a Form object.
 # Purpose    : Ensure Statement object is been instantiate with an id
@@ -31,18 +30,11 @@ sub new {
     my $self = $_args;
 		$self->{method} ||= 'get';
     $self->{'method'} = ($self->{'method'} eq 'post') ? 'post' : 'get';
-
+		$self->{localize} ||= sub {return @_};
 		$self->{fieldset} ||= [];
     bless $self, $class;
 
-		# store localize function, default is this modules's _localize
-		# the previous version if this module depend on another localize module
-		# I must remove this dependence. so I should receive the dependences from
-		# the new args and store it to the global enviroment. I cannot store it into
-		# $self because other function like 'build' will travel on $self and output
-		# all attribute.
-		$LOCALIZE{$self} = $options->{localize} || sub {return @_};
-		
+
     return $self;
 }
 
@@ -647,7 +639,7 @@ sub _build_element_and_attributes {
         next if ($key ne 'value' and $attributes->{$key} and $attributes->{$key} eq '');
 
         # skip attributes that are not intended for HTML
-        next if ($key =~ /^(?:option|text|path_to_graphics|required_asterisk|hide_required_text)/i);
+        next if ($key =~ /^(?:option|text|path_to_graphics|required_asterisk|hide_required_text|localize)/i);
         if ($attributes->{$key}) {
             $html .= ' ' . $key . '="' . $attributes->{$key} . '"';
         }
@@ -759,7 +751,7 @@ sub _build_input_field {
 
 sub _localize{
 	my $self = shift;
-	$LOCALIZE{$self}->(@_);
+	$self->{localize}->(@_);
 }
 
 sub _link_button {
