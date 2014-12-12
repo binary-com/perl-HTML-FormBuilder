@@ -106,12 +106,7 @@ sub add_field {
     #check if the fieldset array is already created
     croak("The fieldset does not exist in $0. form_id[$self->{'id'}]") if (!defined $self->{'fieldset'}->[$fieldset_index]);
 
-    my @fields;
-    if (defined $self->{'fieldset'}->[$fieldset_index]->{'fields'}) {
-        @fields = @{$self->{'fieldset'}->[$fieldset_index]->{'fields'}};
-    }
-    push @fields, $_args;
-    $self->{'fieldset'}->[$fieldset_index]->{'fields'} = \@fields;
+		push @{$self->{'fieldset'}[$fieldset_index]{'fields'}}, $_args;
 
     return 1;
 }
