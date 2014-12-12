@@ -932,11 +932,6 @@ Form - A Multi-part HTML form
   $form->add_field(0, $input_select);
   $form->add_field(0, $input_submit_button);
 
-  #or with the id
-  $form->add_field('id_of_the_fieldset', $input_text);
-  $form->add_field('id_of_the_fieldset', $input_select);
-  $form->add_field('id_of_the_fieldset', $input_submit_button);
-
   ###########################################################
   ### Field value accessors
   ###########################################################
