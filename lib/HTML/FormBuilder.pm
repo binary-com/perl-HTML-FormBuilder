@@ -26,7 +26,7 @@ sub new {
 
 		
     # fields & id must be given when instantiating a new object
-    croak("Form must be given an id when instantiating a BOM::View::Form->new object in $0.") if !defined $_args->{'id'};
+    croak("Form must be given an id when instantiating a HTML::FormBuilder->new object in $0.") if !defined $_args->{'id'};
 
     my $self = $_args;
 		$self->{method} ||= 'get';
@@ -864,7 +864,7 @@ Form - A Multi-part HTML form
                        'method' => 'post', # or get
                        'action' => 'page_to_submit',
 					   'header' => 'My Form'};	#header of the form
-  my $form = BOM::View::Form->new($form_attributes);
+  my $form = HTML::FormBuilder->new($form_attributes);
 
   #Then create fieldset, the form is allow to have more than 1 fieldset
   #The keys in the HASH reference is the attributes of the fieldset
