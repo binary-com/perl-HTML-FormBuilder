@@ -359,11 +359,11 @@ sub build {
     $html .= $fieldsets_html . '</form>';
 
     if (not $self->{'hide_required_text'}) {
-        $html .= '<p class="required"><em class="required_asterisk">*</em> - ' . BOM::Platform::Context::localize('Required') . '</p>'
+        $html .= '<p class="required"><em class="required_asterisk">*</em> - ' . $self->_localize('Required') . '</p>'
             if ($self->{'has_required_field'});
         $html .=
               '<p class="required"><em class="required_asterisk">**</em> - '
-            . BOM::Platform::Context::localize('To change your name, date of birth, or country of residence, please contact Customer Support.')
+            . $self->_localize('To change your name, date of birth, or country of residence, please contact Customer Support.')
             . '</p>'
             if ($self->{'has_call_customer_support_field'});
     }

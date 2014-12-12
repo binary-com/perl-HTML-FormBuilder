@@ -51,6 +51,11 @@ my $expect_result = '<form id="testid" method="get"><input type="hidden" name="p
 lives_ok(sub{$result = $form_obj->build_confirmation_button_with_all_inputs_hidden}, 'build confirmation_button_with_all_inputs_hidden  ok');
 is($result, $expect_result, 'the result of build confirmation_button_with_all_inputs_hidden with arg localize');
 
+$form_obj = HTML::FormBuilder->new({id => 'testid', has_required_field => 1, has_call_customer_support_field => 1},{localize => sub{uc(shift)}});
+lives_ok(sub{$result = $form_obj->build}, 'build form with some args');
+like($result, qr/REQUIRED/, 'has_required_field branch executed');
+like($result, qr/CHANGE YOUR NAME/, 'has_call_customer_support_field branch executed');
+
 {
     $form_obj = create_form_object();
 
