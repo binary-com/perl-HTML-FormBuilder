@@ -60,7 +60,7 @@ like($result, qr/CHANGE YOUR NAME/, 'has_call_customer_support_field branch exec
 # test add_field
 $form_obj = HTML::FormBuilder->new({id => 'testid'});
 throws_ok(sub{$form_obj->add_field('0abc')}, qr/fieldset_index should be a number/, 'fieldset_index should be a number');
-
+throws_ok(sub{$form_obj->add_field(123)}, qr/fieldset does not exist/, 'fieldset should be exist');
 
 
 

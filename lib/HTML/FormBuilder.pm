@@ -101,7 +101,7 @@ sub add_field {
 		croak("The fieldset_index should be a number") unless ($fieldset_index =~ /^\d+$/);
 
 		#check if the fieldset array is already created
-    croak("The fieldset does not exist in $0. form_id[$self->{'id'}]") if (!defined $self->{'fieldset'}->[$fieldset_index]);
+    croak("The fieldset does not exist in $0. form_id[$self->{'id'}]") if ( $fieldset_index > $#{$self->{fieldset}} );
 
 		push @{$self->{'fieldset'}[$fieldset_index]{'fields'}}, $_args;
 
