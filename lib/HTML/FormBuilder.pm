@@ -7,6 +7,7 @@ our $VERSION = '0.01';
 
 use Carp;
 use Template;
+use HTML::Element;
 
 #####################################################################
 # Usage      : Instantiate a Form object.
@@ -662,7 +663,8 @@ sub _build_element_and_attributes {
     if ($options and $options->{'call_customer_support'} and $options->{'call_customer_support'} eq '1') {
         $self->{'has_call_customer_support_field'} = 1;
         if (not $self->{'hide_required_text'}) {
-            $html .= '<em class="required_asterisk">**</em> ';
+					my $elem = HTML::Element->new_from_lol(['em', {class => "required_asterisk"},'**']);
+            $html .= $elem->as_HTML;
         }
     }
 
