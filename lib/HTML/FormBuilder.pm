@@ -241,23 +241,14 @@ sub build {
                         $hide_mobile .= "grd-hide-mobile";
                     }
 
-                    $input_fields_html .=
-                          '<'
-                        . $div_span
-                        . ' class="'
-                        . $label_column . ' '
-                        . $hide_mobile
-                        . ' form_label">'
-                        . $self->_build_element_and_attributes(
+										my $label_html = $self->_build_element_and_attributes(
                         'label',
                         $input_field->{'label'},
                         {
                             'is_optional'           => $is_optional,
                             'call_customer_support' => $call_customer_support
-                        })
-                        . $label_text
-                        . '</label></'
-                        . $div_span . '>';
+                        });
+                    $input_fields_html .= qq{<$div_span class="$label_column $hide_mobile form_label">$label_html$label_text</label></$div_span>};
                 }
             }
 
