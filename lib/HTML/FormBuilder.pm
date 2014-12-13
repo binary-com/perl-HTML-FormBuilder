@@ -639,7 +639,7 @@ sub _build_element_and_attributes {
         next if ($key ne 'value' and $attributes->{$key} and $attributes->{$key} eq '');
 
         # skip attributes that are not intended for HTML
-        next if ($key =~ /^(?:option|text|path_to_graphics|hide_required_text|localize)/i);
+        next if ($key =~ /^(?:option|text|hide_required_text|localize)/i);
         if ($attributes->{$key}) {
             $html .= ' ' . $key . '="' . $attributes->{$key} . '"';
         }
