@@ -22,17 +22,27 @@ use HTML::Element;
 sub new {
     my $class = shift;
     my $_args = shift;
-		my $options = shift;
 
-		
-    # fields & id must be given when instantiating a new object
+		# fields & id must be given when instantiating a new object
     croak("Form must be given an id when instantiating a HTML::FormBuilder->new object in $0.") if !defined $_args->{'id'};
 
-    my $self = $_args;
-		$self->{method} ||= 'get';
-    $self->{'method'} = ($self->{'method'} eq 'post') ? 'post' : 'get';
-		$self->{localize} ||= sub {return @_};
-		$self->{fieldset} ||= [];
+		#split data and options
+		my $self = {};
+		$self->{data} = $_args;
+
+		$self->{option} = {};
+
+		for my $opt (qw(option text hide_required_text has_required_field localize has_call_customer_support_field)){
+			if($_args->{$opt}){
+				$self->{option}{$opt} = delete $_args->{$opt};
+			}
+		}
+
+
+		$self->{data}{method} ||= 'get';
+    $self->{data}{'method'} = ($self->{data}{'method'} eq 'post') ? 'post' : 'get';
+		$self->{option}{localize} ||= sub {return @_};
+		$self->{data}{fieldset} ||= [];
     bless $self, $class;
 
 
@@ -54,21 +64,17 @@ sub add_fieldset {
     my $_args = shift;
 
     #check if the Form object is created
-    croak("Please instantiate the Form object first in $0.") if (!defined $self->{'id'});
+    croak("Please instantiate the Form object first in $0.") if (!defined $self->{data}{'id'});
 
     #check if the $args is a ref HASH
     croak("Parameters must in HASH reference in $0.") if (ref $_args ne 'HASH');
 
     $_args->{'fields'} = [];
 
-    #get the last index of the ref array of fieldset by dereferrencing it
-    my @fieldsets;
-
-    push @fieldsets, $_args;
-    $self->{'fieldset'} = \@fieldsets;
+		push @{$self->{data}{fieldset}}, $_args;
 
     #return fieldset id/index that was created
-    return $#fieldsets;
+    return $#{$self->{data}{fieldset}};
 }
 
 #####################################################################
@@ -94,9 +100,9 @@ sub add_field {
 		croak("The fieldset_index should be a number") unless ($fieldset_index =~ /^\d+$/);
 
 		#check if the fieldset array is already created
-    croak("The fieldset does not exist in $0. form_id[$self->{'id'}]") if ( $fieldset_index > $#{$self->{fieldset}} );
+    croak("The fieldset does not exist in $0. form_id[$self->{data}{'id'}]") if ( $fieldset_index > $#{$self->{data}{fieldset}} );
 
-		push @{$self->{'fieldset'}[$fieldset_index]{'fields'}}, $_args;
+		push @{$self->{data}{'fieldset'}[$fieldset_index]{'fields'}}, $_args;
 
     return 1;
 }
@@ -114,15 +120,15 @@ sub build {
     my $self                 = shift;
     my $print_fieldset_index = shift;
 
-    my $html = $self->_build_element_and_attributes('form', $self);
+    my $html = $self->_build_element_and_attributes('form', $self->{data});
 
     # build the fieldset, if $print_fieldset_index is specifed then
     # we only generate that praticular fieldset with that index
     my @fieldsets;
     if (defined $print_fieldset_index) {
-        push @fieldsets, $self->{'fieldset'}->[$print_fieldset_index];
+        push @fieldsets, $self->{data}{'fieldset'}[$print_fieldset_index];
     } else {
-        @fieldsets = @{$self->{'fieldset'}};
+        @fieldsets = @{$self->{data}{'fieldset'}};
     }
 
     my %grouped_fieldset;
@@ -331,14 +337,14 @@ sub build {
 
     $html .= $fieldsets_html . '</form>';
 
-    if (not $self->{'hide_required_text'}) {
+    if (not $self->{option}{'hide_required_text'}) {
         $html .= '<p class="required"><em class="required_asterisk">*</em> - ' . $self->_localize('Required') . '</p>'
-            if ($self->{'has_required_field'});
+            if ($self->{option}{'has_required_field'});
         $html .=
               '<p class="required">' . HTML::Element->new_from_lol(['em', {class=>"required_asterisk"},'**'])->as_HTML .' - '
             . $self->_localize('To change your name, date of birth, or country of residence, please contact Customer Support.')
             . '</p>'
-            if ($self->{'has_call_customer_support_field'});
+            if ($self->{option}{'has_call_customer_support_field'});
     }
 
     return $html;
@@ -357,7 +363,7 @@ sub build_confirmation_button_with_all_inputs_hidden {
     my @inputs;
 
     # get all inputs that are to be output as hidden
-    foreach my $fieldset (@{$self->{'fieldset'}}) {
+    foreach my $fieldset (@{$self->{data}{'fieldset'}}) {
         INPUT:
         foreach my $input_field (@{$fieldset->{'fields'}}) {
             next INPUT if (not defined $input_field->{'input'});
@@ -370,7 +376,7 @@ sub build_confirmation_button_with_all_inputs_hidden {
         }
     }
 
-    my $html = $self->_build_element_and_attributes('form', $self);
+    my $html = $self->_build_element_and_attributes('form', $self->{data});
 
     foreach my $input (@inputs) {
         next if ($input->{'type'} and $input->{'type'} eq 'submit');
@@ -552,18 +558,18 @@ sub _get_input_field {
 
     #build the form fieldset
     my $fieldset_index = 0;
-    foreach my $fieldset (@{$self->{'fieldset'}}) {
+    foreach my $fieldset (@{$self->{data}{'fieldset'}}) {
         my $input_field_index = 0;
         foreach my $input_field (@{$fieldset->{'fields'}}) {
             if (ref $input_field->{'input'} eq 'ARRAY') {
                 foreach my $sub_input_field (@{$input_field->{'input'}}) {
                     if ($sub_input_field->{'id'} and $field_id and $sub_input_field->{'id'} eq $field_id) {
-                        return \$self->{'fieldset'}[$fieldset_index]->{'fields'}[$input_field_index];
+                        return \$self->{data}{'fieldset'}[$fieldset_index]->{'fields'}[$input_field_index];
                     }
                 }
             } else {
                 if ($field_id and $input_field->{'input'}->{'id'} and $input_field->{'input'}->{'id'} eq $field_id) {
-                    return \$self->{'fieldset'}[$fieldset_index]->{'fields'}[$input_field_index];
+                    return \$self->{data}{'fieldset'}[$fieldset_index]->{'fields'}[$input_field_index];
                 }
             }
             $input_field_index++;
@@ -588,11 +594,11 @@ sub _get_error_field {
 
     #build the form fieldset
     my $fieldset_index = 0;
-    foreach my $fieldset (@{$self->{'fieldset'}}) {
+    foreach my $fieldset (@{$self->{data}{'fieldset'}}) {
         my $input_field_index = 0;
         foreach my $input_field (@{$fieldset->{'fields'}}) {
             if ($input_field->{'error'}->{'id'} and $error_id and $input_field->{'error'}->{'id'} eq $error_id) {
-                return \$self->{'fieldset'}[$fieldset_index]->{'fields'}[$input_field_index];
+                return \$self->{data}{'fieldset'}[$fieldset_index]->{'fields'}[$input_field_index];
             }
             $input_field_index++;
         }
@@ -641,16 +647,16 @@ sub _build_element_and_attributes {
 
     # we actually pass this option as a string, not an integer
     if ($options and $options->{'is_optional'} and $options->{'is_optional'} eq '0') {
-        $self->{'has_required_field'} = 1;
-        if (not $self->{'hide_required_text'}) {
+        $self->{option}{'has_required_field'} = 1;
+        if (not $self->{option}{'hide_required_text'}) {
             $html .= '<em class="required_asterisk">*</em> ';
         }
     }
 
     # we actually pass this option as a string, not an integer
     if ($options and $options->{'call_customer_support'} and $options->{'call_customer_support'} eq '1') {
-        $self->{'has_call_customer_support_field'} = 1;
-        if (not $self->{'hide_required_text'}) {
+        $self->{option}{'has_call_customer_support_field'} = 1;
+        if (not $self->{option}{'hide_required_text'}) {
 					my $elem = HTML::Element->new_from_lol(['em', {class => "required_asterisk"},'**']);
             $html .= $elem->as_HTML;
         }
@@ -690,7 +696,7 @@ sub _build_input_field {
             push @verifications, $input_field->{'verification'};
         }
         undef $input_field->{'verification'};
-        $self->{'verify'}->{$input_field->{'id'}} = \@verifications;
+        $self->{option}{'verify'}->{$input_field->{'id'}} = \@verifications;
     }
 
     #create the filed input
@@ -741,7 +747,7 @@ sub _build_input_field {
 
 sub _localize{
 	my $self = shift;
-	$self->{localize}->(@_);
+	$self->{option}{localize}->(@_);
 }
 
 sub _link_button {

@@ -14,8 +14,8 @@ my $form_obj;
 ################################################################################
 # test new
 lives_ok(sub {$form_obj = HTML::FormBuilder->new({id => 'form1'})}, 'create form ok');
-is($form_obj->{method}, 'get', 'default method of form');
-is_deeply($form_obj->{fieldset}, [], 'default fieldset');
+is($form_obj->{data}{method}, 'get', 'default method of form');
+is_deeply($form_obj->{data}{fieldset}, [], 'default fieldset');
 is($form_obj->build, '<form id="form1" method="get"></form>', 'generate a blank form');
 lives_ok(sub{create_form_object()->build}, 'build ok');
 

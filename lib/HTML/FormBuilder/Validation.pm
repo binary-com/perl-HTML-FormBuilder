@@ -64,9 +64,9 @@ sub build {
     #build the fieldset, if $print_fieldset_index is specifed then we only generate that praticular fieldset with that index
     my @fieldsets;
     if (defined $print_fieldset_index) {
-        push @fieldsets, $self->{'fieldset'}->[$print_fieldset_index];
+        push @fieldsets, $self->{data}{'fieldset'}->[$print_fieldset_index];
     } else {
-        @fieldsets = @{$self->{'fieldset'}};
+        @fieldsets = @{$self->{data}{'fieldset'}};
     }
 
     #build the form fieldset
@@ -78,7 +78,7 @@ sub build {
         }
     }
 
-    $self->{'onsubmit'} = "function v() { var bResult = true; $javascript_validation; return bResult; }; return v();";
+    $self->{data}{'onsubmit'} = "function v() { var bResult = true; $javascript_validation; return bResult; }; return v();";
 
     return $self->SUPER::build();
 }
@@ -93,7 +93,7 @@ sub build {
 ########################################################################
 sub validate {
     my $self      = shift;
-    my @fieldsets = @{$self->{'fieldset'}};
+    my @fieldsets = @{$self->{data}{'fieldset'}};
 
     foreach my $fieldset (@fieldsets) {
         INPUT_FIELD:
