@@ -347,7 +347,7 @@ sub build {
         $html .= '<p class="required"><em class="required_asterisk">*</em> - ' . $self->_localize('Required') . '</p>'
             if ($self->{'has_required_field'});
         $html .=
-              '<p class="required"><em class="required_asterisk">**</em> - '
+              '<p class="required">' . HTML::Element->new_from_lol(['em', {class=>"required_asterisk"},'**'])->as_HTML .' - '
             . $self->_localize('To change your name, date of birth, or country of residence, please contact Customer Support.')
             . '</p>'
             if ($self->{'has_call_customer_support_field'});
