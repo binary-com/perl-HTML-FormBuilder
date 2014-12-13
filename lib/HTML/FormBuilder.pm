@@ -221,19 +221,16 @@ sub build {
 
                 # add a tooltip explanation if given
                 if ($input_field->{'label'}->{'tooltip'}) {
-                    $input_fields_html .= '<div class="extra_tooltip_container">'
-                        . $self->_build_element_and_attributes(
+									my $label_html = $self->_build_element_and_attributes(
                         'label',
                         $input_field->{'label'},
                         {
                             'is_optional'           => $is_optional,
                             'call_customer_support' => $call_customer_support
-                        })
-                        . $label_text
-                        . '</label>'
-												# img_url is the url of question mark picture
-                        . _tooltip($input_field->{'label'}{'tooltip'}{'desc'}, $input_field->{'label'}{tooltip}{img_url})
-                        . '</div>';
+                        });
+									# img_url is the url of question mark picture
+									my $tooltip = _tooltip($input_field->{'label'}{'tooltip'}{'desc'}, $input_field->{'label'}{tooltip}{img_url});
+									$input_fields_html .= qq{<div class="extra_tooltip_container">$label_html$label_text</label>$tooltip</div>};
                 } else {
 
                     my $hide_mobile = "";
