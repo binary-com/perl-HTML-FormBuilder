@@ -18,34 +18,9 @@ is($form_obj->{method}, 'get', 'default method of form');
 is_deeply($form_obj->{fieldset}, [], 'default fieldset');
 is($form_obj->build, '<form id="form1" method="get"></form>', 'generate a blank form');
 lives_ok(sub{create_form_object()->build}, 'build ok');
-$form_obj = HTML::FormBuilder->new({id => 'testid'});
-my $fieldset_index = $form_obj->add_fieldset({});
 
-my $input_field_amount = {
-													'label' => {
-																			'text'     => 'Amount',
-																			'for'      => 'amount',
-																			'optional' => '0',
-																			'tooltip'  => {
-																										 desc => "this is a tool tip",
-																										 img_url => "test.png"
-																										},
-																		 },
-													'input' => {
-																			'type'      => 'text',
-																			'id'        => 'amount',
-																			'name'      => 'amount',
-																			'maxlength' => 40,
-																			'value'     => '',
-																		 },
-												 };
-
-$form_obj->add_field($fieldset_index, $input_field_amount);
-lives_ok(sub{$form_obj->build}, 'build tooltip ok');
-
-
-$form_obj = HTML::FormBuilder->new({id => 'testid',localize => sub{"will " . shift}});
 my $result;
+$form_obj = HTML::FormBuilder->new({id => 'testid',localize => sub{"will " . shift}});
 my $expect_result = '<form id="testid" method="get"><input type="hidden" name="process" value="1"/><a class="button backbutton" href="javascript:history.go(-1)" ><span class="button backbutton" >will Back</span></a> <span class="button"><button id="submit" class="button" type="submit">will Confirm</button></span></form>';
 lives_ok(sub{$result = $form_obj->build_confirmation_button_with_all_inputs_hidden}, 'build confirmation_button_with_all_inputs_hidden  ok');
 is($result, $expect_result, 'the result of build confirmation_button_with_all_inputs_hidden with arg localize');
