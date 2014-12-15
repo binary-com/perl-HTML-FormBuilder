@@ -322,10 +322,12 @@ qq{<div class="extra_tooltip_container">$label_html$tooltip</div>};
                     {
                         'is_optional'           => $is_optional,
                         'call_customer_support' => $call_customer_support
-                    }
-                );
+                    },
+																																			$label_text
+																																		 );
+								$label_html .= '</label>';
                 $input_fields_html .=
-qq{<$div_span class="$label_column $hide_mobile form_label">$label_html$label_text</label></$div_span>};
+qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_span>};
             }
         }
 
