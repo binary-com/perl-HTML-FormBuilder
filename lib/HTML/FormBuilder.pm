@@ -164,7 +164,7 @@ sub build {
         }
     }
     my $html =
-      $self->_build_element_and_attributes( 'form', $self->{data},$fieldsets_html ) . '</form>';
+      $self->_build_element_and_attributes( 'form', $self->{data},$fieldsets_html );
 
     if ( not $self->{option}{'hide_required_text'} ) {
         $html .=
@@ -302,7 +302,6 @@ sub _build_fieldset {
                     },
                 );
 
-								$label_html .= '</label>';
                 $input_fields_html .=
 qq{<div class="extra_tooltip_container">$label_html$tooltip</div>};
             }
@@ -322,7 +321,6 @@ qq{<div class="extra_tooltip_container">$label_html$tooltip</div>};
                         'call_customer_support' => $call_customer_support
                     },
 																																		 );
-								$label_html .= '</label>';
                 $input_fields_html .=
 qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_span>};
             }
@@ -353,8 +351,7 @@ qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_sp
             $input_fields_html .= '<br>'
               . $self->_build_element_and_attributes( 'p',
 																											$input_field->{'comment'},
-																											$input_field->{'comment'}->{'text'})
-							. '</p>';
+																											$input_field->{'comment'}->{'text'});
         }
 
         if ( defined $input_field->{'error'} ) {
@@ -368,8 +365,7 @@ qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_sp
 
 					foreach my $error_box ( @errors ) {
 						$input_fields_html .=
-							$self->_build_element_and_attributes( 'p', $error_box, $error_box->{text} )
-							. '</p>';
+							$self->_build_element_and_attributes( 'p', $error_box, $error_box->{text} );
 					}
 
         }
@@ -392,7 +388,6 @@ qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_sp
     }
 
 		$fieldset_html = $self->_build_element_and_attributes( 'fieldset', $fieldset,  $fieldset_html );
-    $fieldset_html .= '</fieldset>';
 
     if (
         (
@@ -459,7 +454,6 @@ sub build_confirmation_button_with_all_inputs_hidden {
       . $self->_localize('Confirm')
       . '</button></span>';
 		$html = $self->_build_element_and_attributes( 'form', $self->{data}, $html );
-    $html .= '</form>';
 
     return $html;
 }
@@ -797,7 +791,13 @@ sub _build_element_and_attributes {
         }
     }
 
-    return $html . $content;
+		#close the tag
+		my $end_tag = "</$element_tag>";
+		# input needn't close tag
+		if($element_tag =~ /^(input)$/){
+			$end_tag = '';
+		}
+    return $html . $content . $end_tag;
 }
 
 #####################################################################
@@ -844,9 +844,7 @@ sub _build_input_field {
         my $textarea_value = $input_field->{'value'} || '';
         undef $input_field->{'value'};
         $html =
-          $self->_build_element_and_attributes( 'textarea', $input_field );
-        $html .= $textarea_value;
-        $html .= '</textarea>';
+          $self->_build_element_and_attributes( 'textarea', $input_field, $textarea_value );
     }
     else {
         if (    $input_field->{'type'}
@@ -869,12 +867,10 @@ sub _build_input_field {
         {
             $html =
               $self->_build_element_and_attributes( 'button', $input_field )
-              || '';
         }
         elsif ( $input_field->{'type'} ) {
             $html =
               $self->_build_element_and_attributes( 'input', $input_field )
-              || '';
         }
 
         if (
@@ -883,11 +879,7 @@ sub _build_input_field {
                 or $input_field->{'type'} eq 'submit' )
           )
         {
-            $html =
-                '<span class="'
-              . $input_field->{'class'} . '">'
-              . $html
-              . '</span>';
+            $html =qq{<span class="$input_field->{class}">$html</span>};
         }
     }
 
