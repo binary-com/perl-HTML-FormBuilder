@@ -949,17 +949,8 @@ sub _link_button {
     my $myid     = $args->{'id'} ? 'id="' . $args->{'id'} . '"'      : '';
     my $myspanid = $args->{'id'} ? 'id="span_' . $args->{'id'} . '"' : '';
 
-    return
-        '<a class="'
-      . $myclass
-      . '" href="'
-      . $args->{'href'} . '" '
-      . $myid . '>'
-      . '<span class="'
-      . $myclass . '" '
-      . $myspanid . '>'
-      . $args->{'value'}
-      . '</span>' . '</a>';
+    return qq{<a class="$myclass" href="$args->{href}" $myid><span class="$myclass" $myspanid>$args->{value}</span></a>};
+
 }
 
 sub _tooltip {
@@ -967,12 +958,7 @@ sub _tooltip {
     my $url     = shift;
     $content =~ s/\'/&apos;/g;    # Escape for quoting below
 
-    return
-        " <a href='#' title='"
-      . $content
-      . "' rel='tooltip'><img src=\""
-      . $url
-      . "\" /></a>";
+    return qq{ <a href='#' title='$content' rel='tooltip'><img src="$url" /></a>};
 }
 
 sub _template {
