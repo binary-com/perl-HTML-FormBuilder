@@ -391,7 +391,7 @@ qq{<$div_span class="$label_column $hide_mobile form_label">$label_html$label_te
     $fieldset_html .= $input_fields_html;
 
     if ($footer) {
-        $fieldset_html .= '<div class="row comment">' . $footer . '</div>';
+        $fieldset_html .= qq{<div class="row comment">$footer</div>};
     }
 
     $fieldset_html .= '</fieldset>';
