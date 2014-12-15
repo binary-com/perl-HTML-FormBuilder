@@ -716,6 +716,25 @@ sub _get_error_field {
     return;
 }
 
+sub _wrap_item{
+	my $self = shift;
+	my $tag = shift;
+	my $attrs = shift;
+	my @children = @_;
+
+	my $element = HTML::Element->new($tag);
+
+	foreach my $key ( sort keys %{$attrs} ) {
+		$element->attr( $key, $attrs->{$key} );
+	}
+
+	foreach my $child (@children){
+		$element->push_content([ '~literal', { text => $child } ]);
+	}
+
+	return $element->as_HTML;
+}
+
 sub _build_form_element_and_attributes {
     my $self  = shift;
     my $tag   = shift;
@@ -903,15 +922,15 @@ sub _build_input_field {
                 and lc $input_field->{'type'} eq 'checkbox' )
           )
         {
-            $html .= '<span id="inputheading">' . $heading . '</span><br />';
+            $html .= qq{<span id="inputheading">$heading</span><br />};
         }
         else {
-            $html = '<span id="inputheading">' . $heading . '</span>' . $html;
+            $html = qq{<span id="inputheading">$heading</span>$html};
         }
     }
 
     if ($trailing) {
-        $html = $html . '<span class="inputtrailing">' . $trailing . '</span>';
+        $html .= qq{<span class="inputtrailing">$trailing</span>};
     }
 
     return $html;
