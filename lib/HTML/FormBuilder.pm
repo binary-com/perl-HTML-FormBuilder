@@ -240,8 +240,8 @@ sub _build_fieldset {
 
     my $fieldset_html = '';
 
-    $fieldset_html .=
-      $self->_build_element_and_attributes( 'fieldset', $fieldset );
+    #$fieldset_html .=
+    #  $self->_build_element_and_attributes( 'fieldset', $fieldset );
     $fieldset_html .= $legend;
     $fieldset_html .= $header;
     $fieldset_html .= $comment;
@@ -394,6 +394,7 @@ qq{<$div_span class="$label_column $hide_mobile form_label">$label_html$label_te
         $fieldset_html .= qq{<div class="row comment">$footer</div>};
     }
 
+		$fieldset_html = $self->_build_element_and_attributes( 'fieldset', $fieldset, {}, $fieldset_html );
     $fieldset_html .= '</fieldset>';
 
     if (
@@ -764,7 +765,8 @@ sub _build_element_and_attributes {
     my $element_tag = shift;
     my $attributes  = shift;
     my $options     = shift;
-
+		my $content     = shift ||'';
+		
     #check if the elemen tag is empty
     return if ( $element_tag eq '' );
 
@@ -816,7 +818,7 @@ sub _build_element_and_attributes {
         }
     }
 
-    return $html;
+    return $html . $content;
 }
 
 #####################################################################
