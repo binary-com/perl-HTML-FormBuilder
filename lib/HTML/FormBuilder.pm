@@ -240,8 +240,6 @@ sub _build_fieldset {
 
     my $fieldset_html = '';
 
-    #$fieldset_html .=
-    #  $self->_build_element_and_attributes( 'fieldset', $fieldset );
     $fieldset_html .= $legend;
     $fieldset_html .= $header;
     $fieldset_html .= $comment;
@@ -291,22 +289,25 @@ sub _build_fieldset {
 
             # add a tooltip explanation if given
             if ( $input_field->{'label'}->{'tooltip'} ) {
-                my $label_html = $self->_build_element_and_attributes(
-                    'label',
-                    $input_field->{'label'},
-                    {
-                        'is_optional'           => $is_optional,
-                        'call_customer_support' => $call_customer_support
-                    }
-                );
 
                 # img_url is the url of question mark picture
                 my $tooltip = _tooltip(
                     $input_field->{'label'}{'tooltip'}{'desc'},
                     $input_field->{'label'}{tooltip}{img_url}
                 );
+                my $label_html = $self->_build_element_and_attributes(
+                    'label',
+                    $input_field->{'label'},
+                    {
+                        'is_optional'           => $is_optional,
+                        'call_customer_support' => $call_customer_support
+                    },
+																																			$label_text
+                );
+
+								$label_html .= '</label>';
                 $input_fields_html .=
-qq{<div class="extra_tooltip_container">$label_html$label_text</label>$tooltip</div>};
+qq{<div class="extra_tooltip_container">$label_html$tooltip</div>};
             }
             else {
 
