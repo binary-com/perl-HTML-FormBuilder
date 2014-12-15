@@ -227,10 +227,7 @@ sub _build_fieldset {
     # message at the top of the fieldset
     my $comment = '';
     if ( defined $fieldset->{'comment'} ) {
-        $comment =
-            '<div class="grd-grid-12"><p>'
-          . $fieldset->{'comment'}
-          . '</p></div>';
+        $comment =qq{<div class="grd-grid-12"><p>$fieldset->{comment}</p></div>};
         undef $fieldset->{'comment'};
     }
 
