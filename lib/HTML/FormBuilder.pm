@@ -259,11 +259,10 @@ sub _build_fieldset {
             if ( $input_field->{'type'} and $input_field->{'type'} eq 'hidden' )
             {
                 my $c = $input_field->{'class'} || '';
-                $input_fields_html .= '<div class="' . $c . '">';
+                $input_fields_html .= qq{<div class="$c">};
             }
             elsif ( $input_field->{'class'} ) {
-                $input_fields_html .= '<div class="grd-row-padding row clear '
-                  . $input_field->{'class'} . '">';
+                $input_fields_html .= qq{<div class="grd-row-padding row clear $input_field->{class}">};
             }
             else {
                 $input_fields_html .= '<div class="grd-row-padding row clear">';
