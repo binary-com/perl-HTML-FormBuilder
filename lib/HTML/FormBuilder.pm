@@ -815,24 +815,18 @@ sub _build_input_field {
     my $input_field = shift;
 
     my $html     = '';
-    my $heading  = $input_field->{'heading'};
-    my $trailing = $input_field->{'trailing'};
+    # delete this so that it doesn't carry on to the next field
+		# I don't know why should delete it(undef it)
+    my $heading  = delete $input_field->{'heading'};
+    my $trailing = delete $input_field->{'trailing'};
 
-    # undefine this so that it doesn't carry on to the next field
-    undef $input_field->{'heading'};
-    undef $input_field->{'trailing'};
 
     #construct the required verification from the input
-    if ( defined $input_field->{'verification'} ) {
-        my @verifications;
-        if ( ref $input_field->{'verification'} eq 'ARRAY' ) {
-            @verifications = @{ $input_field->{'verification'} };
-        }
-        else {
-            push @verifications, $input_field->{'verification'};
-        }
-        undef $input_field->{'verification'};
-        $self->{option}{'verify'}->{ $input_field->{'id'} } = \@verifications;
+		#TODO are these code really useful ?
+    if ( $input_field->{'verification'} ) {
+			my $verifications = delete $input_field->{'verification'};
+			$verifications = ref($verifications) eq 'ARRAY' ? $verifications : [$verifications];
+			$self->{option}{'verify'}{$input_field->{id}} = $verifications;
     }
 
     #create the filed input
