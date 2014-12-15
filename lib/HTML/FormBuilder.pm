@@ -440,7 +440,7 @@ sub build_confirmation_button_with_all_inputs_hidden {
         }
     }
 
-    my $html = $self->_build_element_and_attributes( 'form', $self->{data} );
+    my $html = ''; 
 
     foreach my $input (@inputs) {
         next if ( $input->{'type'} and $input->{'type'} eq 'submit' );
@@ -462,6 +462,7 @@ sub build_confirmation_button_with_all_inputs_hidden {
       ' <span class="button"><button id="submit" class="button" type="submit">'
       . $self->_localize('Confirm')
       . '</button></span>';
+		$html = $self->_build_element_and_attributes( 'form', $self->{data},{}, $html );
     $html .= '</form>';
 
     return $html;
