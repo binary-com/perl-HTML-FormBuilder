@@ -352,14 +352,13 @@ qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_sp
         }
 
         if ( defined $input_field->{'comment'} ) {
-            $input_field->{'comment'}->{'class'} =
-                $input_field->{'comment'}->{'class'}
-              ? $input_field->{'comment'}->{'class'}
-              : '';
+            $input_field->{'comment'}{'class'} ||= '';
             $input_fields_html .= '<br>'
               . $self->_build_element_and_attributes( 'p',
-                $input_field->{'comment'} )
-              . $input_field->{'comment'}->{'text'} . '</p>';
+																											$input_field->{'comment'},
+																											{},
+																											$input_field->{'comment'}->{'text'})
+							. '</p>';
         }
 
         if ( defined $input_field->{'error'} ) {

@@ -31,7 +31,8 @@ my $input_field_amount = {
         'name'      => 'amount',
         'maxlength' => 40,
         'value'     => '',
-    },
+							 },
+													'comment' => {text => 'commenttext'},
 };
 
 $form_obj->add_field( $fieldset_index, $input_field_amount );
@@ -41,7 +42,7 @@ $expect_result = <<EOF;
 <form id="testid" method="get"><div class="rbox form">
     <div class="rbox-wrap">
         
-        <fieldset><legend>a legend</legend><h2>header</h2><div class="grd-grid-12"><p>comment</p></div><div class="grd-row-padding row clear"><div class="extra_tooltip_container"><label for="amount"><em class="required_asterisk">**</em>Amount</label> <a href='#' title='this is a tool tip' rel='tooltip'><img src="test.png" /></a></div><div class="grd-grid-8"><input class=" text" id="amount" maxlength="40" name="amount" type="text"></div></div></fieldset>
+        <fieldset><legend>a legend</legend><h2>header</h2><div class="grd-grid-12"><p>comment</p></div><div class="grd-row-padding row clear"><div class="extra_tooltip_container"><label for="amount"><em class="required_asterisk">**</em>Amount</label> <a href='#' title='this is a tool tip' rel='tooltip'><img src="test.png" /></a></div><div class="grd-grid-8"><input class=" text" id="amount" maxlength="40" name="amount" type="text"><br><p>commenttext</p></div></div></fieldset>
         <span class="tl">&nbsp;</span><span class="tr">&nbsp;</span><span class="bl">&nbsp;</span><span class="br">&nbsp;</span>
         
         
