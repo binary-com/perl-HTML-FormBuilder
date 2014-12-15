@@ -840,38 +840,32 @@ sub _build_input_field {
         $html =
           $self->_build_element_and_attributes( 'textarea', $input_field, $textarea_value );
     }
-    else {
-        if (    $input_field->{'type'}
-            and $input_field->{'type'} =~ /^(?:text|password)$/i )
+    elsif($input_field->{'type'}) {
+        if ( $input_field->{'type'} =~ /^(?:text|password)$/i )
         {
             $input_field->{'class'} .= ' text';
         }
-        elsif ( $input_field->{'type'} and $input_field->{'type'} eq 'button' )
+        elsif ( $input_field->{'type'} eq 'button' )
         {
             $input_field->{'class'} .= ' button';
         }
-        elsif ( $input_field->{'type'} and $input_field->{'type'} eq 'submit' )
+        elsif ( $input_field->{'type'} eq 'submit' )
         {
             $input_field->{'class'} .= ' button';
         }
 
         # Only build input attribute if there is type defined.
-        if (    $input_field->{'type'}
-            and $input_field->{'type'} =~ /button|submit/ )
+        if ($input_field->{'type'} =~ /button|submit/ )
         {
             $html =
               $self->_build_element_and_attributes( 'button', $input_field )
         }
-        elsif ( $input_field->{'type'} ) {
+        else {
             $html =
               $self->_build_element_and_attributes( 'input', $input_field )
         }
 
-        if (
-            $input_field->{'type'}
-            and (  $input_field->{'type'} eq 'button'
-                or $input_field->{'type'} eq 'submit' )
-          )
+        if ($input_field->{'type'} =~ /button|submit/)
         {
             $html =qq{<span class="$input_field->{class}">$html</span>};
         }
