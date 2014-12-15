@@ -55,6 +55,22 @@ EOF
 chomp $expect_result;
 is( $result, $expect_result, 'tooltip and call_customer_support' );
 
+# test build_confirmation_button_with_all_inputs_hidden
+$form_obj = HTML::FormBuilder->new( { id => 'testid' } );
+$fieldset_index = $form_obj->add_fieldset( {legend => 'a legend',header => 'header',comment => 'comment'} );
+$form_obj->add_field( $fieldset_index, $input_field_amount );
+
+lives_ok( sub { $result = $form_obj->build_confirmation_button_with_all_inputs_hidden }, 'build_confirmation_button_with_all_inputs_hidden ok' );
+
+$expect_result = <<EOF;
+<form id="testid" method="get"><input type="hidden" name="amount" value=""/><input type="hidden" name="process" value="1"/><a class="button backbutton" href="javascript:history.go(-1)" ><span class="button backbutton" >Back</span></a> <span class="button"><button id="submit" class="button" type="submit">1</button></span></form>
+EOF
+
+chomp($expect_result);
+is($result,$expect_result, 'result of build_confirmation_button_with_all_inputs_hidden');
+
+
+
 $form_obj      = create_multiset_form();
 $expect_result = <<'EOF';
 <form action="http://localhost/some/where/test.cgi" class="formObject" id="id_test_form" method="post" name="name_test_form"><div class="rbox form">
