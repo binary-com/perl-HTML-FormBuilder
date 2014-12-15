@@ -213,14 +213,14 @@ sub _build_fieldset {
     # fieldset legend
     my $legend = '';
     if ( defined $fieldset->{'legend'} ) {
-        $legend = '<legend>' . $fieldset->{'legend'} . '</legend>';
+        $legend = qq{<legend>$fieldset->{legend}</legend>};
         undef $fieldset->{'legend'};
     }
 
     # header at the top of the fieldset
     my $header = '';
     if ( defined $fieldset->{'header'} ) {
-        $header = '<h2>' . $fieldset->{'header'} . '</h2>';
+        $header = qq{<h2>$fieldset->{header}</h2>};
         undef $fieldset->{'header'};
     }
 
