@@ -121,7 +121,6 @@ sub build {
     my $print_fieldset_index = shift;
 
 		my $form = $self->_build_form_element_and_attributes('form', $self->{data});
-    #my $html = $self->_build_element_and_attributes('form', $self->{data});
 
     # build the fieldset, if $print_fieldset_index is specifed then
     # we only generate that praticular fieldset with that index
@@ -135,7 +134,47 @@ sub build {
     my %grouped_fieldset;
     # build the form fieldset
     foreach my $fieldset (@fieldsets) {
-        my $fieldset_group = $fieldset->{'group'};
+			my ($fieldset_group, $fieldset_html) = $self->_build_fieldset_phrase1($fieldset);
+			push @{$grouped_fieldset{$fieldset_group}}, $fieldset_html;
+    }
+
+    my $fieldsets_html = '';
+    foreach my $fieldset_group (sort keys %grouped_fieldset) {
+        if ($fieldset_group ne 'no-group') {
+            $fieldsets_html .= '<div id="' . $fieldset_group . '" class="toggle-content">';
+        }
+
+        foreach my $fieldset_html (@{$grouped_fieldset{$fieldset_group}}) {
+            $fieldsets_html .= $fieldset_html;
+        }
+
+        if ($fieldset_group ne 'no-group') {
+            $fieldsets_html .= '</div>';
+        }
+    }
+
+		$form->push_content(['~literal', {text => $fieldsets_html}]);
+    my $html = $form->as_HTML;
+
+    if (not $self->{option}{'hide_required_text'}) {
+        $html .= '<p class="required"><em class="required_asterisk">*</em> - ' . $self->_localize('Required') . '</p>'
+            if ($self->{option}{'has_required_field'});
+        $html .=
+              '<p class="required">' . HTML::Element->new_from_lol(['em', {class=>"required_asterisk"},'**'])->as_HTML .' - '
+            . $self->_localize('To change your name, date of birth, or country of residence, please contact Customer Support.')
+            . '</p>'
+            if ($self->{option}{'has_call_customer_support_field'});
+    }
+
+    return $html;
+}
+
+sub _build_fieldset_phrase1{
+	my $self = shift;
+	my $fieldset = shift;
+	
+
+	        my $fieldset_group = $fieldset->{'group'};
         my $stacked        = defined $fieldset->{'stacked'} ? $fieldset->{'stacked'} : 1;
         my $div_span       = "div";
         my $label_column   = "grd-grid-4";
@@ -313,43 +352,11 @@ sub build {
             )
             and (not $fieldset->{'class'} or $fieldset->{'class'} !~ /no-wrap|invisible/))
         {
-            my $wrapped_fieldset = $self->_wrap_fieldset($fieldset_html);
+            $fieldset_html = $self->_wrap_fieldset($fieldset_html);
 
-            push @{$grouped_fieldset{$fieldset_group}}, $wrapped_fieldset;
-        } else {
-            push @{$grouped_fieldset{$fieldset_group}}, $fieldset_html;
-        }
-    }
 
-    my $fieldsets_html = '';
-    foreach my $fieldset_group (sort keys %grouped_fieldset) {
-        if ($fieldset_group ne 'no-group') {
-            $fieldsets_html .= '<div id="' . $fieldset_group . '" class="toggle-content">';
-        }
-
-        foreach my $fieldset_html (@{$grouped_fieldset{$fieldset_group}}) {
-            $fieldsets_html .= $fieldset_html;
-        }
-
-        if ($fieldset_group ne 'no-group') {
-            $fieldsets_html .= '</div>';
-        }
-    }
-
-		$form->push_content(['~literal', {text => $fieldsets_html}]);
-    my $html = $form->as_HTML;
-
-    if (not $self->{option}{'hide_required_text'}) {
-        $html .= '<p class="required"><em class="required_asterisk">*</em> - ' . $self->_localize('Required') . '</p>'
-            if ($self->{option}{'has_required_field'});
-        $html .=
-              '<p class="required">' . HTML::Element->new_from_lol(['em', {class=>"required_asterisk"},'**'])->as_HTML .' - '
-            . $self->_localize('To change your name, date of birth, or country of residence, please contact Customer Support.')
-            . '</p>'
-            if ($self->{option}{'has_call_customer_support_field'});
-    }
-
-    return $html;
+					}
+	return ($fieldset_group, $fieldset_html);
 }
 
 #
