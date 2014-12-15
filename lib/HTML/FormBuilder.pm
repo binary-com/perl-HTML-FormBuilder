@@ -146,7 +146,7 @@ sub build {
     # build the form fieldset
     foreach my $fieldset (@fieldsets) {
         my ( $fieldset_group, $fieldset_html ) =
-          $self->_build_fieldset_phrase1($fieldset);
+          $self->_build_fieldset($fieldset);
         push @{ $grouped_fieldset{$fieldset_group} }, $fieldset_html;
     }
 
@@ -189,7 +189,7 @@ sub build {
     return $html;
 }
 
-sub _build_fieldset_phrase1 {
+sub _build_fieldset {
     my $self     = shift;
     my $fieldset = shift;
 
