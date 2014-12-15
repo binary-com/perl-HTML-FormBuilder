@@ -128,8 +128,6 @@ sub build {
     my $self                 = shift;
     my $print_fieldset_index = shift;
 
-    my $form =
-      $self->_build_form_element_and_attributes( 'form', $self->{data} );
 
     # build the fieldset, if $print_fieldset_index is specifed then
     # we only generate that praticular fieldset with that index
@@ -165,9 +163,8 @@ sub build {
             $fieldsets_html .= '</div>';
         }
     }
-
-    $form->push_content( [ '~literal', { text => $fieldsets_html } ] );
-    my $html = $form->as_HTML;
+    my $html =
+      $self->_build_element_and_attributes( 'form', $self->{data},{}, $fieldsets_html ) . '</form>';
 
     if ( not $self->{option}{'hide_required_text'} ) {
         $html .=
@@ -733,25 +730,6 @@ sub _wrap_item{
 	return $element->as_HTML;
 }
 
-sub _build_form_element_and_attributes {
-    my $self  = shift;
-    my $tag   = shift;
-    my $attrs = shift;
-
-    return unless $tag;
-
-    my $element = HTML::Element->new($tag);
-
-    foreach my $key ( sort keys %{$attrs} ) {
-
-        #skip children
-        next if ( ref( $attrs->{$key} ) );
-
-        $element->attr( $key, $attrs->{$key} );
-    }
-
-    return $element;
-}
 #####################################################################
 # Usage      : build the html element and its own attributes
 # Purpose    : perform checking and drop unnecessary attributes
