@@ -362,21 +362,20 @@ qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_sp
         }
 
         if ( defined $input_field->{'error'} ) {
-            if ( ref $input_field->{'error'} eq 'ARRAY' ) {
-                foreach my $error_box ( @{ $input_field->{'error'} } ) {
-                    $input_fields_html .=
-                        $self->_build_element_and_attributes( 'p', $error_box )
-                      . $error_box->{'text'} . '</p>';
-                }
-            }
-            else {
-                my $attribs =
-                  $self->_build_element_and_attributes( 'p',
-                    $input_field->{'error'} )
-                  || '';
-                my $err = $input_field->{'error'}->{'text'} || '';
-                $input_fields_html .= $attribs . $err . '</p>';
-            }
+					my @errors;
+					if (ref($input_field->{'error'}) eq 'ARRAY' ) {
+						@errors = @{$input_field->{'error'}};
+					}
+					else{
+						@errors = $input_field->{error};
+					}
+
+					foreach my $error_box ( @errors ) {
+						$input_fields_html .=
+							$self->_build_element_and_attributes( 'p', $error_box,{}, $error_box->{text} )
+							. '</p>';
+					}
+
         }
 
         $input_fields_html .= '</' . $div_span . '>';
