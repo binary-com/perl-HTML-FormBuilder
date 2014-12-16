@@ -639,6 +639,7 @@ sub _get_input_field {
     my $self     = shift;
     my $field_id = shift;
 
+		return unless $field_id;
     #build the form fieldset
     my $fieldset_index = 0;
     foreach my $fieldset ( @{ $self->{data}{'fieldset'} } ) {
@@ -647,7 +648,6 @@ sub _get_input_field {
             if ( ref $input_field->{'input'} eq 'ARRAY' ) {
                 foreach my $sub_input_field ( @{ $input_field->{'input'} } ) {
                     if (    $sub_input_field->{'id'}
-                        and $field_id
                         and $sub_input_field->{'id'} eq $field_id )
                     {
                         return \$self->{data}{'fieldset'}[$fieldset_index]
@@ -656,9 +656,8 @@ sub _get_input_field {
                 }
             }
             else {
-                if (    $field_id
-                    and $input_field->{'input'}->{'id'}
-                    and $input_field->{'input'}->{'id'} eq $field_id )
+                if ($input_field->{'input'}{'id'}
+                    and $input_field->{'input'}{'id'} eq $field_id )
                 {
                     return \$self->{data}{'fieldset'}[$fieldset_index]
                       ->{'fields'}[$input_field_index];
