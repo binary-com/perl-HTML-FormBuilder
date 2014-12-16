@@ -749,11 +749,6 @@ sub _build_element_and_attributes {
         next
           if ( ref( $attributes->{$key} ) eq 'HASH'
             or ref( $attributes->{$key} ) eq 'ARRAY' );
-				#TODO false forever ?
-        next
-          if (  $key ne 'value'
-            and $attributes->{$key}
-            and $attributes->{$key} eq '' );
 
         # skip attributes that are not intended for HTML
         next if ( $key =~ /^(?:option|text|hide_required_text|localize)/i );
@@ -769,9 +764,8 @@ sub _build_element_and_attributes {
     }
 
     # we actually pass this option as a string, not an integer
-    if (    $options
-        and $options->{'is_optional'}
-        and $options->{'is_optional'} eq '0' )
+		# weired usage. why not use a number and just test !$optional->{is_optioanl} ?
+    if ($options->{'is_optional'} and $options->{'is_optional'} eq '0' )
     {
         $self->{option}{'has_required_field'} = 1;
         if ( not $self->{option}{'hide_required_text'} ) {
