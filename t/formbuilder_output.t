@@ -26,7 +26,8 @@ my $input_field_amount = {
         },
     },
     'input' => {
-        'type'      => 'text',
+        'heading'   => 'heading',
+				'type'      => 'text',
         'id'        => 'amount',
         'name'      => 'amount',
         'maxlength' => 40,
@@ -56,7 +57,7 @@ $expect_result = <<EOF;
 <form id="testid" method="get"><div class="rbox form">
     <div class="rbox-wrap">
         
-        <fieldset><legend>a legend</legend><h2>header</h2><div class="grd-grid-12"><p>comment</p></div><div class="grd-row-padding row clear"><div class="extra_tooltip_container"><label for="amount"><em class="required_asterisk">**</em>Amount</label> <a href='#' title='this is a tool tip' rel='tooltip'><img src="test.png" /></a></div><div class="grd-grid-8"><input class=" text" id="amount" maxlength="40" name="amount" type="text"><br><p>commenttext</p><p>errortext</p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-8"><span class=" button"><button class=" button" id="Button" name="Button name" type="button" value="button value">button value</button></button></span></div></div></fieldset>
+        <fieldset><legend>a legend</legend><h2>header</h2><div class="grd-grid-12"><p>comment</p></div><div class="grd-row-padding row clear"><div class="extra_tooltip_container"><label for="amount"><em class="required_asterisk">**</em>Amount</label> <a href='#' title='this is a tool tip' rel='tooltip'><img src="test.png" /></a></div><div class="grd-grid-8"><span id="inputheading">heading</span><input class=" text" id="amount" maxlength="40" name="amount" type="text"><br><p>commenttext</p><p>errortext</p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-8"><span class=" button"><button class=" button" id="Button" name="Button name" type="button" value="button value">button value</button></button></span></div></div></fieldset>
         <span class="tl">&nbsp;</span><span class="tr">&nbsp;</span><span class="bl">&nbsp;</span><span class="br">&nbsp;</span>
         
         
@@ -65,6 +66,52 @@ $expect_result = <<EOF;
 EOF
 chomp $expect_result;
 is( $result, $expect_result, 'tooltip and call_customer_support' );
+
+
+# test heading
+$form_obj = HTML::FormBuilder->new( { id => 'testid' } );
+$fieldset_index = $form_obj->add_fieldset( {} );
+
+
+my $input_field1 = {
+    'input' => {
+        'heading'   => 'text heading',
+				'type'      => 'text',
+        'id'        => 'amount',
+        'name'      => 'amount',
+        'maxlength' => 40,
+        'value'     => '',
+							 },
+};
+
+my $input_field2 = {
+										'input' => {
+								'heading' => 'checkbox heading',
+                'type'  => 'checkbox',
+                'id'    => 'single_checkbox',
+                'name'  => 'single_checkbox',
+                'value' => 'SGLBOX',
+            },
+        };
+
+$form_obj->add_field( $fieldset_index, $input_field1 );
+$form_obj->add_field( $fieldset_index, $input_field2 );
+lives_ok( sub { $result = $form_obj->build }, 'build field with heading' );
+
+$expect_result = <<EOF;
+<form id="testid" method="get"><div class="rbox form">
+    <div class="rbox-wrap">
+        
+        <fieldset><div class="grd-row-padding row clear"><div class="grd-grid-8"><span id="inputheading">text heading</span><input class=" text" id="amount" maxlength="40" name="amount" type="text"></div></div><div class="grd-row-padding row clear"><div class="grd-grid-8"><input id="single_checkbox" name="single_checkbox" type="checkbox" value="SGLBOX"><span id="inputheading">checkbox heading</span><br /></div></div></fieldset>
+        <span class="tl">&nbsp;</span><span class="tr">&nbsp;</span><span class="bl">&nbsp;</span><span class="br">&nbsp;</span>
+        
+        
+    </div>
+</div></form>
+EOF
+
+chomp($expect_result);
+is($result, $expect_result, 'heading result ok');
 
 # test build_confirmation_button_with_all_inputs_hidden
 $form_obj = HTML::FormBuilder->new( { id => 'testid' } );
