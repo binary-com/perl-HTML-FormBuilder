@@ -749,6 +749,7 @@ sub _build_element_and_attributes {
         next
           if ( ref( $attributes->{$key} ) eq 'HASH'
             or ref( $attributes->{$key} ) eq 'ARRAY' );
+				#TODO false forever ?
         next
           if (  $key ne 'value'
             and $attributes->{$key}
@@ -851,16 +852,9 @@ sub _build_input_field {
             $input_field->{'class'} .= ' button';
         }
 
-        # Only build input attribute if there is type defined.
-        if ($type =~ /button|submit/ )
-        {
-            $html =
-              $self->_build_element_and_attributes( 'button', $input_field )
-        }
-        else {
-            $html =
-              $self->_build_element_and_attributes( 'input', $input_field )
-        }
+			my $tag = ($type =~ /button|submit/ ? 'button' : 'input');
+			
+			$html = $self->_build_element_and_attributes( $tag, $input_field );
 
         if ($type =~ /button|submit/)
         {
@@ -869,11 +863,7 @@ sub _build_input_field {
     }
 
     if ($heading) {
-        if (
-            ( $input_field->{'type'} and lc $input_field->{'type'} eq 'radio' )
-            or ( $input_field->{'type'}
-                and lc $input_field->{'type'} eq 'checkbox' )
-          )
+        if ( $input_field->{'type'} && ($input_field->{'type'} =~ /radio|checkbox/i ))
         {
             $html .= qq{<span id="inputheading">$heading</span><br />};
         }
