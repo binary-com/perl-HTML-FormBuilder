@@ -194,13 +194,14 @@ sub _build_fieldset {
     my $div_span = "div";
     my $label_column = "grd-grid-4";
     my $input_column = "grd-grid-8";
+    my $input_fields_html = '';
 
     if ( $stacked == 0 ) {
 
         $div_span     = "span";
         $label_column = "";
         $input_column = "";
-
+        $input_fields_html .= '<div class="grd-grid-12">';
     }
 
     if ( not $fieldset_group ) {
@@ -241,11 +242,6 @@ sub _build_fieldset {
     $fieldset_html .= $header;
     $fieldset_html .= $comment;
 
-    my $input_fields_html = '';
-
-    if ( $stacked == 0 ) {
-        $input_fields_html .= '<div class="grd-grid-12">';
-    }
 
     foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
 
