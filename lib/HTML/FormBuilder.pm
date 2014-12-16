@@ -475,7 +475,7 @@ sub set_field_value {
     my $input_field = $self->_get_input_field($field_id);
 
     if ($input_field) {
-        if ( ref ${$input_field}->{'input'} eq 'ARRAY' ) {
+        if ( ref $input_field->{'input'} eq 'ARRAY' ) {
 
             # $_ is the alias of the reference of $input_field
             grep {
@@ -492,21 +492,21 @@ sub set_field_value {
                         }
                     }
                 }
-            } @{ ${$input_field}->{'input'} };
+            } @{ $input_field->{'input'} };
         }
         else {
-            if ( eval { ${$input_field}->{'input'}->can('value') } ) {
-                ${$input_field}->{'input'}->value($field_value);
+            if ( eval { $input_field->{'input'}->can('value') } ) {
+                $input_field->{'input'}->value($field_value);
             }
-            elsif ( ${$input_field}->{'input'}->{'type'} =~
+            elsif ( $input_field->{'input'}->{'type'} =~
                 /(?:text|textarea|password|hidden|file)/i )
             {
-                ${$input_field}->{'input'}{'value'} = $field_value;
+                $input_field->{'input'}{'value'} = $field_value;
             }
-            elsif ( ${$input_field}->{'input'}->{'type'} eq 'checkbox'
-                and $field_value eq ${$input_field}->{'input'}->{'value'} )
+            elsif ( $input_field->{'input'}->{'type'} eq 'checkbox'
+                and $field_value eq $input_field->{'input'}->{'value'} )
             {
-                ${$input_field}->{'input'}->{'checked'} = 'checked';
+                $input_field->{'input'}->{'checked'} = 'checked';
             }
         }
     }
@@ -528,9 +528,9 @@ sub get_field_value {
     my $input_field = $self->_get_input_field($field_id);
 
     if ($input_field) {
-        if ( ref ${$input_field}->{'input'} eq 'ARRAY' ) {
+        if ( ref $input_field->{'input'} eq 'ARRAY' ) {
 
-            foreach my $input ( @{ ${$input_field}->{'input'} } ) {
+            foreach my $input ( @{ $input_field->{'input'} } ) {
                 if ( $input->{'id'} and $input->{'id'} eq $field_id ) {
                     if ( eval { $input->can('value') } ) {
                         return $input->value;
@@ -549,20 +549,20 @@ sub get_field_value {
             }
         }
         else {
-            if ( eval { ${$input_field}->{'input'}->can('value') } ) {
-                return ${$input_field}->{'input'}->value;
+            if ( eval { $input_field->{'input'}->can('value') } ) {
+                return $input_field->{'input'}->value;
             }
-            elsif ( ${$input_field}->{'input'}->{'type'} =~
+            elsif ( $input_field->{'input'}->{'type'} =~
                 /(?:text|textarea|password|hidden|file)/i )
             {
-                return ${$input_field}->{'input'}->{'value'};
+                return $input_field->{'input'}->{'value'};
             }
-            elsif ( ${$input_field}->{'input'}->{'type'}
-                and ${$input_field}->{'input'}->{'type'} eq 'checkbox'
-                and ${$input_field}->{'input'}->{'checked'}
-                and ${$input_field}->{'input'}->{'checked'} eq 'checked' )
+            elsif ( $input_field->{'input'}->{'type'}
+                and $input_field->{'input'}->{'type'} eq 'checkbox'
+                and $input_field->{'input'}->{'checked'}
+                and $input_field->{'input'}->{'checked'} eq 'checked' )
             {
-                return ${$input_field}->{'input'}->{'value'};
+                return $input_field->{'input'}->{'value'};
             }
         }
     }
@@ -587,7 +587,7 @@ sub set_field_error_message {
 
     my $input_field = $self->_get_input_field($field_id);
     if ($input_field) {
-			${$input_field}->{'error'}{'text'} = $error_msg;
+			$input_field->{'error'}{'text'} = $error_msg;
 			return;
     }
 
@@ -613,7 +613,7 @@ sub get_field_error_message {
     my $field_id = shift;
 
     my $input_field = $self->_get_input_field($field_id);
-		return ${$input_field}->{'error'}{'text'} if $input_field;
+		return $input_field->{'error'}{'text'} if $input_field;
 
 		my $error_field = $self->_get_error_field($field_id);
 
@@ -642,7 +642,7 @@ sub _get_input_field {
 				my $inputs = ref($input) eq 'ARRAY' ? $input : [$input];
 				foreach my $sub_input_field (@$inputs){
 					if ($sub_input_field->{id} and $sub_input_field->{id} eq $field_id ){
-						return \$input_field;
+						return $input_field;
 					}
 				}
 			}
