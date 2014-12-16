@@ -586,16 +586,16 @@ sub set_field_error_message {
     my $error_msg = shift;
 
     my $input_field = $self->_get_input_field($field_id);
-
     if ($input_field) {
-        ${$input_field}->{'error'}{'text'} = $error_msg;
+			${$input_field}->{'error'}{'text'} = $error_msg;
+			return;
     }
-    else {
-        my $error_field = $self->_get_error_field($field_id);
-        if ($error_field) {
-            ${$error_field}->{'error'}{'text'} = $error_msg;
-        }
-    }
+
+		my $error_field = $self->_get_error_field($field_id);
+		if ($error_field) {
+			${$error_field}->{'error'}{'text'} = $error_msg;
+			return;
+		}
     return;
 }
 
