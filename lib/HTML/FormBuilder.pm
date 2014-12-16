@@ -471,45 +471,28 @@ sub set_field_value {
     my $self        = shift;
     my $field_id    = shift;
     my $field_value = shift;
-
+		return unless $field_id;
     my $input_field = $self->_get_input_field($field_id);
 
-    if ($input_field) {
-        if ( ref $input_field->{'input'} eq 'ARRAY' ) {
+		return unless $input_field;
 
-            # $_ is the alias of the reference of $input_field
-            grep {
-                if ( $_->{'id'} and $field_id and $_->{'id'} eq $field_id ) {
-                    if ( eval { $_->can('value') } ) {
-                        $_->value($field_value);
-                    }
-                    elsif ( $_->{'type'} =~ /(?:text|hidden|file)/i ) {
-                        $_->{'value'} = $field_value;
-                    }
-                    elsif ( $_->{'type'} eq 'checkbox' ) {
-                        if ( $field_value eq $_->{'value'} ) {
-                            $_->{'checked'} = 'checked';
-                        }
-                    }
-                }
-            } @{ $input_field->{'input'} };
-        }
-        else {
-            if ( eval { $input_field->{'input'}->can('value') } ) {
-                $input_field->{'input'}->value($field_value);
-            }
-            elsif ( $input_field->{'input'}->{'type'} =~
-                /(?:text|textarea|password|hidden|file)/i )
-            {
-                $input_field->{'input'}{'value'} = $field_value;
-            }
-            elsif ( $input_field->{'input'}->{'type'} eq 'checkbox'
-                and $field_value eq $input_field->{'input'}->{'value'} )
-            {
-                $input_field->{'input'}->{'checked'} = 'checked';
-            }
-        }
-    }
+		my $inputs = ref($input_field->{input}) eq 'ARRAY' ? $input_field->{input} : [$input_field->{input}];
+
+
+		map {
+
+			if ( $_->{'id'} and $_->{'id'} eq $field_id ) {
+				if ( eval { $_->can('value') } ) {
+					$_->value($field_value);
+				}
+				elsif ( $_->{'type'} =~ /(?:text|textarea|password|hidden|file)/i ) {
+					$_->{'value'} = $field_value;
+				}
+				elsif ( $_->{'type'} eq 'checkbox' and $field_value eq $_->{'value'} ) {
+						$_->{'checked'} = 'checked';
+					}
+			}
+		} @{$inputs};
     return;
 }
 
@@ -592,7 +575,6 @@ sub get_field_error_message {
 		return $input_field->{'error'}{'text'} if $input_field;
 
 		my $error_field = $self->_get_error_field($field_id);
-
 		return $error_field->{'error'}{'text'} if $error_field;
 
 
