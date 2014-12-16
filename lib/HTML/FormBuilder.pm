@@ -569,7 +569,7 @@ sub set_field_error_message {
 
 		my $error_field = $self->_get_error_field($field_id);
 		if ($error_field) {
-			${$error_field}->{'error'}{'text'} = $error_msg;
+			$error_field->{'error'}{'text'} = $error_msg;
 			return;
 		}
     return;
@@ -593,7 +593,7 @@ sub get_field_error_message {
 
 		my $error_field = $self->_get_error_field($field_id);
 
-		return ${$error_field}->{'error'}{'text'} if $error_field;
+		return $error_field->{'error'}{'text'} if $error_field;
 
 
     return;
@@ -646,7 +646,7 @@ sub _get_error_field {
             if (    $input_field->{error}{id}
                 and $input_field->{error}{id} eq $error_id )
 							{
-								return \$input_field;
+								return $input_field;
             }
         }
     }
