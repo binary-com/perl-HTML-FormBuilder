@@ -613,16 +613,12 @@ sub get_field_error_message {
     my $field_id = shift;
 
     my $input_field = $self->_get_input_field($field_id);
+		return ${$input_field}->{'error'}{'text'} if $input_field;
 
-    if ($input_field) {
-        return ${$input_field}->{'error'}{'text'};
-    }
-    else {
-        my $error_field = $self->_get_error_field($field_id);
-        if ($error_field) {
-            return ${$error_field}->{'error'}{'text'};
-        }
-    }
+		my $error_field = $self->_get_error_field($field_id);
+
+		return ${$error_field}->{'error'}{'text'} if $error_field;
+
 
     return;
 }
