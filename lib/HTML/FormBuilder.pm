@@ -527,47 +527,23 @@ sub get_field_value {
 
     my $input_field = $self->_get_input_field($field_id);
 
-    if ($input_field) {
-        if ( ref $input_field->{'input'} eq 'ARRAY' ) {
+		return unless $input_field;
 
-            foreach my $input ( @{ $input_field->{'input'} } ) {
-                if ( $input->{'id'} and $input->{'id'} eq $field_id ) {
-                    if ( eval { $input->can('value') } ) {
-                        return $input->value;
-                    }
-                    elsif ( $input->{'type'} =~ /(?:text|hidden|file)/i ) {
-                        return $input->{'value'};
-                    }
-                    elsif ( $input->{'type'}
-                        and $input->{'type'} eq 'checkbox'
-                        and $input->{'checked'}
-                        and $input->{'checked'} eq 'checked' )
-                    {
-                        return $input->{'value'};
-                    }
-                }
-            }
-        }
-        else {
-            if ( eval { $input_field->{'input'}->can('value') } ) {
-                return $input_field->{'input'}->value;
-            }
-            elsif ( $input_field->{'input'}->{'type'} =~
-                /(?:text|textarea|password|hidden|file)/i )
-            {
-                return $input_field->{'input'}->{'value'};
-            }
-            elsif ( $input_field->{'input'}->{'type'}
-                and $input_field->{'input'}->{'type'} eq 'checkbox'
-                and $input_field->{'input'}->{'checked'}
-                and $input_field->{'input'}->{'checked'} eq 'checked' )
-            {
-                return $input_field->{'input'}->{'value'};
-            }
-        }
-    }
+		my $inputs = ref($input_field->{input}) eq 'ARRAY' ? $input_field->{input} : [$input_field->{input}];
 
-    return;
+		foreach my $input (@$inputs){
+			if ( $input->{'id'} and $input->{'id'} eq $field_id ) {
+				if ( eval { $input->can('value') } ) {
+					return $input->value;
+				}
+				return unless $input->{type};
+				if($input->{type} =~ /(?:text|textarea|password|hidden|file)/i
+					 or $input->{type} eq 'checkbox' && $input->{checked} && $input->{checked} eq 'checked'){
+					return $input->{value};
+				}
+			}
+		}
+		return;
 }
 
 ################################################################################
@@ -663,21 +639,16 @@ sub _get_error_field {
     my $self     = shift;
     my $error_id = shift;
 
+		return unless $error_id;
     #build the form fieldset
-    my $fieldset_index = 0;
     foreach my $fieldset ( @{ $self->{data}{'fieldset'} } ) {
-        my $input_field_index = 0;
         foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
-            if (    $input_field->{'error'}->{'id'}
-                and $error_id
-                and $input_field->{'error'}->{'id'} eq $error_id )
-            {
-                return \$self->{data}{'fieldset'}[$fieldset_index]
-                  ->{'fields'}[$input_field_index];
+            if (    $input_field->{error}{id}
+                and $input_field->{error}{id} eq $error_id )
+							{
+								return \$input_field;
             }
-            $input_field_index++;
         }
-        $fieldset_index++;
     }
 
     return;
