@@ -738,7 +738,7 @@ sub _build_element_and_attributes {
     my $element_tag = shift;
     my $attributes  = shift;
 		my $content     = shift ||'';
-    my $options     = shift;
+    my $options     = shift || {};
 		
     #check if the elemen tag is empty
     return if ( $element_tag eq '' );
@@ -779,10 +779,7 @@ sub _build_element_and_attributes {
         }
     }
 
-    # we actually pass this option as a string, not an integer
-    if (    $options
-        and $options->{'call_customer_support'}
-        and $options->{'call_customer_support'} eq '1' )
+    if ($options->{'call_customer_support'})
     {
         $self->{option}{'has_call_customer_support_field'} = 1;
         if ( not $self->{option}{'hide_required_text'} ) {
