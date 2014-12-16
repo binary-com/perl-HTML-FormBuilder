@@ -437,8 +437,7 @@ sub build_confirmation_button_with_all_inputs_hidden {
         next if ( $input->{'type'} and $input->{'type'} eq 'submit' );
         my $n = $input->{'name'} || '';
         my $val = $self->get_field_value( $input->{'id'} ) || '';
-        $html .=
-          '<input type="hidden" name="' . $n . '" value="' . $val . '"/>';
+        $html .= qq{<input type="hidden" name="$n" value="$val"/>};
     }
 
     $html .= '<input type="hidden" name="process" value="1"/>';
