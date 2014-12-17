@@ -375,11 +375,10 @@ sub _validate_field {
 
     foreach my $validation (@validations) {
         if ($validation->{'type'} and $validation->{'type'} =~ /(?:regexp|min_amount|max_amount)/) {
-            if (ref $input_element eq 'ARRAY') {
-                $input_element_id = $validation->{'id'};
-            } else {
-                $input_element_id = $input_element->{'id'};
-            }
+
+					# The input_element must be an array. so if validation no 'id', then we use the first element's id
+					# because the array should be just one element.
+						$input_element_id = $validation->{id} || $input_element->[0]{id};
 
             # Check with whitespace trimmed from both ends to make sure that it's reasonable.
             $field_value = trim($self->get_field_value($input_element_id));

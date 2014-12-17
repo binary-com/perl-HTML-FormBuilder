@@ -110,6 +110,11 @@ sub add_field {
     croak("The fieldset does not exist in $0. form_id[$self->{data}{'id'}]")
       if ( $fieldset_index > $#{ $self->{data}{fieldset} } );
 
+		# normalize: if 'input' is not an array, then make it as an array, so that
+		# we can process as an array
+		if($_args->{input} && ref($_args->{input}) ne 'ARRAY'){
+			$_args->{input} = [$_args->{input}];
+		}
     push @{ $self->{data}{'fieldset'}[$fieldset_index]{'fields'} }, $_args;
 
     return 1;
