@@ -285,6 +285,17 @@ sub _build_field{
 			undef $input_field->{'label'}->{'call_customer_support'};
 		}
 
+		my $label_html = $self->_build_element_and_attributes(
+																													'label',
+																													$input_field->{'label'},
+																													$label_text,
+																													{
+																													 'is_optional'           => $is_optional,
+																													 'call_customer_support' => $call_customer_support
+																													},
+																												 );
+
+		
 		# add a tooltip explanation if given
 		if ( $input_field->{'label'}->{'tooltip'} ) {
 
@@ -293,15 +304,6 @@ sub _build_field{
 														 $input_field->{'label'}{'tooltip'}{'desc'},
 														 $input_field->{'label'}{tooltip}{img_url}
 														);
-			my $label_html = $self->_build_element_and_attributes(
-																														'label',
-																														$input_field->{'label'},
-																														$label_text,
-																														{
-																														 'is_optional'           => $is_optional,
-																														 'call_customer_support' => $call_customer_support
-																														},
-																													 );
 
 			$input_fields_html .=
 				qq{<div class="extra_tooltip_container">$label_html$tooltip</div>};
@@ -312,15 +314,6 @@ sub _build_field{
 				$hide_mobile .= "grd-hide-mobile";
 			}
 
-			my $label_html = $self->_build_element_and_attributes(
-																														'label',
-																														$input_field->{'label'},
-																														$label_text,
-																														{
-																														 'is_optional'           => $is_optional,
-																														 'call_customer_support' => $call_customer_support
-																														},
-																													 );
 			$input_fields_html .=
 				qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_span>};
 		}
