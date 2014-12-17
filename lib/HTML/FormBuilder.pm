@@ -191,16 +191,10 @@ sub _build_fieldset {
 
     my $fieldset_group = $fieldset->{'group'};
     my $stacked  = defined $fieldset->{'stacked'} ? $fieldset->{'stacked'} : 1;
-    my $div_span = "div";
-    my $label_column = "grd-grid-4";
-    my $input_column = "grd-grid-8";
     my $input_fields_html = '';
 
     if ( $stacked == 0 ) {
 
-        $div_span     = "span";
-        $label_column = "";
-        $input_column = "";
         $input_fields_html .= '<div class="grd-grid-12">';
     }
 
@@ -213,12 +207,7 @@ sub _build_fieldset {
 
 
     foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
-			$input_fields_html .= $self->_build_field($input_field,
-																								{stacked => $stacked,
-																								 div_span => $div_span,
-																								 label_column => $label_column,
-																								 input_column => $input_column,
-																								});
+			$input_fields_html .= $self->_build_field($input_field,$stacked);
     }
 
     if ( $stacked == 0 ) {
@@ -255,140 +244,142 @@ sub _build_fieldset {
 sub _build_field{
 	my $self = shift;
 	my $input_field = shift;
-	my $option = shift;
+	my $stacked = shift;
+	#my ($stacked, $div_span, $label_column, $input_column) = @{$option}{qw(stacked div_span label_column input_column)};
 
-	my ($stacked, $div_span, $label_column, $input_column) = @{$option}{qw(stacked div_span label_column input_column)};
+	my $div_span = "div";
+	my $label_column = "grd-grid-4";
+	my $input_column = "grd-grid-8";
 
+    if ( $stacked == 0 ) {
+			$div_span     = "span";
+			$label_column = "";
+			$input_column = "";
+		}
 	my $input_fields_html = '';
 
 
 
-        if ( $stacked == 1 ) {
+	if ( $stacked == 1 ) {
 
-            if ( $input_field->{'type'} and $input_field->{'type'} eq 'hidden' )
-            {
-                my $c = $input_field->{'class'} || '';
-                $input_fields_html .= qq{<div class="$c">};
-            }
-            elsif ( $input_field->{'class'} ) {
-                $input_fields_html .= qq{<div class="grd-row-padding row clear $input_field->{class}">};
-            }
-            else {
-                $input_fields_html .= '<div class="grd-row-padding row clear">';
-            }
-        }
+		if ( $input_field->{'type'} and $input_field->{'type'} eq 'hidden' ) {
+			my $c = $input_field->{'class'} || '';
+			$input_fields_html .= qq{<div class="$c">};
+		} elsif ( $input_field->{'class'} ) {
+			$input_fields_html .= qq{<div class="grd-row-padding row clear $input_field->{class}">};
+		} else {
+			$input_fields_html .= '<div class="grd-row-padding row clear">';
+		}
+	}
 
-        #create the field label
-        if ( defined $input_field->{'label'} ) {
-            my $label_text = $input_field->{'label'}->{'text'} || '';
-            undef $input_field->{'label'}->{'text'};
+	#create the field label
+	if ( defined $input_field->{'label'} ) {
+		my $label_text = $input_field->{'label'}->{'text'} || '';
+		undef $input_field->{'label'}->{'text'};
 
-            # default is optional = false (mandatory)
-            my $is_optional;
-            if ( defined $input_field->{'label'}->{'optional'} ) {
-                $is_optional = $input_field->{'label'}->{'optional'};
-                undef $input_field->{'label'}->{'optional'};
-            }
+		# default is optional = false (mandatory)
+		my $is_optional;
+		if ( defined $input_field->{'label'}->{'optional'} ) {
+			$is_optional = $input_field->{'label'}->{'optional'};
+			undef $input_field->{'label'}->{'optional'};
+		}
 
-            # default is call_customer_support = false
-            my $call_customer_support;
-            if ( defined $input_field->{'label'}->{'call_customer_support'} ) {
-                $call_customer_support =
-                  $input_field->{'label'}->{'call_customer_support'};
-                undef $input_field->{'label'}->{'call_customer_support'};
-            }
+		# default is call_customer_support = false
+		my $call_customer_support;
+		if ( defined $input_field->{'label'}->{'call_customer_support'} ) {
+			$call_customer_support =
+				$input_field->{'label'}->{'call_customer_support'};
+			undef $input_field->{'label'}->{'call_customer_support'};
+		}
 
-            # add a tooltip explanation if given
-            if ( $input_field->{'label'}->{'tooltip'} ) {
+		# add a tooltip explanation if given
+		if ( $input_field->{'label'}->{'tooltip'} ) {
 
-                # img_url is the url of question mark picture
-                my $tooltip = _tooltip(
-                    $input_field->{'label'}{'tooltip'}{'desc'},
-                    $input_field->{'label'}{tooltip}{img_url}
-                );
-                my $label_html = $self->_build_element_and_attributes(
-                    'label',
-                    $input_field->{'label'},
-                    $label_text,
-                    {
-                        'is_optional'           => $is_optional,
-                        'call_customer_support' => $call_customer_support
-                    },
-                );
+			# img_url is the url of question mark picture
+			my $tooltip = _tooltip(
+														 $input_field->{'label'}{'tooltip'}{'desc'},
+														 $input_field->{'label'}{tooltip}{img_url}
+														);
+			my $label_html = $self->_build_element_and_attributes(
+																														'label',
+																														$input_field->{'label'},
+																														$label_text,
+																														{
+																														 'is_optional'           => $is_optional,
+																														 'call_customer_support' => $call_customer_support
+																														},
+																													 );
 
-                $input_fields_html .=
-qq{<div class="extra_tooltip_container">$label_html$tooltip</div>};
-            }
-            else {
+			$input_fields_html .=
+				qq{<div class="extra_tooltip_container">$label_html$tooltip</div>};
+		} else {
 
-                my $hide_mobile = "";
-                if ( length($label_text) == 0 ) {
-                    $hide_mobile .= "grd-hide-mobile";
-                }
+			my $hide_mobile = "";
+			if ( length($label_text) == 0 ) {
+				$hide_mobile .= "grd-hide-mobile";
+			}
 
-                my $label_html = $self->_build_element_and_attributes(
-                    'label',
-                    $input_field->{'label'},
-		                $label_text,
-                    {
-                        'is_optional'           => $is_optional,
-                        'call_customer_support' => $call_customer_support
-                    },
-																																		 );
-                $input_fields_html .=
-qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_span>};
-            }
-        }
+			my $label_html = $self->_build_element_and_attributes(
+																														'label',
+																														$input_field->{'label'},
+																														$label_text,
+																														{
+																														 'is_optional'           => $is_optional,
+																														 'call_customer_support' => $call_customer_support
+																														},
+																													 );
+			$input_fields_html .=
+				qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_span>};
+		}
+	}
 
-        # create the input field
-        if ( defined $input_field->{'input'} ) {
+	# create the input field
+	if ( defined $input_field->{'input'} ) {
 
-   #if there are more than 1 input field in a single row then we generate 1 by 1
-            if ( ref( $input_field->{'input'} ) eq 'ARRAY' ) {
-                $input_fields_html .=
-                  '<' . $div_span . ' class="' . $input_column . '">';
-                foreach my $input ( @{ $input_field->{'input'} } ) {
-                    $input_fields_html .= $self->_build_input($input);
-                }
-            }
-            else {
-                $input_fields_html .= '<'
-                  . $div_span
-                  . ' class="'
-                  . $input_column . '">'
-                  . $self->_build_input( $input_field->{'input'} );
-            }
-        }
+		#if there are more than 1 input field in a single row then we generate 1 by 1
+		if ( ref( $input_field->{'input'} ) eq 'ARRAY' ) {
+			$input_fields_html .=
+				'<' . $div_span . ' class="' . $input_column . '">';
+			foreach my $input ( @{ $input_field->{'input'} } ) {
+				$input_fields_html .= $self->_build_input($input);
+			}
+		} else {
+			$input_fields_html .= '<'
+				. $div_span
+				. ' class="'
+				. $input_column . '">'
+				. $self->_build_input( $input_field->{'input'} );
+		}
+	}
 
-        if ( defined $input_field->{'comment'} ) {
-            $input_field->{'comment'}{'class'} ||= '';
-            $input_fields_html .= '<br>'
-              . $self->_build_element_and_attributes( 'p',
-																											$input_field->{'comment'},
-																											$input_field->{'comment'}->{'text'});
-        }
+	if ( defined $input_field->{'comment'} ) {
+		$input_field->{'comment'}{'class'} ||= '';
+		$input_fields_html .= '<br>'
+			. $self->_build_element_and_attributes( 'p',
+																							$input_field->{'comment'},
+																							$input_field->{'comment'}->{'text'});
+	}
 
-        if ( defined $input_field->{'error'} ) {
-					my @errors;
-					if (ref($input_field->{'error'}) eq 'ARRAY' ) {
-						@errors = @{$input_field->{'error'}};
-					}
-					else{
-						@errors = $input_field->{error};
-					}
+	if ( defined $input_field->{'error'} ) {
+		my @errors;
+		if (ref($input_field->{'error'}) eq 'ARRAY' ) {
+			@errors = @{$input_field->{'error'}};
+		} else {
+			@errors = $input_field->{error};
+		}
 
-					foreach my $error_box ( @errors ) {
-						$input_fields_html .=
-							$self->_build_element_and_attributes( 'p', $error_box, $error_box->{text} );
-					}
+		foreach my $error_box ( @errors ) {
+			$input_fields_html .=
+				$self->_build_element_and_attributes( 'p', $error_box, $error_box->{text} );
+		}
 
-        }
+	}
 
-        $input_fields_html .= '</' . $div_span . '>';
+	$input_fields_html .= '</' . $div_span . '>';
 
-        if ( $stacked == 1 ) {
-            $input_fields_html .= '</div>';
-        }
+	if ( $stacked == 1 ) {
+		$input_fields_html .= '</div>';
+	}
 
 	return $input_fields_html;
 	
