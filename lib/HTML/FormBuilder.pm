@@ -7,7 +7,6 @@ our $VERSION = '0.01';
 
 use Carp;
 use Template;
-use HTML::Element;
 
 #####################################################################
 # Usage      : Instantiate a Form object.
