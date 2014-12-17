@@ -213,6 +213,55 @@ sub _build_fieldset {
 
 
     foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
+			$input_fields_html .= $self->_build_field($input_field,
+																								{stacked => $stacked,
+																								 div_span => $div_span,
+																								 label_column => $label_column,
+																								 input_column => $input_column,
+																								});
+    }
+
+    if ( $stacked == 0 ) {
+        $input_fields_html .= '</div>';
+    }
+
+    $fieldset_html .= $input_fields_html;
+
+		# message at the bottom of the fieldset
+    if ( defined $fieldset->{'footer'} ) {
+			my  $footer = delete $fieldset->{'footer'};
+			$fieldset_html .= qq{<div class="row comment">$footer</div>};
+    }
+
+		
+		$fieldset_html = $self->_build_element_and_attributes( 'fieldset', $fieldset,  $fieldset_html );
+
+    if (
+        (
+            not $fieldset->{'id'}
+            or $fieldset->{'id'} ne 'formlayout'
+        )
+        and ( not $fieldset->{'class'}
+            or $fieldset->{'class'} !~ /no-wrap|invisible/ )
+      )
+    {
+        $fieldset_html = $self->_wrap_fieldset($fieldset_html);
+
+    }
+    return ( $fieldset_group, $fieldset_html );
+}
+
+
+sub _build_field{
+	my $self = shift;
+	my $input_field = shift;
+	my $option = shift;
+
+	my ($stacked, $div_span, $label_column, $input_column) = @{$option}{qw(stacked div_span label_column input_column)};
+
+	my $input_fields_html = '';
+
+
 
         if ( $stacked == 1 ) {
 
@@ -340,36 +389,9 @@ qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_sp
         if ( $stacked == 1 ) {
             $input_fields_html .= '</div>';
         }
-    }
 
-    if ( $stacked == 0 ) {
-        $input_fields_html .= '</div>';
-    }
-
-    $fieldset_html .= $input_fields_html;
-
-		# message at the bottom of the fieldset
-    if ( defined $fieldset->{'footer'} ) {
-			my  $footer = delete $fieldset->{'footer'};
-			$fieldset_html .= qq{<div class="row comment">$footer</div>};
-    }
-
-		
-		$fieldset_html = $self->_build_element_and_attributes( 'fieldset', $fieldset,  $fieldset_html );
-
-    if (
-        (
-            not $fieldset->{'id'}
-            or $fieldset->{'id'} ne 'formlayout'
-        )
-        and ( not $fieldset->{'class'}
-            or $fieldset->{'class'} !~ /no-wrap|invisible/ )
-      )
-    {
-        $fieldset_html = $self->_wrap_fieldset($fieldset_html);
-
-    }
-    return ( $fieldset_group, $fieldset_html );
+	return $input_fields_html;
+	
 }
 
 
