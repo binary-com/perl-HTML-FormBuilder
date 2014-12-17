@@ -360,7 +360,7 @@ sub _build_field{
 	}
 
 	if ( $stacked == 1 ) {
-		$input_fields_html = $self->_wrap_item('div',$stacked_attr, $input_fields_html);
+		$input_fields_html = $self->_build_element_and_attributes('div',$stacked_attr, $input_fields_html);
 	}
 
 	return $input_fields_html;
@@ -622,24 +622,6 @@ sub _get_error_field {
     return;
 }
 
-sub _wrap_item{
-	my $self = shift;
-	my $tag = shift;
-	my $attrs = shift;
-	my @children = @_;
-
-	my $element = HTML::Element->new($tag);
-
-	foreach my $key ( sort keys %{$attrs} ) {
-		$element->attr( $key, $attrs->{$key} );
-	}
-
-	foreach my $child (@children){
-		$element->push_content([ '~literal', { text => $child } ]);
-	}
-
-	return $element->as_HTML;
-}
 
 #####################################################################
 # Usage      : build the html element and its own attributes

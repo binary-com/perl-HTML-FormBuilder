@@ -37,13 +37,6 @@ $form_obj = HTML::FormBuilder->new({id => 'testid'});
 throws_ok(sub{$form_obj->add_field('0abc')}, qr/fieldset_index should be a number/, 'fieldset_index should be a number');
 throws_ok(sub{$form_obj->add_field(123)}, qr/fieldset does not exist/, 'fieldset should be exist');
 
-################################################################################
-# test _wrap_item
-
-$result = $form_obj->_wrap_item('div', {class => 'testclass'}, 'hello','<div class="child"></div>');
-$expect_result = '<div class="testclass">hello<div class="child"></div></div>';
-is($result, $expect_result, '_wrap_item work');
-
 
 
 {
