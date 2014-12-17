@@ -328,7 +328,7 @@ sub _build_field{
 	if ( defined $input_field->{'input'} ) {
 
 		#if there are more than 1 input field in a single row then we generate 1 by 1
-		my $inputs = ref($input_field->{input}) eq 'ARRAY' ? $input_field->{input} : [$input_field->{input}];
+		my $inputs = $input_field->{input};
 		$input_fields_html .=	qq{<$div_span class="$input_column">};
 		foreach my $input ( @{ $inputs } ) {
 			$input_fields_html .= $self->_build_input($input);
@@ -414,12 +414,8 @@ sub build_confirmation_button_with_all_inputs_hidden {
         foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
             next INPUT if ( not defined $input_field->{'input'} );
 
-            if ( ref $input_field->{'input'} eq 'ARRAY' ) {
-                push @inputs, @{ $input_field->{'input'} };
-            }
-            else {
-                push @inputs, $input_field->{'input'};
-            }
+						push @inputs, @{ $input_field->{'input'} };
+
         }
     }
 
@@ -467,7 +463,7 @@ sub set_field_value {
 
 		return unless $input_field;
 
-		my $inputs = ref($input_field->{input}) eq 'ARRAY' ? $input_field->{input} : [$input_field->{input}];
+		my $inputs = $input_field->{input};
 
 
 		map {
@@ -503,7 +499,7 @@ sub get_field_value {
 
 		return unless $input_field;
 
-		my $inputs = ref($input_field->{input}) eq 'ARRAY' ? $input_field->{input} : [$input_field->{input}];
+		my $inputs = $input_field->{input};
 
 		foreach my $input (@$inputs){
 			if ( $input->{'id'} and $input->{'id'} eq $field_id ) {
@@ -587,8 +583,7 @@ sub _get_input_field {
 		return unless $field_id;
     foreach my $fieldset ( @{ $self->{data}{'fieldset'} } ) {
 			foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
-				my $input = $input_field->{input};
-				my $inputs = ref($input) eq 'ARRAY' ? $input : [$input];
+				my $inputs = $input_field->{input};
 				foreach my $sub_input_field (@$inputs){
 					if ($sub_input_field->{id} and $sub_input_field->{id} eq $field_id ){
 						return $input_field;
