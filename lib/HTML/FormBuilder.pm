@@ -348,12 +348,8 @@ sub _build_field{
 	}
 
 	if ( defined $input_field->{'error'} ) {
-		my @errors;
-		if (ref($input_field->{'error'}) eq 'ARRAY' ) {
-			@errors = @{$input_field->{'error'}};
-		} else {
-			@errors = $input_field->{error};
-		}
+
+		my @errors = ref($input_field->{'error'}) eq 'ARRAY' ? @{$input_field->{error}} : $input_field->{error};
 
 		foreach my $error_box ( @errors ) {
 			$input_fields_html .=
