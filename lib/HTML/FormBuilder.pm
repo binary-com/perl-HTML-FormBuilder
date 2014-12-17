@@ -209,13 +209,6 @@ sub _build_fieldset {
     }
 
 
-    # message at the bottom of the fieldset
-    my $footer = '';
-    if ( defined $fieldset->{'footer'} ) {
-        $footer = $fieldset->{'footer'};
-        undef $fieldset->{'footer'};
-    }
-
     my $fieldset_html = $self->_build_fieldset_foreword($fieldset);
 
 
@@ -355,10 +348,13 @@ qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_sp
 
     $fieldset_html .= $input_fields_html;
 
-    if ($footer) {
-        $fieldset_html .= qq{<div class="row comment">$footer</div>};
+		# message at the bottom of the fieldset
+    if ( defined $fieldset->{'footer'} ) {
+			my  $footer = delete $fieldset->{'footer'};
+			$fieldset_html .= qq{<div class="row comment">$footer</div>};
     }
 
+		
 		$fieldset_html = $self->_build_element_and_attributes( 'fieldset', $fieldset,  $fieldset_html );
 
     if (
