@@ -713,9 +713,7 @@ sub _build_element_and_attributes {
     {
         $self->{option}{'has_call_customer_support_field'} = 1;
         if ( not $self->{option}{'hide_required_text'} ) {
-            my $elem = HTML::Element->new_from_lol(
-                [ 'em', { class => "required_asterisk" }, '**' ] );
-            $html .= $elem->as_HTML;
+            $html .= '<em class="required_asterisk">**</em>';
         }
     }
 
