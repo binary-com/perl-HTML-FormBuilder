@@ -208,26 +208,6 @@ sub _build_fieldset {
         $fieldset_group = 'no-group';
     }
 
-    # fieldset legend
-    my $legend = '';
-    if ( defined $fieldset->{'legend'} ) {
-        $legend = qq{<legend>$fieldset->{legend}</legend>};
-        undef $fieldset->{'legend'};
-    }
-
-    # header at the top of the fieldset
-    my $header = '';
-    if ( defined $fieldset->{'header'} ) {
-        $header = qq{<h2>$fieldset->{header}</h2>};
-        undef $fieldset->{'header'};
-    }
-
-    # message at the top of the fieldset
-    my $comment = '';
-    if ( defined $fieldset->{'comment'} ) {
-        $comment =qq{<div class="grd-grid-12"><p>$fieldset->{comment}</p></div>};
-        undef $fieldset->{'comment'};
-    }
 
     # message at the bottom of the fieldset
     my $footer = '';
@@ -236,11 +216,7 @@ sub _build_fieldset {
         undef $fieldset->{'footer'};
     }
 
-    my $fieldset_html = '';
-
-    $fieldset_html .= $legend;
-    $fieldset_html .= $header;
-    $fieldset_html .= $comment;
+    my $fieldset_html = $self->_build_fieldset_foreword($fieldset);
 
 
     foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
@@ -398,6 +374,34 @@ qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_sp
 
     }
     return ( $fieldset_group, $fieldset_html );
+}
+
+sub _build_fieldset_foreword{
+	my $self = shift;
+	my $fieldset = shift;
+	
+	    # fieldset legend
+    my $legend = '';
+    if ( defined $fieldset->{'legend'} ) {
+        $legend = qq{<legend>$fieldset->{legend}</legend>};
+        undef $fieldset->{'legend'};
+    }
+
+    # header at the top of the fieldset
+    my $header = '';
+    if ( defined $fieldset->{'header'} ) {
+        $header = qq{<h2>$fieldset->{header}</h2>};
+        undef $fieldset->{'header'};
+    }
+
+    # message at the top of the fieldset
+    my $comment = '';
+    if ( defined $fieldset->{'comment'} ) {
+        $comment =qq{<div class="grd-grid-12"><p>$fieldset->{comment}</p></div>};
+        undef $fieldset->{'comment'};
+    }
+
+	return $legend . $header . $comment;
 }
 
 #
