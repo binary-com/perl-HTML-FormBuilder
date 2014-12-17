@@ -206,7 +206,7 @@ sub _build_fieldset {
     }
 
     if ( $stacked == 0 ) {
-			$input_fields_html = $self->_wrap_item('div', {class => 'grd-grid-12'}, $input_fields_html);
+			$input_fields_html = $self->_build_element_and_attributes('div', {class => 'grd-grid-12'}, $input_fields_html);
     }
 
     $fieldset_html .= $input_fields_html;
