@@ -297,7 +297,7 @@ sub _build_field{
 
 		
 		# add a tooltip explanation if given
-		if ( $input_field->{'label'}->{'tooltip'} ) {
+		if ( $input_field->{'label'}{'tooltip'} ) {
 
 			# img_url is the url of question mark picture
 			my $tooltip = _tooltip(
@@ -349,7 +349,10 @@ sub _build_field{
 
 	}
 
-	$input_fields_html .= '</' . $div_span . '>';
+	#close the input tag
+	if ( defined $input_field->{'input'} ) {
+		$input_fields_html .= '</' . $div_span . '>';
+	}
 
 	if ( $stacked == 1 ) {
 		$input_fields_html = $self->_wrap_item('div',$stacked_attr, $input_fields_html);
