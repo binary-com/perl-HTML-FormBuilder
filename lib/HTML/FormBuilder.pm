@@ -299,7 +299,7 @@ qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_sp
                 $input_fields_html .=
                   '<' . $div_span . ' class="' . $input_column . '">';
                 foreach my $input ( @{ $input_field->{'input'} } ) {
-                    $input_fields_html .= $self->_build_input_field($input);
+                    $input_fields_html .= $self->_build_input($input);
                 }
             }
             else {
@@ -307,7 +307,7 @@ qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_sp
                   . $div_span
                   . ' class="'
                   . $input_column . '">'
-                  . $self->_build_input_field( $input_field->{'input'} );
+                  . $self->_build_input( $input_field->{'input'} );
             }
         }
 
@@ -371,6 +371,7 @@ qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_sp
     }
     return ( $fieldset_group, $fieldset_html );
 }
+
 
 sub _build_fieldset_foreword{
 	my $self = shift;
@@ -729,7 +730,7 @@ sub _build_element_and_attributes {
 # Comments   : check pod below to understand how to create different input fields
 # See Also   :
 #####################################################################
-sub _build_input_field {
+sub _build_input {
     my $self        = shift;
     my $input_field = shift;
 
