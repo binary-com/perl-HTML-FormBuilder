@@ -253,18 +253,16 @@ sub _build_field{
 		}
 	my $input_fields_html = '';
 
-
+	my $stacked_attr = {};
 
 	if ( $stacked == 1 ) {
+    my $class = $input_field->{'class'} ? " $input_field->{class}" : '';
 
 		if ( $input_field->{'type'} and $input_field->{'type'} eq 'hidden' ) {
-			my $c = $input_field->{'class'} || '';
-			$input_fields_html .= qq{<div class="$c">};
-		} elsif ( $input_field->{'class'} ) {
-			$input_fields_html .= qq{<div class="grd-row-padding row clear $input_field->{class}">};
+			$stacked_attr->{class} = $class;
 		} else {
-			$input_fields_html .= '<div class="grd-row-padding row clear">';
-		}
+			$stacked_attr->{class} = "grd-row-padding row clear$class";
+		} 
 	}
 
 	#create the field label
@@ -361,7 +359,7 @@ sub _build_field{
 	$input_fields_html .= '</' . $div_span . '>';
 
 	if ( $stacked == 1 ) {
-		$input_fields_html .= '</div>';
+		$input_fields_html = $self->_wrap_item('div',$stacked_attr, $input_fields_html);
 	}
 
 	return $input_fields_html;
