@@ -332,18 +332,10 @@ sub _build_field{
 	if ( defined $input_field->{'input'} ) {
 
 		#if there are more than 1 input field in a single row then we generate 1 by 1
-		if ( ref( $input_field->{'input'} ) eq 'ARRAY' ) {
-			$input_fields_html .=
-				'<' . $div_span . ' class="' . $input_column . '">';
-			foreach my $input ( @{ $input_field->{'input'} } ) {
-				$input_fields_html .= $self->_build_input($input);
-			}
-		} else {
-			$input_fields_html .= '<'
-				. $div_span
-				. ' class="'
-				. $input_column . '">'
-				. $self->_build_input( $input_field->{'input'} );
+		my $inputs = ref($input_field->{input}) eq 'ARRAY' ? $input_field->{input} : [$input_field->{input}];
+		$input_fields_html .=	qq{<$div_span class="$input_column">};
+		foreach my $input ( @{ $inputs } ) {
+			$input_fields_html .= $self->_build_input($input);
 		}
 	}
 
