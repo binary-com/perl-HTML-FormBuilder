@@ -127,6 +127,26 @@ EOF
 chomp($expect_result);
 is($result,$expect_result, 'result of build_confirmation_button_with_all_inputs_hidden');
 
+################################################################################
+# stacked
+$form_obj = HTML::FormBuilder->new( { id => 'testid' } );
+$fieldset_index = $form_obj->add_fieldset( {stacked => 0} );
+lives_ok( sub { $result = $form_obj->build }, 'build field with heading' );
+$expect_result = <<EOF;
+<form id="testid" method="get"><div class="rbox form">
+    <div class="rbox-wrap">
+        
+        <fieldset><div class="grd-grid-12"></div></fieldset>
+        <span class="tl">&nbsp;</span><span class="tr">&nbsp;</span><span class="bl">&nbsp;</span><span class="br">&nbsp;</span>
+        
+        
+    </div>
+</div></form>
+EOF
+
+chomp($expect_result);
+is($result,$expect_result, 'result of stacked=0 fieldset');
+
 
 
 $form_obj      = create_multiset_form();

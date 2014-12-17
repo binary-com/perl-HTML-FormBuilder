@@ -191,12 +191,6 @@ sub _build_fieldset {
 
     my $fieldset_group = $fieldset->{'group'};
     my $stacked  = defined $fieldset->{'stacked'} ? $fieldset->{'stacked'} : 1;
-    my $input_fields_html = '';
-
-    if ( $stacked == 0 ) {
-
-        $input_fields_html .= '<div class="grd-grid-12">';
-    }
 
     if ( not $fieldset_group ) {
         $fieldset_group = 'no-group';
@@ -205,13 +199,14 @@ sub _build_fieldset {
 
     my $fieldset_html = $self->_build_fieldset_foreword($fieldset);
 
+    my $input_fields_html = '';
 
     foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
 			$input_fields_html .= $self->_build_field($input_field,$stacked);
     }
 
     if ( $stacked == 0 ) {
-        $input_fields_html .= '</div>';
+			$input_fields_html = $self->_wrap_item('div', {class => 'grd-grid-12'}, $input_fields_html);
     }
 
     $fieldset_html .= $input_fields_html;
