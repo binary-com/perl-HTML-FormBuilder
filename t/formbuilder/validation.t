@@ -68,6 +68,35 @@ is($form_obj->get_field_value('select_text_curr'),   'EUR',  'select_text_curr =
 is($form_obj->get_field_value('select_text_amount'), '888',  'select_text_amount = 888');
 is($form_obj->get_field_value('test'),               undef,  'test = undef [not in form])');
 
+
+
+
+
+
+
+
+$form_obj = create_form_object();
+
+set_valid_input(\$form_obj);
+
+my $expected_result = <<EOF;
+<form action="http://localhost/some/where/test.cgi" class="formObject" id="id_test_form" method="post" name="name_test_form" onsubmit="function v() { var bResult = true; var error_element_error_general = clearInputErrorField('error_general');var input_element_name = document.getElementById('name');var error_element_error_name = clearInputErrorField('error_name');if (input_element_name &&  error_element_error_name){var regexp;bInputResult = true;regexp = new RegExp('[a-z]+', 'i');if (bInputResult && !regexp.test(input_element_name.value)){error_element_error_name.innerHTML = decodeURIComponent('Not%20empty');bInputResult = false;}if (!bInputResult){bResult = bInputResult;}}var input_element_amount = document.getElementById('amount');var error_element_error_amount = clearInputErrorField('error_amount');if (input_element_amount &&  error_element_error_amount){var regexp;bInputResult = true;regexp = new RegExp('\\\\w+');if (bInputResult && !regexp.test(input_element_amount.value)){error_element_error_amount.innerHTML = decodeURIComponent('Not%20empty');bInputResult = false;}regexp = new RegExp('\\\\d+');if (bInputResult && !regexp.test(input_element_amount.value)){error_element_error_amount.innerHTML = decodeURIComponent('Must%20be%20digit');bInputResult = false;}if (bInputResult && input_element_amount.value < 50){error_element_error_amount.innerHTML = decodeURIComponent('Too%20little');bInputResult = false;}if (bInputResult && input_element_amount.value > 500){error_element_error_amount.innerHTML = decodeURIComponent('Too%20much');bInputResult = false;}if (bInputResult && !custom_amount_validation()){error_element_error_amount.innerHTML = decodeURIComponent('It%20is%20not%20good');bInputResult = false;}if (!bInputResult){bResult = bInputResult;}}var input_element_select_text_curr = document.getElementById('select_text_curr');var input_element_select_text_amount = document.getElementById('select_text_amount');var error_element_error_select_text = clearInputErrorField('error_select_text');if (input_element_select_text_curr && input_element_select_text_amount &&  error_element_error_select_text){var regexp;bInputResult = true;regexp = new RegExp('\\\\w+');if (bInputResult && !regexp.test(input_element_select_text_curr.value)){error_element_error_select_text.innerHTML = decodeURIComponent('Must%20be%20select');bInputResult = false;}regexp = new RegExp('\\\\d+');if (bInputResult && !regexp.test(input_element_select_text_amount.value)){error_element_error_select_text.innerHTML = decodeURIComponent('Must%20be%20digits');bInputResult = false;}if (bInputResult && input_element_select_text_amount.value < 50){error_element_error_select_text.innerHTML = decodeURIComponent('Too%20little');bInputResult = false;}if (!bInputResult){bResult = bInputResult;}}; return bResult; }; return v();"><div class="rbox form">
+    <div class="rbox-wrap">
+        
+        <fieldset><div class="grd-row-padding row clear"><p class="errorfield" id="error_general"></p></div><div class="grd-row-padding row clear"><div class="grd-grid-8"><input id="w" name="w" type="hidden" value="CR"></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="name">Name</label></div><div class="grd-grid-8"><input class=" text" id="name" maxlength="40" name="name" type="text" value="Omid"><p class="errorfield" id="error_name"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="amount">Amount</label></div><div class="grd-grid-8"><input class=" text" id="amount" maxlength="40" name="amount" type="text" value="123"><p class="errorfield" id="error_amount"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="select_text">select_text</label></div><div class="grd-grid-8"><select id="select_text_curr" name="select_text_curr"><option value="" ></option><option value="USD" SELECTED >USD</option><option value="EUR" >EUR</option></select><input class=" text" id="select_text_amount" name="select_text_amount" type="text" value="50"><p class="errorfield" id="error_select_text"></p></div></div></fieldset>
+        <span class="tl">&nbsp;</span><span class="tr">&nbsp;</span><span class="bl">&nbsp;</span><span class="br">&nbsp;</span>
+        
+        
+    </div>
+</div></form>
+EOF
+
+chomp($expected_result);
+is($form_obj->build, $expected_result, 'the result of build');
+
+
+
+
 sub set_valid_input {
     my $arg_ref = shift;
 

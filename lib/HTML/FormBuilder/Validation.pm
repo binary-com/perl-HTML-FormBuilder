@@ -10,7 +10,8 @@ use Text::Trim;
 
 use Encode;
 use URI::Escape;
-
+use HTML::Entities;
+	
 my %has_error_of;
 my %custom_server_side_check_of;
 
