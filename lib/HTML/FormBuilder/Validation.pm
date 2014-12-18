@@ -99,7 +99,6 @@ sub validate {
         INPUT_FIELD:
         foreach my $input_field (@{$fieldset->{'fields'}}) {
             if ($input_field->{'input'} and $input_field->{'error'}->{'id'}) {
-                if (ref $input_field->{'input'} eq 'ARRAY') {
                     foreach my $input_element (@{$input_field->{'input'}}) {
                         if (eval { $input_element->{'input'}->can('value') }
                             and (not defined $self->get_field_value($input_element->{'id'})))
@@ -108,14 +107,6 @@ sub validate {
                             next INPUT_FIELD;
                         }
                     }
-                } else {
-                    if (    (eval { $input_field->{'input'}->can('value') })
-                        and (not defined $self->get_field_value($input_field->{'input'}->{'id'})))
-                    {
-                        $self->set_field_error_message($input_field->{'input'}->{'id'}, $self->_localize('Invalid amount'));
-                        next INPUT_FIELD;
-                    }
-                }
             }
 
             # Validate each field
@@ -225,19 +216,14 @@ sub _build_javascript_validation {
         my $input_element_id;
         my $input_element_conditions;
 
-        if (ref $input_element ne 'ARRAY') {
-            $input_element_id = $input_element->{'id'};
-            $javascript               .= "var input_element_$input_element_id = document.getElementById('$input_element_id');";
-            $input_element_conditions .= "input_element_$input_element_id && ";
-        } else {
-            foreach my $input_field (@{$input_element}) {
-                if (defined $input_field->{'id'}) {
-                    $input_element_id = $input_field->{'id'};
-                    $javascript               .= "var input_element_$input_element_id = document.getElementById('$input_element_id');";
-                    $input_element_conditions .= "input_element_$input_element_id && ";
-                }
-            }
-        }
+				foreach my $input_field (@{$input_element}) {
+					if (defined $input_field->{'id'}) {
+						$input_element_id = $input_field->{'id'};
+						$javascript               .= "var input_element_$input_element_id = document.getElementById('$input_element_id');";
+						$input_element_conditions .= "input_element_$input_element_id && ";
+					}
+				}
+        
 
         $javascript .=
               "var error_element_$error_element_id = clearInputErrorField('$error_element_id');"
