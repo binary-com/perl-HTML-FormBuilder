@@ -110,7 +110,7 @@ sub add_field {
       if ( $fieldset_index > $#{ $self->{data}{fieldset} } );
 
 		# normalize: if 'input' is not an array, then make it as an array, so that
-		# we can process as an array
+		# we can process the array directly 
 		if($_args->{input} && ref($_args->{input}) ne 'ARRAY'){
 			$_args->{input} = [$_args->{input}];
 		}

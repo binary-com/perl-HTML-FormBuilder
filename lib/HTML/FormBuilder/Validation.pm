@@ -104,7 +104,7 @@ sub validate {
                         if (eval { $input_element->{'input'}->can('value') }
                             and (not defined $self->get_field_value($input_element->{'id'})))
                         {
-                            $self->set_field_error_message($input_element->{'id'}, BOM::Platform::Context::localize('Invalid amount'));
+                            $self->set_field_error_message($input_element->{'id'}, $self->_localize('Invalid amount'));
                             next INPUT_FIELD;
                         }
                     }
@@ -112,7 +112,7 @@ sub validate {
                     if (    (eval { $input_field->{'input'}->can('value') })
                         and (not defined $self->get_field_value($input_field->{'input'}->{'id'})))
                     {
-                        $self->set_field_error_message($input_field->{'input'}->{'id'}, BOM::Platform::Context::localize('Invalid amount'));
+                        $self->set_field_error_message($input_field->{'input'}->{'id'}, $self->_localize('Invalid amount'));
                         next INPUT_FIELD;
                     }
                 }
