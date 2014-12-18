@@ -233,79 +233,78 @@ sub _build_javascript_validation {
             . 'bInputResult = true;';
 
         foreach my $validation (@validations) {
-            if ($validation->{'type'} =~ /(?:regexp|min_amount|max_amount|custom)/) {
-                # if the id define in the validation hash, meaing input has more than 1 fields, the validation is validated against the id
-                if ($validation->{'id'} and length $validation->{'id'} > 0) {
-                    $input_element_id = $validation->{'id'};
-                }
+					next unless ($validation->{'type'} =~ /(?:regexp|min_amount|max_amount|custom)/);
+					# if the id define in the validation hash, meaing input has more than 1 fields, the validation is validated against the id
+					if ($validation->{'id'} and length $validation->{'id'} > 0) {
+						$input_element_id = $validation->{'id'};
+					}
 
-                if ($validation->{'type'} and $validation->{'type'} eq 'regexp') {
-                    my $regexp = $validation->{'regexp'};
-                    $regexp =~ s/(\\|')/\\$1/g;
-                    $javascript .= ($validation->{'case_insensitive'}) ? "regexp = new RegExp('$regexp', 'i');" : "regexp = new RegExp('$regexp');";
+					if ($validation->{'type'} and $validation->{'type'} eq 'regexp') {
+						my $regexp = $validation->{'regexp'};
+						$regexp =~ s/(\\|')/\\$1/g;
+						$javascript .= ($validation->{'case_insensitive'}) ? "regexp = new RegExp('$regexp', 'i');" : "regexp = new RegExp('$regexp');";
 
-                    if ($validation->{'error_if_true'}) {
-                        $javascript .= 'if (bInputResult && regexp.test(input_element_' . $input_element_id . '.value))';
-                    } else {
-                        $javascript .= 'if (bInputResult && !regexp.test(input_element_' . $input_element_id . '.value))';
-                    }
+						if ($validation->{'error_if_true'}) {
+							$javascript .= 'if (bInputResult && regexp.test(input_element_' . $input_element_id . '.value))';
+						} else {
+							$javascript .= 'if (bInputResult && !regexp.test(input_element_' . $input_element_id . '.value))';
+						}
 
-                    $javascript .= '{'
-                        . 'error_element_'
-                        . $error_element_id
-                        . '.innerHTML = decodeURIComponent(\''
-                        . _encode_text($validation->{'err_msg'}) . '\');'
-                        . 'bInputResult = false;' . '}';
-                }
-                # Min amount checking
-                elsif ($validation->{'type'} and $validation->{'type'} eq 'min_amount') {
-                    $javascript .=
-                          'if (bInputResult && input_element_'
-                        . $input_element_id
-                        . '.value < '
-                        . $validation->{'amount'} . ')' . '{'
-                        . 'error_element_'
-                        . $error_element_id
-                        . '.innerHTML = decodeURIComponent(\''
-                        . _encode_text($validation->{'err_msg'}) . '\');'
-                        . 'bInputResult = false;' . '}';
-                }
-                # Max amount checking
-                elsif ($validation->{'type'} and $validation->{'type'} eq 'max_amount') {
-                    $javascript .=
-                          'if (bInputResult && input_element_'
-                        . $input_element_id
-                        . '.value > '
-                        . $validation->{'amount'} . ')' . '{'
-                        . 'error_element_'
-                        . $error_element_id
-                        . '.innerHTML = decodeURIComponent(\''
-                        . _encode_text($validation->{'err_msg'}) . '\');'
-                        . 'bInputResult = false;' . '}';
-                }
-                # Custom checking
-                elsif ($validation->{'type'} and $validation->{'type'} eq 'custom') {
-                    if ($validation->{'error_if_true'}) {
-                        $javascript .=
-                              'if (bInputResult && '
-                            . $validation->{'function'} . ')' . '{'
-                            . 'error_element_'
-                            . $error_element_id
-                            . '.innerHTML = decodeURIComponent(\''
-                            . _encode_text($validation->{'err_msg'}) . '\');'
-                            . 'bInputResult = false;' . '}';
-                    } else {
-                        $javascript .=
-                              'if (bInputResult && !'
-                            . $validation->{'function'} . ')' . '{'
-                            . 'error_element_'
-                            . $error_element_id
-                            . '.innerHTML = decodeURIComponent(\''
-                            . _encode_text($validation->{'err_msg'}) . '\');'
-                            . 'bInputResult = false;' . '}';
-                    }
-                }
-            }
+						$javascript .= '{'
+							. 'error_element_'
+							. $error_element_id
+							. '.innerHTML = decodeURIComponent(\''
+							. _encode_text($validation->{'err_msg'}) . '\');'
+							. 'bInputResult = false;' . '}';
+					}
+					# Min amount checking
+					elsif ($validation->{'type'} and $validation->{'type'} eq 'min_amount') {
+						$javascript .=
+							'if (bInputResult && input_element_'
+							. $input_element_id
+							. '.value < '
+							. $validation->{'amount'} . ')' . '{'
+							. 'error_element_'
+							. $error_element_id
+							. '.innerHTML = decodeURIComponent(\''
+							. _encode_text($validation->{'err_msg'}) . '\');'
+							. 'bInputResult = false;' . '}';
+					}
+					# Max amount checking
+					elsif ($validation->{'type'} and $validation->{'type'} eq 'max_amount') {
+						$javascript .=
+							'if (bInputResult && input_element_'
+							. $input_element_id
+							. '.value > '
+							. $validation->{'amount'} . ')' . '{'
+							. 'error_element_'
+							. $error_element_id
+							. '.innerHTML = decodeURIComponent(\''
+							. _encode_text($validation->{'err_msg'}) . '\');'
+							. 'bInputResult = false;' . '}';
+					}
+					# Custom checking
+					elsif ($validation->{'type'} and $validation->{'type'} eq 'custom') {
+						if ($validation->{'error_if_true'}) {
+							$javascript .=
+								'if (bInputResult && '
+								. $validation->{'function'} . ')' . '{'
+								. 'error_element_'
+								. $error_element_id
+								. '.innerHTML = decodeURIComponent(\''
+								. _encode_text($validation->{'err_msg'}) . '\');'
+								. 'bInputResult = false;' . '}';
+						} else {
+							$javascript .=
+								'if (bInputResult && !'
+								. $validation->{'function'} . ')' . '{'
+								. 'error_element_'
+								. $error_element_id
+								. '.innerHTML = decodeURIComponent(\''
+								. _encode_text($validation->{'err_msg'}) . '\');'
+								. 'bInputResult = false;' . '}';
+						}
+					}
         }
 
         $javascript .= 'if (!bInputResult)' . '{' . 'bResult = bInputResult;' . '}' . '}';
