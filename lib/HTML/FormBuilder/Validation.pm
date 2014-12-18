@@ -239,7 +239,7 @@ sub _build_javascript_validation {
 						$input_element_id = $validation->{'id'};
 					}
 
-					if ($validation->{'type'} and $validation->{'type'} eq 'regexp') {
+					if ($validation->{'type'} eq 'regexp') {
 						my $regexp = $validation->{'regexp'};
 						$regexp =~ s/(\\|')/\\$1/g;
 						$javascript .= ($validation->{'case_insensitive'}) ? "regexp = new RegExp('$regexp', 'i');" : "regexp = new RegExp('$regexp');";
@@ -258,7 +258,7 @@ sub _build_javascript_validation {
 							. 'bInputResult = false;' . '}';
 					}
 					# Min amount checking
-					elsif ($validation->{'type'} and $validation->{'type'} eq 'min_amount') {
+					elsif ($validation->{'type'} eq 'min_amount') {
 						$javascript .=
 							'if (bInputResult && input_element_'
 							. $input_element_id
@@ -271,7 +271,7 @@ sub _build_javascript_validation {
 							. 'bInputResult = false;' . '}';
 					}
 					# Max amount checking
-					elsif ($validation->{'type'} and $validation->{'type'} eq 'max_amount') {
+					elsif ($validation->{'type'} eq 'max_amount') {
 						$javascript .=
 							'if (bInputResult && input_element_'
 							. $input_element_id
@@ -284,7 +284,7 @@ sub _build_javascript_validation {
 							. 'bInputResult = false;' . '}';
 					}
 					# Custom checking
-					elsif ($validation->{'type'} and $validation->{'type'} eq 'custom') {
+					elsif ($validation->{'type'} eq 'custom') {
 						if ($validation->{'error_if_true'}) {
 							$javascript .=
 								'if (bInputResult && '
