@@ -269,9 +269,9 @@ sub _build_single_javascript_validation{
 		$javascript .= ($validation->{'case_insensitive'}) ? "regexp = new RegExp('$regexp', 'i');" : "regexp = new RegExp('$regexp');";
 
 		if ($validation->{'error_if_true'}) {
-			$javascript .= 'if (bInputResult && regexp.test(input_element_' . $input_element_id . '.value))';
+			$javascript .= qq[if (bInputResult && regexp.test(input_element_$input_element_id.value))];
 		} else {
-			$javascript .= 'if (bInputResult && !regexp.test(input_element_' . $input_element_id . '.value))';
+			$javascript .= qq[if (bInputResult && !regexp.test(input_element_$input_element_id.value))];
 		}
 
 		$javascript .= qq[{error_element_$error_element_id.innerHTML = decodeURIComponent('$err_msg');bInputResult = false;}];
