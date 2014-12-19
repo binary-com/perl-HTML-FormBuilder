@@ -263,16 +263,13 @@ sub _build_single_javascript_validation{
 		$input_element_id = $validation->{'id'};
 	}
 
+	my $error_if_true = $validation->{error_if_true} ? '' : '!';
 	if ($validation->{'type'} eq 'regexp') {
 		my $regexp = $validation->{'regexp'};
 		$regexp =~ s/(\\|')/\\$1/g;
 		$javascript .= ($validation->{'case_insensitive'}) ? "regexp = new RegExp('$regexp', 'i');" : "regexp = new RegExp('$regexp');";
 
-		if ($validation->{'error_if_true'}) {
-			$javascript .= qq[if (bInputResult && regexp.test(input_element_$input_element_id.value))];
-		} else {
-			$javascript .= qq[if (bInputResult && !regexp.test(input_element_$input_element_id.value))];
-		}
+		$javascript .= qq[if (bInputResult && ${error_if_true}regexp.test(input_element_$input_element_id.value))];
 
 		$javascript .= qq[{error_element_$error_element_id.innerHTML = decodeURIComponent('$err_msg');bInputResult = false;}];
 	}
@@ -283,11 +280,7 @@ sub _build_single_javascript_validation{
 	}
 	# Custom checking
 	elsif ($validation->{'type'} eq 'custom') {
-		if ($validation->{'error_if_true'}) {
-			$javascript .= qq[if (bInputResult && $validation->{function}){error_element_$error_element_id.innerHTML = decodeURIComponent('$err_msg');bInputResult = false;}];
-		} else {
-			$javascript .=qq[if (bInputResult && !$validation->{function}){error_element_$error_element_id.innerHTML = decodeURIComponent('$err_msg');bInputResult = false;}];
-		}
+			$javascript .= qq[if (bInputResult && ${error_if_true}$validation->{function}){error_element_$error_element_id.innerHTML = decodeURIComponent('$err_msg');bInputResult = false;}];
 	}
 	return $javascript;
 }
