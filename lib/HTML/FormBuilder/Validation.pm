@@ -264,23 +264,28 @@ sub _build_single_javascript_validation{
 	}
 
 	my $error_if_true = $validation->{error_if_true} ? '' : '!';
+	my $test = '';
 	if ($validation->{'type'} eq 'regexp') {
 		my $regexp = $validation->{'regexp'};
 		$regexp =~ s/(\\|')/\\$1/g;
 		$javascript .= ($validation->{'case_insensitive'}) ? "regexp = new RegExp('$regexp', 'i');" : "regexp = new RegExp('$regexp');";
 
-		$javascript .= qq[if (bInputResult && ${error_if_true}regexp.test(input_element_$input_element_id.value))];
+		$test = qq[${error_if_true}regexp.test(input_element_$input_element_id.value)];
+		
+		$javascript .= qq[if (bInputResult && $test)];
 
 		$javascript .= qq[{error_element_$error_element_id.innerHTML = decodeURIComponent('$err_msg');bInputResult = false;}];
 	}
 	# Min Max amount checking
 	elsif ($validation->{'type'} =~ /^(min|max)_amount$/) {
 		my $op = $1 eq 'min' ? '<' : '>';
-		$javascript .= qq[if (bInputResult && input_element_$input_element_id.value $op $validation->{amount}){error_element_$error_element_id.innerHTML = decodeURIComponent('$err_msg');bInputResult = false;}];
+		$test = qq[input_element_$input_element_id.value $op $validation->{amount}];
+		$javascript .= qq[if (bInputResult && $test){error_element_$error_element_id.innerHTML = decodeURIComponent('$err_msg');bInputResult = false;}];
 	}
 	# Custom checking
 	elsif ($validation->{'type'} eq 'custom') {
-			$javascript .= qq[if (bInputResult && ${error_if_true}$validation->{function}){error_element_$error_element_id.innerHTML = decodeURIComponent('$err_msg');bInputResult = false;}];
+		$test = qq[${error_if_true}$validation->{function}];
+			$javascript .= qq[if (bInputResult && $test){error_element_$error_element_id.innerHTML = decodeURIComponent('$err_msg');bInputResult = false;}];
 	}
 	return $javascript;
 }
