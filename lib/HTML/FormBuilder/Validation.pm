@@ -234,7 +234,30 @@ sub _build_javascript_validation {
 
         foreach my $validation (@validations) {
 					next unless ($validation->{'type'} =~ /(?:regexp|min_amount|max_amount|custom)/);
-					# if the id define in the validation hash, meaing input has more than 1 fields, the validation is validated against the id
+					$javascript .= $self->_build_single_javascript_validation($validation, $input_element_id, $error_element_id);
+        }
+
+        $javascript .= 'if (!bInputResult)' . '{' . 'bResult = bInputResult;' . '}' . '}';
+
+    }
+    # get the general error field (contain only error message without input)
+    elsif (defined $input_field->{'error'} and defined $input_field->{'error'}->{'id'}) {
+        my $error_id = $input_field->{'error'}->{'id'};
+        # Clear the error message
+        $javascript = "var error_element_$error_id = clearInputErrorField('$error_id');";
+    }
+
+    return $javascript;
+}
+
+sub _build_single_javascript_validation{
+	my $self = shift;
+	my $validation = shift;
+	my $input_element_id = shift;
+	my $error_element_id = shift;
+	
+	my $javascript = '';
+	# if the id define in the validation hash, meaing input has more than 1 fields, the validation is validated against the id
 					if ($validation->{'id'} and length $validation->{'id'} > 0) {
 						$input_element_id = $validation->{'id'};
 					}
@@ -305,19 +328,7 @@ sub _build_javascript_validation {
 								. 'bInputResult = false;' . '}';
 						}
 					}
-        }
-
-        $javascript .= 'if (!bInputResult)' . '{' . 'bResult = bInputResult;' . '}' . '}';
-
-    }
-    # get the general error field (contain only error message without input)
-    elsif (defined $input_field->{'error'} and defined $input_field->{'error'}->{'id'}) {
-        my $error_id = $input_field->{'error'}->{'id'};
-        # Clear the error message
-        $javascript = "var error_element_$error_id = clearInputErrorField('$error_id');";
-    }
-
-    return $javascript;
+	return $javascript;
 }
 
 ########################################################################
