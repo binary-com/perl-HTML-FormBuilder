@@ -335,7 +335,7 @@ sub _validate_field {
             # Check with whitespace trimmed from both ends to make sure that it's reasonable.
             $field_value = trim($self->get_field_value($input_element_id));
 
-            if ($validation->{'type'} and $validation->{'type'} eq 'regexp') {
+            if ($validation->{'type'} eq 'regexp') {
                 my $regexp = ($validation->{'case_insensitive'}) ? qr{$validation->{'regexp'}}i : qr{$validation->{'regexp'}};
                 if ($validation->{'error_if_true'}) {
                     if ($field_value =~ $regexp) {
@@ -350,14 +350,14 @@ sub _validate_field {
                 }
             }
             # Min amount checking
-            elsif ($validation->{'type'} and $validation->{'type'} eq 'min_amount') {
+            elsif ($validation->{'type'} eq 'min_amount') {
                 if ($field_value < $validation->{'amount'}) {
                     $self->set_field_error_message($input_element_id, $validation->{'err_msg'});
                     return 0;
                 }
             }
             # Max amount checking
-            elsif ($validation->{'type'} and $validation->{'type'} eq 'max_amount') {
+            elsif ($validation->{'type'} eq 'max_amount') {
                 if ($field_value > $validation->{'amount'}) {
                     $self->set_field_error_message($input_element_id, $validation->{'err_msg'});
                     return 0;
