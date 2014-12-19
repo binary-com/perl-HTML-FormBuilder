@@ -14,7 +14,8 @@ use Template;
 # Returns    : Form object.
 # Parameters : Hash reference with keys
 #              'id'     => 'id_of_the_form',
-#              'method' => 'post' #or get
+#              'method' => 'post' #or get,
+#              'localize' => localize sub ref
 # Comments   :
 # See Also   :
 #####################################################################
@@ -189,6 +190,15 @@ sub build {
     return $html;
 }
 
+#####################################################################
+# Usage      : generate the form content for a fieldset
+# Purpose    : check and parse the parameters and generate the form
+#              properly
+# Returns    : a piece of form HTML for a fieldset
+# Parameters : fieldset
+# Comments   :
+# See Also   :
+#####################################################################
 sub _build_fieldset {
     my $self     = shift;
     my $fieldset = shift;
@@ -239,7 +249,15 @@ sub _build_fieldset {
     return ( $fieldset_group, $fieldset_html );
 }
 
-
+#####################################################################
+# Usage      : generate the form content for a field
+# Purpose    : check and parse the parameters and generate the form
+#              properly
+# Returns    : a piece of form HTML code for a field
+# Parameters : input_field, stacked
+# Comments   :
+# See Also   :
+#####################################################################
 sub _build_field{
 	my $self = shift;
 	my $input_field = shift;
@@ -366,7 +384,15 @@ sub _build_field{
 	
 }
 
-
+#####################################################################
+# Usage      : generate the form content for a fieldset foreword thing
+# Purpose    : check and parse the parameters and generate the form
+#              properly
+# Returns    : a piece of form HTML code for a fieldset foreword
+# Parameters : input_field, stacked
+# Comments   :
+# See Also   :
+#####################################################################
 sub _build_fieldset_foreword{
 	my $self = shift;
 	my $fieldset = shift;
@@ -767,11 +793,27 @@ sub _build_input {
     return $html;
 }
 
+#####################################################################
+# Usage      : call $self->{option}{localize} to localize a string
+# Purpose    : localize string
+# Returns    : a localized string
+# Parameters : string
+# Comments   :
+# See Also   : new
+#####################################################################
 sub _localize {
     my $self = shift;
     $self->{option}{localize}->(@_);
 }
 
+#####################################################################
+# Usage      : $self->_link_button({value => 'back', class => 'backbutton', href => '})
+# Purpose    : create link button html
+# Returns    : HTML
+# Parameters : {value, class, href}
+# Comments   :
+# See Also   :
+#####################################################################
 sub _link_button {
     my $args = shift;
 
@@ -784,6 +826,13 @@ sub _link_button {
 
 }
 
+#####################################################################
+# Usage      : $self->_link_button($content, $url)
+# Purpose    : create tooltip html code
+# Returns    : HTML
+# Comments   :
+# See Also   :
+#####################################################################
 sub _tooltip {
     my $content = shift;
     my $url     = shift;
@@ -792,6 +841,12 @@ sub _tooltip {
     return qq{ <a href='#' title='$content' rel='tooltip'><img src="$url" /></a>};
 }
 
+#####################################################################
+# Usage      : $self->_template
+# Returns    : temlate object
+# Comments   :
+# See Also   :
+#####################################################################
 sub _template {
     return Template->new(
         ENCODING    => 'utf8',
@@ -802,6 +857,13 @@ sub _template {
     );
 }
 
+#####################################################################
+# Usage      : $self->_wrap_fieldset($fieldset_html)
+# Purpose    : wrap fieldset html by template
+# Returns    : HTML
+# Comments   :
+# See Also   :
+#####################################################################
 sub _wrap_fieldset {
     my ( $self, $fieldset_html ) = @_;
     my $output            = '';
@@ -853,7 +915,9 @@ Form - A Multi-part HTML form
                        'name'   => 'name_of_the_form',
                        'method' => 'post', # or get
                        'action' => 'page_to_submit',
-					   'header' => 'My Form'};	#header of the form
+          					   'header' => 'My Form',
+                       'localize' => \&Localize::translate,
+                       };	#header of the form
   my $form = HTML::FormBuilder->new($form_attributes);
 
   #Then create fieldset, the form is allow to have more than 1 fieldset

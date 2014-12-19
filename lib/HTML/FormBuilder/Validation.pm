@@ -250,6 +250,15 @@ sub _build_javascript_validation {
     return $javascript;
 }
 
+########################################################################
+# Usage      : $self->_build_single_validation
+#              ($validation, $input_element_id, $error_element_id);
+# Purpose    : Create javascript validation code for a validation.
+# Returns    : text (Javascript code)
+# Parameters : validation, input_element_id, error_element_id
+# Comments   : Private
+# See Also   : build()
+########################################################################
 sub _build_single_javascript_validation{
 	my $self = shift;
 	my $validation = shift;
