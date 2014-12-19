@@ -257,6 +257,7 @@ sub _build_single_javascript_validation{
 	my $error_element_id = shift;
 	
 	my $javascript = '';
+	my $err_msg = _encode_text($validation->{'err_msg'});
 	# if the id define in the validation hash, meaing input has more than 1 fields, the validation is validated against the id
 					if ($validation->{'id'} and length $validation->{'id'} > 0) {
 						$input_element_id = $validation->{'id'};
@@ -277,7 +278,7 @@ sub _build_single_javascript_validation{
 							. 'error_element_'
 							. $error_element_id
 							. '.innerHTML = decodeURIComponent(\''
-							. _encode_text($validation->{'err_msg'}) . '\');'
+							. $err_msg . '\');'
 							. 'bInputResult = false;' . '}';
 					}
 					# Min amount checking
@@ -290,7 +291,7 @@ sub _build_single_javascript_validation{
 							. 'error_element_'
 							. $error_element_id
 							. '.innerHTML = decodeURIComponent(\''
-							. _encode_text($validation->{'err_msg'}) . '\');'
+							. $err_msg . '\');'
 							. 'bInputResult = false;' . '}';
 					}
 					# Max amount checking
@@ -303,7 +304,7 @@ sub _build_single_javascript_validation{
 							. 'error_element_'
 							. $error_element_id
 							. '.innerHTML = decodeURIComponent(\''
-							. _encode_text($validation->{'err_msg'}) . '\');'
+							. $err_msg . '\');'
 							. 'bInputResult = false;' . '}';
 					}
 					# Custom checking
@@ -315,7 +316,7 @@ sub _build_single_javascript_validation{
 								. 'error_element_'
 								. $error_element_id
 								. '.innerHTML = decodeURIComponent(\''
-								. _encode_text($validation->{'err_msg'}) . '\');'
+								. $err_msg . '\');'
 								. 'bInputResult = false;' . '}';
 						} else {
 							$javascript .=
@@ -324,7 +325,7 @@ sub _build_single_javascript_validation{
 								. 'error_element_'
 								. $error_element_id
 								. '.innerHTML = decodeURIComponent(\''
-								. _encode_text($validation->{'err_msg'}) . '\');'
+								. $err_msg . '\');'
 								. 'bInputResult = false;' . '}';
 						}
 					}
