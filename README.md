@@ -166,6 +166,7 @@ In each <fieldset>, you can create rows which contain label, different input typ
 
 # AUTHOR
 
-Bond Lim, <kheyeng@my.regentmarkets.com<gt>
+Bond Lim [kheyeng@my.regentmarkets.com](https://metacpan.org/pod/kheyeng@my.regentmarkets.com)
+Chylli, [chylli@binary.com](https://metacpan.org/pod/chylli@binary.com)
 
 # COPYRIGHT AND LICENSE

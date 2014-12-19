@@ -11,7 +11,7 @@ use ExtUtils::MakeMaker;
 
 my %WriteMakefileArgs = (
   "ABSTRACT" => "A Multi-part HTML form",
-  "AUTHOR" => "Bond Lim, <kheyeng\@my.regentmarkets.com<gt>",
+  "AUTHOR" => "Bond Lim L<kheyeng\@my.regentmarkets.com>",
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => 0
   },

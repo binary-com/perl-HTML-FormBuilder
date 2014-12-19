@@ -1,7 +1,7 @@
 {
    "abstract" : "A Multi-part HTML form",
    "author" : [
-      "Bond Lim, <kheyeng@my.regentmarkets.com<gt>"
+      "Bond Lim L<kheyeng@my.regentmarkets.com>"
    ],
    "dynamic_config" : 0,
    "generated_by" : "Dist::Zilla version 5.025, Dist::Milla version v1.0.9, CPAN::Meta::Converter version 2.142690",

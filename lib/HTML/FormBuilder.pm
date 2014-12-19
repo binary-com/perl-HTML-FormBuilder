@@ -1093,7 +1093,8 @@ In each <fieldset>, you can create rows which contain label, different input typ
 
 =head1 AUTHOR
 
-Bond Lim, E<lt>kheyeng@my.regentmarkets.com<gt>
+Bond Lim L<kheyeng@my.regentmarkets.com>
+Chylli, L<chylli@binary.com>
 
 =head1 COPYRIGHT AND LICENSE
 
