@@ -276,13 +276,10 @@ sub _build_single_javascript_validation{
 
 		$javascript .= qq[{error_element_$error_element_id.innerHTML = decodeURIComponent('$err_msg');bInputResult = false;}];
 	}
-	# Min amount checking
-	elsif ($validation->{'type'} eq 'min_amount') {
-		$javascript .= qq[if (bInputResult && input_element_$input_element_id.value < $validation->{amount}){error_element_$error_element_id.innerHTML = decodeURIComponent('$err_msg');bInputResult = false;}];
-	}
-	# Max amount checking
-	elsif ($validation->{'type'} eq 'max_amount') {
-		$javascript .= qq[if (bInputResult && input_element_$input_element_id.value > $validation->{amount}){error_element_$error_element_id.innerHTML = decodeURIComponent('$err_msg');bInputResult = false;}];
+	# Min Max amount checking
+	elsif ($validation->{'type'} =~ /^(min|max)_amount$/) {
+		my $op = $1 eq 'min' ? '<' : '>';
+		$javascript .= qq[if (bInputResult && input_element_$input_element_id.value $op $validation->{amount}){error_element_$error_element_id.innerHTML = decodeURIComponent('$err_msg');bInputResult = false;}];
 	}
 	# Custom checking
 	elsif ($validation->{'type'} eq 'custom') {
