@@ -13,122 +13,176 @@ my $form_obj;
 
 ################################################################################
 # test new
-lives_ok(sub {$form_obj = HTML::FormBuilder->new({id => 'form1'})}, 'create form ok');
-is($form_obj->{data}{method}, 'get', 'default method of form');
-is_deeply($form_obj->{data}{fieldset}, [], 'default fieldset');
-is($form_obj->build, '<form id="form1" method="get"></form>', 'generate a blank form');
-lives_ok(sub{create_form_object()->build}, 'build ok');
+lives_ok( sub { $form_obj = HTML::FormBuilder->new( { id => 'form1' } ) },
+    'create form ok' );
+is( $form_obj->{data}{method}, 'get', 'default method of form' );
+is_deeply( $form_obj->{data}{fieldset}, [], 'default fieldset' );
+is(
+    $form_obj->build,
+    '<form id="form1" method="get"></form>',
+    'generate a blank form'
+);
+lives_ok( sub { create_form_object()->build }, 'build ok' );
 
 my $result;
-$form_obj = HTML::FormBuilder->new({id => 'testid',localize => sub{"will " . shift}});
-my $expect_result = '<form id="testid" method="get"><input type="hidden" name="process" value="1"/><a class="button backbutton" href="javascript:history.go(-1)" ><span class="button backbutton" >will Back</span></a> <span class="button"><button id="submit" class="button" type="submit">will Confirm</button></span></form>';
-lives_ok(sub{$result = $form_obj->build_confirmation_button_with_all_inputs_hidden}, 'build confirmation_button_with_all_inputs_hidden  ok');
-is($result, $expect_result, 'the result of build confirmation_button_with_all_inputs_hidden with arg localize');
+$form_obj = HTML::FormBuilder->new(
+    {
+        id       => 'testid',
+        localize => sub { "will " . shift }
+    }
+);
+my $expect_result =
+'<form id="testid" method="get"><input type="hidden" name="process" value="1"/><a class="button backbutton" href="javascript:history.go(-1)" ><span class="button backbutton" >will Back</span></a> <span class="button"><button id="submit" class="button" type="submit">will Confirm</button></span></form>';
+lives_ok(
+    sub {
+        $result = $form_obj->build_confirmation_button_with_all_inputs_hidden;
+    },
+    'build confirmation_button_with_all_inputs_hidden  ok'
+);
+is( $result, $expect_result,
+'the result of build confirmation_button_with_all_inputs_hidden with arg localize'
+);
 
-$form_obj = HTML::FormBuilder->new({id => 'testid', has_required_field => 1, has_call_customer_support_field => 1, localize => sub{uc(shift)}});
-lives_ok(sub{$result = $form_obj->build}, 'build form with some args');
-like($result, qr/REQUIRED/, 'has_required_field branch executed');
-like($result, qr/CHANGE YOUR NAME/, 'has_call_customer_support_field branch executed');
-
+$form_obj = HTML::FormBuilder->new(
+    {
+        id                              => 'testid',
+        has_required_field              => 1,
+        has_call_customer_support_field => 1,
+        localize                        => sub { uc(shift) }
+    }
+);
+lives_ok( sub { $result = $form_obj->build }, 'build form with some args' );
+like( $result, qr/REQUIRED/, 'has_required_field branch executed' );
+like(
+    $result,
+    qr/CHANGE YOUR NAME/,
+    'has_call_customer_support_field branch executed'
+);
 
 ################################################################################
 # test add_field
-$form_obj = HTML::FormBuilder->new({id => 'testid'});
-throws_ok(sub{$form_obj->add_field('0abc')}, qr/fieldset_index should be a number/, 'fieldset_index should be a number');
-throws_ok(sub{$form_obj->add_field(123)}, qr/fieldset does not exist/, 'fieldset should be exist');
-
-
+$form_obj = HTML::FormBuilder->new( { id => 'testid' } );
+throws_ok(
+    sub { $form_obj->add_field('0abc') },
+    qr/fieldset_index should be a number/,
+    'fieldset_index should be a number'
+);
+throws_ok(
+    sub { $form_obj->add_field(123) },
+    qr/fieldset does not exist/,
+    'fieldset should be exist'
+);
 
 {
     $form_obj = create_form_object();
 
     # Test set_field_value and get_field_value
-    $form_obj->set_field_value('amount', 100);
-    Test::More::is($form_obj->get_field_value('amount'), 100, 'Test accessor of fields of form object. [set_field_value, get_field_value]');
+    $form_obj->set_field_value( 'amount', 100 );
+    Test::More::is( $form_obj->get_field_value('amount'), 100,
+'Test accessor of fields of form object. [set_field_value, get_field_value]'
+    );
 
     # Test set_field_value and get_field_value [before select]
-    Test::More::is($form_obj->get_field_value('gender'),
-        'male', 'Test accessor of fields of form object [Select - male]. [set_field_value, get_field_value]');
+    Test::More::is( $form_obj->get_field_value('gender'), 'male',
+'Test accessor of fields of form object [Select - male]. [set_field_value, get_field_value]'
+    );
 
     # Test set_field_value and get_field_value
-    $form_obj->set_field_value('gender', 'female');
-    Test::More::is($form_obj->get_field_value('gender'),
-        'female', 'Test accessor of fields of form object [Select - female]. [set_field_value, get_field_value]');
+    $form_obj->set_field_value( 'gender', 'female' );
+    Test::More::is( $form_obj->get_field_value('gender'), 'female',
+'Test accessor of fields of form object [Select - female]. [set_field_value, get_field_value]'
+    );
 
     # Test set_field_value and get_field_value
-    $form_obj->set_field_value('select_text_curr', 'EUR');
-    Test::More::is($form_obj->get_field_value('select_text_curr'),
-        'EUR', 'Test accessor of array fields of form object [Select - EUR]. [set_field_value, get_field_value]');
+    $form_obj->set_field_value( 'select_text_curr', 'EUR' );
+    Test::More::is( $form_obj->get_field_value('select_text_curr'), 'EUR',
+'Test accessor of array fields of form object [Select - EUR]. [set_field_value, get_field_value]'
+    );
 
     # Test set_field_value and get_field_value
-    Test::More::is($form_obj->get_field_value('select_text_amount'),
-        20, 'Test accessor of array fields of form object [text - 20(default value)]. [set_field_value, get_field_value]');
+    Test::More::is( $form_obj->get_field_value('select_text_amount'), 20,
+'Test accessor of array fields of form object [text - 20(default value)]. [set_field_value, get_field_value]'
+    );
+
     # Test set_field_value and get_field_value
-    $form_obj->set_field_value('select_text_amount', 50);
-    Test::More::is($form_obj->get_field_value('select_text_amount'),
-        50, 'Test accessor of array fields of form object [text - 50]. [set_field_value, get_field_value]');
+    $form_obj->set_field_value( 'select_text_amount', 50 );
+    Test::More::is( $form_obj->get_field_value('select_text_amount'), 50,
+'Test accessor of array fields of form object [text - 50]. [set_field_value, get_field_value]'
+    );
 
     # Test set_field_value and get_field_value
     Test::More::is(
         $form_obj->get_field_value('Textarea'),
         'This is default value of textarea',
-        'Test accessor of fields of form object [textarea - \'This is default value of textarea\'(default value)]. [set_field_value, get_field_value]'
+'Test accessor of fields of form object [textarea - \'This is default value of textarea\'(default value)]. [set_field_value, get_field_value]'
     );
+
     # Test set_field_value and get_field_value
-    $form_obj->set_field_value('Textarea', 'It should be changed now...');
+    $form_obj->set_field_value( 'Textarea', 'It should be changed now...' );
     Test::More::is(
         $form_obj->get_field_value('Textarea'),
         'It should be changed now...',
-        'Test accessor of fields of form object [text - \'It should be changed now...\']. [set_field_value, get_field_value]'
+'Test accessor of fields of form object [text - \'It should be changed now...\']. [set_field_value, get_field_value]'
     );
 
     # Test set_field_value and get_field_value
-    Test::More::is($form_obj->get_field_value('Password'),
-        'pa$$w0rd', 'Test accessor of fields of form object [password - pa$$w0rd(default value)]. [set_field_value, get_field_value]');
-    # Test set_field_value and get_field_value
-    $form_obj->set_field_value('Password', 'Baghali');
-    Test::More::is($form_obj->get_field_value('Password'),
-        'Baghali', 'Test accessor of fields of form object [password - Baghali]. [set_field_value, get_field_value]');
+    Test::More::is( $form_obj->get_field_value('Password'), 'pa$$w0rd',
+'Test accessor of fields of form object [password - pa$$w0rd(default value)]. [set_field_value, get_field_value]'
+    );
 
     # Test set_field_value and get_field_value
-    Test::More::is($form_obj->get_field_value('single_checkbox'),
-        undef, 'Test accessor of fields of form object [single_checkbox - (Not checked)]. [set_field_value, get_field_value]');
-    # Test set_field_value and get_field_value
-    $form_obj->set_field_value('single_checkbox', 'SGLBOX');
-    Test::More::is($form_obj->get_field_value('single_checkbox'),
-        'SGLBOX', 'Test accessor of fields of form object [single_checkbox - SGLBOX]. [set_field_value, get_field_value]');
+    $form_obj->set_field_value( 'Password', 'Baghali' );
+    Test::More::is( $form_obj->get_field_value('Password'), 'Baghali',
+'Test accessor of fields of form object [password - Baghali]. [set_field_value, get_field_value]'
+    );
 
     # Test set_field_value and get_field_value
-    Test::More::is($form_obj->get_field_value('checkbox1'),
-        undef, 'Test accessor of fields of form object [checkbox1 - (Not checked)]. [set_field_value, get_field_value]');
-    Test::More::is($form_obj->get_field_value('checkbox2'),
-        undef, 'Test accessor of fields of form object [checkbox2 - (Not checked)]. [set_field_value, get_field_value]');
+    Test::More::is( $form_obj->get_field_value('single_checkbox'), undef,
+'Test accessor of fields of form object [single_checkbox - (Not checked)]. [set_field_value, get_field_value]'
+    );
+
     # Test set_field_value and get_field_value
-    $form_obj->set_field_value('checkbox1', 'BOX1');
-    $form_obj->set_field_value('checkbox2', 'BOX2');
-    Test::More::is($form_obj->get_field_value('checkbox1'),
-        'BOX1', 'Test accessor of fields of form object [checkbox1 - BOX1]. [set_field_value, get_field_value]');
-    Test::More::is($form_obj->get_field_value('checkbox2'),
-        'BOX2', 'Test accessor of fields of form object [checkbox2 - BOX2]. [set_field_value, get_field_value]');
+    $form_obj->set_field_value( 'single_checkbox', 'SGLBOX' );
+    Test::More::is( $form_obj->get_field_value('single_checkbox'), 'SGLBOX',
+'Test accessor of fields of form object [single_checkbox - SGLBOX]. [set_field_value, get_field_value]'
+    );
+
+    # Test set_field_value and get_field_value
+    Test::More::is( $form_obj->get_field_value('checkbox1'), undef,
+'Test accessor of fields of form object [checkbox1 - (Not checked)]. [set_field_value, get_field_value]'
+    );
+    Test::More::is( $form_obj->get_field_value('checkbox2'), undef,
+'Test accessor of fields of form object [checkbox2 - (Not checked)]. [set_field_value, get_field_value]'
+    );
+
+    # Test set_field_value and get_field_value
+    $form_obj->set_field_value( 'checkbox1', 'BOX1' );
+    $form_obj->set_field_value( 'checkbox2', 'BOX2' );
+    Test::More::is( $form_obj->get_field_value('checkbox1'), 'BOX1',
+'Test accessor of fields of form object [checkbox1 - BOX1]. [set_field_value, get_field_value]'
+    );
+    Test::More::is( $form_obj->get_field_value('checkbox2'), 'BOX2',
+'Test accessor of fields of form object [checkbox2 - BOX2]. [set_field_value, get_field_value]'
+    );
 
     # Test set_field_error_message
-    $form_obj->set_field_error_message('amount', 'It is not good');
+    $form_obj->set_field_error_message( 'amount', 'It is not good' );
     Test::More::is(
         $form_obj->get_field_error_message('amount'),
         'It is not good',
-        'Test accessor of fields of form object. [set_field_error_message, get_field_error_message]'
+'Test accessor of fields of form object. [set_field_error_message, get_field_error_message]'
     );
 
     # Test set_field_error_message
-    $form_obj->set_field_error_message('error_general', 'There is a general error.');
+    $form_obj->set_field_error_message( 'error_general',
+        'There is a general error.' );
     Test::More::is(
         $form_obj->get_field_error_message('error_general'),
         'There is a general error.',
-        'Test accessor of general error of form object . [set_field_error_message, get_field_error_message]'
+'Test accessor of general error of form object . [set_field_error_message, get_field_error_message]'
     );
 
 }
-
 
 sub create_form_object {
     my $form_obj;
@@ -143,12 +197,15 @@ sub create_form_object {
     };
 
     # Create new form object
-    Test::Exception::lives_ok { $form_obj = HTML::FormBuilder->new($form_attributes); } 'Create Form';
+    Test::Exception::lives_ok {
+        $form_obj = HTML::FormBuilder->new($form_attributes);
+    }
+    'Create Form';
 
     # Test object type
-    Test::More::isa_ok($form_obj, 'HTML::FormBuilder');
+    Test::More::isa_ok( $form_obj, 'HTML::FormBuilder' );
 
-    my $fieldset_index = $form_obj->add_fieldset({});
+    my $fieldset_index = $form_obj->add_fieldset( {} );
 
     my $input_field_amount = {
         'label' => {
@@ -168,7 +225,8 @@ sub create_form_object {
             'id'    => 'error_amount',
             'class' => 'errorfield',
         },
-        'validation' => [{
+        'validation' => [
+            {
                 'type'    => 'regexp',
                 'regexp'  => '\w+',
                 'err_msg' => 'Not empty',
@@ -205,7 +263,7 @@ sub create_form_object {
         'input' => HTML::FormBuilder::Select->new(
             'id'      => 'gender',
             'name'    => 'gender',
-            'options' => [{value => 'male'}, {value => 'female'}],
+            'options' => [ { value => 'male' }, { value => 'female' } ],
             'values'  => ['male'],
         ),
         'error' => {
@@ -218,7 +276,7 @@ sub create_form_object {
     my $select_curr = HTML::FormBuilder::Select->new(
         'id'      => 'select_text_curr',
         'name'    => 'select_text_curr',
-        'options' => [{value => 'USD'}, {value => "EUR"}],
+        'options' => [ { value => 'USD' }, { value => "EUR" } ],
     );
     my $input_amount = {
         'id'    => 'select_text_amount',
@@ -232,7 +290,7 @@ sub create_form_object {
             'for'      => 'select_text',
             'optional' => '0',
         },
-        'input' => [$select_curr, $input_amount],
+        'input' => [ $select_curr, $input_amount ],
         'error' => {
             'text'  => '',
             'id'    => 'error_select_text',
@@ -298,7 +356,8 @@ sub create_form_object {
             'for'      => 'single_checkbox',
             'optional' => '0',
         },
-        'input' => [{
+        'input' => [
+            {
                 'type'  => 'checkbox',
                 'id'    => 'checkbox1',
                 'name'  => 'checkbox1',
@@ -321,14 +380,14 @@ sub create_form_object {
         },
     };
 
-    $form_obj->add_field($fieldset_index, $input_field_amount);
-    $form_obj->add_field($fieldset_index, $input_field_gender);
-    $form_obj->add_field($fieldset_index, $input_field_select_text);
-    $form_obj->add_field($fieldset_index, $input_field_textarea);
-    $form_obj->add_field($fieldset_index, $input_field_password);
-    $form_obj->add_field($fieldset_index, $input_field_single_checkbox);
-    $form_obj->add_field($fieldset_index, $input_field_array_checkbox);
-    $form_obj->add_field($fieldset_index, $general_error_message_field);
+    $form_obj->add_field( $fieldset_index, $input_field_amount );
+    $form_obj->add_field( $fieldset_index, $input_field_gender );
+    $form_obj->add_field( $fieldset_index, $input_field_select_text );
+    $form_obj->add_field( $fieldset_index, $input_field_textarea );
+    $form_obj->add_field( $fieldset_index, $input_field_password );
+    $form_obj->add_field( $fieldset_index, $input_field_single_checkbox );
+    $form_obj->add_field( $fieldset_index, $input_field_array_checkbox );
+    $form_obj->add_field( $fieldset_index, $general_error_message_field );
 
     return $form_obj;
 }
@@ -355,7 +414,6 @@ $expect_result = <<'EOF';
 </div></form>
 EOF
 chomp($expect_result);
-is(create_form_object()->build(), $expect_result, ' the result is right');
-
+is( create_form_object()->build(), $expect_result, ' the result is right' );
 
 done_testing;

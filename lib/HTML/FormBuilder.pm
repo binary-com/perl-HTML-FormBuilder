@@ -110,11 +110,11 @@ sub add_field {
     croak("The fieldset does not exist in $0. form_id[$self->{data}{'id'}]")
       if ( $fieldset_index > $#{ $self->{data}{fieldset} } );
 
-		# normalize: if 'input' is not an array, then make it as an array, so that
-		# we can process the array directly 
-		if($_args->{input} && ref($_args->{input}) ne 'ARRAY'){
-			$_args->{input} = [$_args->{input}];
-		}
+    # normalize: if 'input' is not an array, then make it as an array, so that
+    # we can process the array directly
+    if ( $_args->{input} && ref( $_args->{input} ) ne 'ARRAY' ) {
+        $_args->{input} = [ $_args->{input} ];
+    }
     push @{ $self->{data}{'fieldset'}[$fieldset_index]{'fields'} }, $_args;
 
     return 1;
@@ -132,7 +132,6 @@ sub add_field {
 sub build {
     my $self                 = shift;
     my $print_fieldset_index = shift;
-
 
     # build the fieldset, if $print_fieldset_index is specifed then
     # we only generate that praticular fieldset with that index
@@ -169,7 +168,8 @@ sub build {
         }
     }
     my $html =
-      $self->_build_element_and_attributes( 'form', $self->{data},$fieldsets_html );
+      $self->_build_element_and_attributes( 'form', $self->{data},
+        $fieldsets_html );
 
     if ( not $self->{option}{'hide_required_text'} ) {
         $html .=
@@ -177,13 +177,15 @@ sub build {
           . $self->_localize('Required') . '</p>'
           if ( $self->{option}{'has_required_field'} );
 
-				if ( $self->{option}{'has_call_customer_support_field'} ){
-					my $info = $self->_localize('To change your name, date of birth, or country of residence, please contact Customer Support.');
+        if ( $self->{option}{'has_call_customer_support_field'} ) {
+            my $info = $self->_localize(
+'To change your name, date of birth, or country of residence, please contact Customer Support.'
+            );
 
-					$html .= qq{<p class="required"><em class="required_asterisk">**</em> - $info</p>};
-					
-				}
-				
+            $html .=
+qq{<p class="required"><em class="required_asterisk">**</em> - $info</p>};
+
+        }
 
     }
 
@@ -204,35 +206,38 @@ sub _build_fieldset {
     my $fieldset = shift;
 
     my $fieldset_group = $fieldset->{'group'};
-    my $stacked  = defined $fieldset->{'stacked'} ? $fieldset->{'stacked'} : 1;
+    my $stacked = defined $fieldset->{'stacked'} ? $fieldset->{'stacked'} : 1;
 
     if ( not $fieldset_group ) {
         $fieldset_group = 'no-group';
     }
-
 
     my $fieldset_html = $self->_build_fieldset_foreword($fieldset);
 
     my $input_fields_html = '';
 
     foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
-			$input_fields_html .= $self->_build_field($input_field,$stacked);
+        $input_fields_html .= $self->_build_field( $input_field, $stacked );
     }
 
     if ( $stacked == 0 ) {
-			$input_fields_html = $self->_build_element_and_attributes('div', {class => 'grd-grid-12'}, $input_fields_html);
+        $input_fields_html =
+          $self->_build_element_and_attributes( 'div',
+            { class => 'grd-grid-12' },
+            $input_fields_html );
     }
 
     $fieldset_html .= $input_fields_html;
 
-		# message at the bottom of the fieldset
+    # message at the bottom of the fieldset
     if ( defined $fieldset->{'footer'} ) {
-			my  $footer = delete $fieldset->{'footer'};
-			$fieldset_html .= qq{<div class="row comment">$footer</div>};
+        my $footer = delete $fieldset->{'footer'};
+        $fieldset_html .= qq{<div class="row comment">$footer</div>};
     }
 
-		
-		$fieldset_html = $self->_build_element_and_attributes( 'fieldset', $fieldset,  $fieldset_html );
+    $fieldset_html =
+      $self->_build_element_and_attributes( 'fieldset', $fieldset,
+        $fieldset_html );
 
     if (
         (
@@ -258,130 +263,140 @@ sub _build_fieldset {
 # Comments   :
 # See Also   :
 #####################################################################
-sub _build_field{
-	my $self = shift;
-	my $input_field = shift;
-	my $stacked = shift;
-	#my ($stacked, $div_span, $label_column, $input_column) = @{$option}{qw(stacked div_span label_column input_column)};
+sub _build_field {
+    my $self        = shift;
+    my $input_field = shift;
+    my $stacked     = shift;
 
-	my $div_span = "div";
-	my $label_column = "grd-grid-4";
-	my $input_column = "grd-grid-8";
+#my ($stacked, $div_span, $label_column, $input_column) = @{$option}{qw(stacked div_span label_column input_column)};
+
+    my $div_span     = "div";
+    my $label_column = "grd-grid-4";
+    my $input_column = "grd-grid-8";
 
     if ( $stacked == 0 ) {
-			$div_span     = "span";
-			$label_column = "";
-			$input_column = "";
-		}
-	my $input_fields_html = '';
+        $div_span     = "span";
+        $label_column = "";
+        $input_column = "";
+    }
+    my $input_fields_html = '';
 
-	my $stacked_attr = {};
+    my $stacked_attr = {};
 
-	if ( $stacked == 1 ) {
-    my $class = $input_field->{'class'} ? " $input_field->{class}" : '';
+    if ( $stacked == 1 ) {
+        my $class = $input_field->{'class'} ? " $input_field->{class}" : '';
 
-		if ( $input_field->{'type'} and $input_field->{'type'} eq 'hidden' ) {
-			$stacked_attr->{class} = $class;
-		} else {
-			$stacked_attr->{class} = "grd-row-padding row clear$class";
-		} 
-	}
+        if ( $input_field->{'type'} and $input_field->{'type'} eq 'hidden' ) {
+            $stacked_attr->{class} = $class;
+        }
+        else {
+            $stacked_attr->{class} = "grd-row-padding row clear$class";
+        }
+    }
 
-	#create the field label
-	if ( defined $input_field->{'label'} ) {
-		my $label_text = $input_field->{'label'}->{'text'} || '';
-		undef $input_field->{'label'}->{'text'};
+    #create the field label
+    if ( defined $input_field->{'label'} ) {
+        my $label_text = $input_field->{'label'}->{'text'} || '';
+        undef $input_field->{'label'}->{'text'};
 
-		# default is optional = false (mandatory)
-		my $is_optional;
-		if ( defined $input_field->{'label'}->{'optional'} ) {
-			$is_optional = $input_field->{'label'}->{'optional'};
-			undef $input_field->{'label'}->{'optional'};
-		}
+        # default is optional = false (mandatory)
+        my $is_optional;
+        if ( defined $input_field->{'label'}->{'optional'} ) {
+            $is_optional = $input_field->{'label'}->{'optional'};
+            undef $input_field->{'label'}->{'optional'};
+        }
 
-		# default is call_customer_support = false
-		my $call_customer_support;
-		if ( defined $input_field->{'label'}->{'call_customer_support'} ) {
-			$call_customer_support =
-				$input_field->{'label'}->{'call_customer_support'};
-			undef $input_field->{'label'}->{'call_customer_support'};
-		}
+        # default is call_customer_support = false
+        my $call_customer_support;
+        if ( defined $input_field->{'label'}->{'call_customer_support'} ) {
+            $call_customer_support =
+              $input_field->{'label'}->{'call_customer_support'};
+            undef $input_field->{'label'}->{'call_customer_support'};
+        }
 
-		my $label_html = $self->_build_element_and_attributes(
-																													'label',
-																													$input_field->{'label'},
-																													$label_text,
-																													{
-																													 'is_optional'           => $is_optional,
-																													 'call_customer_support' => $call_customer_support
-																													},
-																												 );
+        my $label_html = $self->_build_element_and_attributes(
+            'label',
+            $input_field->{'label'},
+            $label_text,
+            {
+                'is_optional'           => $is_optional,
+                'call_customer_support' => $call_customer_support
+            },
+        );
 
-		
-		# add a tooltip explanation if given
-		if ( $input_field->{'label'}{'tooltip'} ) {
+        # add a tooltip explanation if given
+        if ( $input_field->{'label'}{'tooltip'} ) {
 
-			# img_url is the url of question mark picture
-			my $tooltip = _tooltip(
-														 $input_field->{'label'}{'tooltip'}{'desc'},
-														 $input_field->{'label'}{tooltip}{img_url}
-														);
+            # img_url is the url of question mark picture
+            my $tooltip = _tooltip(
+                $input_field->{'label'}{'tooltip'}{'desc'},
+                $input_field->{'label'}{tooltip}{img_url}
+            );
 
-			$input_fields_html .=
-				qq{<div class="extra_tooltip_container">$label_html$tooltip</div>};
-		} else {
+            $input_fields_html .=
+qq{<div class="extra_tooltip_container">$label_html$tooltip</div>};
+        }
+        else {
 
-			my $hide_mobile = "";
-			if ( length($label_text) == 0 ) {
-				$hide_mobile .= "grd-hide-mobile";
-			}
+            my $hide_mobile = "";
+            if ( length($label_text) == 0 ) {
+                $hide_mobile .= "grd-hide-mobile";
+            }
 
-			$input_fields_html .=
-				qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_span>};
-		}
-	}
+            $input_fields_html .=
+qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_span>};
+        }
+    }
 
-	# create the input field
-	if ( defined $input_field->{'input'} ) {
+    # create the input field
+    if ( defined $input_field->{'input'} ) {
 
-		#if there are more than 1 input field in a single row then we generate 1 by 1
-		my $inputs = $input_field->{input};
-		$input_fields_html .=	qq{<$div_span class="$input_column">};
-		foreach my $input ( @{ $inputs } ) {
-			$input_fields_html .= $self->_build_input($input);
-		}
-	}
+   #if there are more than 1 input field in a single row then we generate 1 by 1
+        my $inputs = $input_field->{input};
+        $input_fields_html .= qq{<$div_span class="$input_column">};
+        foreach my $input ( @{$inputs} ) {
+            $input_fields_html .= $self->_build_input($input);
+        }
+    }
 
-	if ( defined $input_field->{'comment'} ) {
-		$input_field->{'comment'}{'class'} ||= '';
-		$input_fields_html .= '<br>'
-			. $self->_build_element_and_attributes( 'p',
-																							$input_field->{'comment'},
-																							$input_field->{'comment'}->{'text'});
-	}
+    if ( defined $input_field->{'comment'} ) {
+        $input_field->{'comment'}{'class'} ||= '';
+        $input_fields_html .= '<br>'
+          . $self->_build_element_and_attributes(
+            'p',
+            $input_field->{'comment'},
+            $input_field->{'comment'}->{'text'}
+          );
+    }
 
-	if ( defined $input_field->{'error'} ) {
+    if ( defined $input_field->{'error'} ) {
 
-		my @errors = ref($input_field->{'error'}) eq 'ARRAY' ? @{$input_field->{error}} : $input_field->{error};
+        my @errors =
+          ref( $input_field->{'error'} ) eq 'ARRAY'
+          ? @{ $input_field->{error} }
+          : $input_field->{error};
 
-		foreach my $error_box ( @errors ) {
-			$input_fields_html .=
-				$self->_build_element_and_attributes( 'p', $error_box, $error_box->{text} );
-		}
+        foreach my $error_box (@errors) {
+            $input_fields_html .=
+              $self->_build_element_and_attributes( 'p', $error_box,
+                $error_box->{text} );
+        }
 
-	}
+    }
 
-	#close the input tag
-	if ( defined $input_field->{'input'} ) {
-		$input_fields_html .= '</' . $div_span . '>';
-	}
+    #close the input tag
+    if ( defined $input_field->{'input'} ) {
+        $input_fields_html .= '</' . $div_span . '>';
+    }
 
-	if ( $stacked == 1 ) {
-		$input_fields_html = $self->_build_element_and_attributes('div',$stacked_attr, $input_fields_html);
-	}
+    if ( $stacked == 1 ) {
+        $input_fields_html =
+          $self->_build_element_and_attributes( 'div', $stacked_attr,
+            $input_fields_html );
+    }
 
-	return $input_fields_html;
-	
+    return $input_fields_html;
+
 }
 
 #####################################################################
@@ -393,11 +408,11 @@ sub _build_field{
 # Comments   :
 # See Also   :
 #####################################################################
-sub _build_fieldset_foreword{
-	my $self = shift;
-	my $fieldset = shift;
-	
-	    # fieldset legend
+sub _build_fieldset_foreword {
+    my $self     = shift;
+    my $fieldset = shift;
+
+    # fieldset legend
     my $legend = '';
     if ( defined $fieldset->{'legend'} ) {
         $legend = qq{<legend>$fieldset->{legend}</legend>};
@@ -414,11 +429,12 @@ sub _build_fieldset_foreword{
     # message at the top of the fieldset
     my $comment = '';
     if ( defined $fieldset->{'comment'} ) {
-        $comment =qq{<div class="grd-grid-12"><p>$fieldset->{comment}</p></div>};
+        $comment =
+          qq{<div class="grd-grid-12"><p>$fieldset->{comment}</p></div>};
         undef $fieldset->{'comment'};
     }
 
-	return $legend . $header . $comment;
+    return $legend . $header . $comment;
 }
 
 #
@@ -439,12 +455,12 @@ sub build_confirmation_button_with_all_inputs_hidden {
         foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
             next INPUT if ( not defined $input_field->{'input'} );
 
-						push @inputs, @{ $input_field->{'input'} };
+            push @inputs, @{ $input_field->{'input'} };
 
         }
     }
 
-    my $html = ''; 
+    my $html = '';
 
     foreach my $input (@inputs) {
         next if ( $input->{'type'} and $input->{'type'} eq 'submit' );
@@ -465,7 +481,8 @@ sub build_confirmation_button_with_all_inputs_hidden {
       ' <span class="button"><button id="submit" class="button" type="submit">'
       . $self->_localize('Confirm')
       . '</button></span>';
-		$html = $self->_build_element_and_attributes( 'form', $self->{data}, $html );
+    $html =
+      $self->_build_element_and_attributes( 'form', $self->{data}, $html );
 
     return $html;
 }
@@ -483,28 +500,30 @@ sub set_field_value {
     my $self        = shift;
     my $field_id    = shift;
     my $field_value = shift;
-		return unless $field_id;
+    return unless $field_id;
     my $input_field = $self->_get_input_field($field_id);
 
-		return unless $input_field;
+    return unless $input_field;
 
-		my $inputs = $input_field->{input};
+    my $inputs = $input_field->{input};
 
+    map {
 
-		map {
-
-			if ( $_->{'id'} and $_->{'id'} eq $field_id ) {
-				if ( eval { $_->can('value') } ) {
-					$_->value($field_value);
-				}
-				elsif ( $_->{'type'} =~ /(?:text|textarea|password|hidden|file)/i ) {
-					$_->{'value'} = $field_value;
-				}
-				elsif ( $_->{'type'} eq 'checkbox' and $field_value eq $_->{'value'} ) {
-						$_->{'checked'} = 'checked';
-					}
-			}
-		} @{$inputs};
+        if ( $_->{'id'} and $_->{'id'} eq $field_id ) {
+            if ( eval { $_->can('value') } ) {
+                $_->value($field_value);
+            }
+            elsif ( $_->{'type'} =~ /(?:text|textarea|password|hidden|file)/i )
+            {
+                $_->{'value'} = $field_value;
+            }
+            elsif ( $_->{'type'} eq 'checkbox'
+                and $field_value eq $_->{'value'} )
+            {
+                $_->{'checked'} = 'checked';
+            }
+        }
+    } @{$inputs};
     return;
 }
 
@@ -522,23 +541,26 @@ sub get_field_value {
 
     my $input_field = $self->_get_input_field($field_id);
 
-		return unless $input_field;
+    return unless $input_field;
 
-		my $inputs = $input_field->{input};
+    my $inputs = $input_field->{input};
 
-		foreach my $input (@$inputs){
-			if ( $input->{'id'} and $input->{'id'} eq $field_id ) {
-				if ( eval { $input->can('value') } ) {
-					return $input->value;
-				}
-				return unless $input->{type};
-				if($input->{type} =~ /(?:text|textarea|password|hidden|file)/i
-					 or $input->{type} eq 'checkbox' && $input->{checked} && $input->{checked} eq 'checked'){
-					return $input->{value};
-				}
-			}
-		}
-		return;
+    foreach my $input (@$inputs) {
+        if ( $input->{'id'} and $input->{'id'} eq $field_id ) {
+            if ( eval { $input->can('value') } ) {
+                return $input->value;
+            }
+            return unless $input->{type};
+            if (   $input->{type} =~ /(?:text|textarea|password|hidden|file)/i
+                or $input->{type} eq 'checkbox'
+                && $input->{checked}
+                && $input->{checked} eq 'checked' )
+            {
+                return $input->{value};
+            }
+        }
+    }
+    return;
 }
 
 ################################################################################
@@ -558,15 +580,15 @@ sub set_field_error_message {
 
     my $input_field = $self->_get_input_field($field_id);
     if ($input_field) {
-			$input_field->{'error'}{'text'} = $error_msg;
-			return;
+        $input_field->{'error'}{'text'} = $error_msg;
+        return;
     }
 
-		my $error_field = $self->_get_error_field($field_id);
-		if ($error_field) {
-			$error_field->{'error'}{'text'} = $error_msg;
-			return;
-		}
+    my $error_field = $self->_get_error_field($field_id);
+    if ($error_field) {
+        $error_field->{'error'}{'text'} = $error_msg;
+        return;
+    }
     return;
 }
 
@@ -584,11 +606,10 @@ sub get_field_error_message {
     my $field_id = shift;
 
     my $input_field = $self->_get_input_field($field_id);
-		return $input_field->{'error'}{'text'} if $input_field;
+    return $input_field->{'error'}{'text'} if $input_field;
 
-		my $error_field = $self->_get_error_field($field_id);
-		return $error_field->{'error'}{'text'} if $error_field;
-
+    my $error_field = $self->_get_error_field($field_id);
+    return $error_field->{'error'}{'text'} if $error_field;
 
     return;
 }
@@ -605,17 +626,19 @@ sub _get_input_field {
     my $self     = shift;
     my $field_id = shift;
 
-		return unless $field_id;
+    return unless $field_id;
     foreach my $fieldset ( @{ $self->{data}{'fieldset'} } ) {
-			foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
-				my $inputs = $input_field->{input};
-				foreach my $sub_input_field (@$inputs){
-					if ($sub_input_field->{id} and $sub_input_field->{id} eq $field_id ){
-						return $input_field;
-					}
-				}
-			}
-		}
+        foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
+            my $inputs = $input_field->{input};
+            foreach my $sub_input_field (@$inputs) {
+                if (    $sub_input_field->{id}
+                    and $sub_input_field->{id} eq $field_id )
+                {
+                    return $input_field;
+                }
+            }
+        }
+    }
 
     return;
 }
@@ -632,21 +655,21 @@ sub _get_error_field {
     my $self     = shift;
     my $error_id = shift;
 
-		return unless $error_id;
+    return unless $error_id;
+
     #build the form fieldset
     foreach my $fieldset ( @{ $self->{data}{'fieldset'} } ) {
         foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
             if (    $input_field->{error}{id}
                 and $input_field->{error}{id} eq $error_id )
-							{
-								return $input_field;
+            {
+                return $input_field;
             }
         }
     }
 
     return;
 }
-
 
 #####################################################################
 # Usage      : build the html element and its own attributes
@@ -662,9 +685,9 @@ sub _build_element_and_attributes {
     my $self        = shift;
     my $element_tag = shift;
     my $attributes  = shift;
-		my $content     = shift ||'';
+    my $content     = shift || '';
     my $options     = shift || {};
-		
+
     #check if the elemen tag is empty
     return if ( $element_tag eq '' );
 
@@ -688,30 +711,29 @@ sub _build_element_and_attributes {
         $html .= '>';
     }
 
-    # we actually pass this option as a string, not an integer
-		# weired usage. why not use a number and just test !$optional->{is_optioanl} ?
-    if ($options->{'is_optional'} and $options->{'is_optional'} eq '0' )
-    {
+  # we actually pass this option as a string, not an integer
+  # weired usage. why not use a number and just test !$optional->{is_optioanl} ?
+    if ( $options->{'is_optional'} and $options->{'is_optional'} eq '0' ) {
         $self->{option}{'has_required_field'} = 1;
         if ( not $self->{option}{'hide_required_text'} ) {
             $html .= '<em class="required_asterisk">*</em> ';
         }
     }
 
-    if ($options->{'call_customer_support'})
-    {
+    if ( $options->{'call_customer_support'} ) {
         $self->{option}{'has_call_customer_support_field'} = 1;
         if ( not $self->{option}{'hide_required_text'} ) {
             $html .= '<em class="required_asterisk">**</em>';
         }
     }
 
-		#close the tag
-		my $end_tag = "</$element_tag>";
-		# input needn't close tag
-		if($element_tag =~ /^(input)$/){
-			$end_tag = '';
-		}
+    #close the tag
+    my $end_tag = "</$element_tag>";
+
+    # input needn't close tag
+    if ( $element_tag =~ /^(input)$/ ) {
+        $end_tag = '';
+    }
     return $html . $content . $end_tag;
 }
 
@@ -729,19 +751,20 @@ sub _build_input {
     my $self        = shift;
     my $input_field = shift;
 
-    my $html     = '';
+    my $html = '';
+
     # delete this so that it doesn't carry on to the next field
-		# I don't know why should delete it(undef it)
+    # I don't know why should delete it(undef it)
     my $heading  = delete $input_field->{'heading'};
     my $trailing = delete $input_field->{'trailing'};
 
-
     #construct the required verification from the input
-		#TODO are these code really useful ?
+    #TODO are these code really useful ?
     if ( $input_field->{'verification'} ) {
-			my $verifications = delete $input_field->{'verification'};
-			$verifications = ref($verifications) eq 'ARRAY' ? $verifications : [$verifications];
-			$self->{option}{'verify'}{$input_field->{id}} = $verifications;
+        my $verifications = delete $input_field->{'verification'};
+        $verifications =
+          ref($verifications) eq 'ARRAY' ? $verifications : [$verifications];
+        $self->{option}{'verify'}{ $input_field->{id} } = $verifications;
     }
 
     #create the filed input
@@ -753,31 +776,30 @@ sub _build_input {
         my $textarea_value = $input_field->{'value'} || '';
         undef $input_field->{'value'};
         $html =
-          $self->_build_element_and_attributes( 'textarea', $input_field, $textarea_value );
+          $self->_build_element_and_attributes( 'textarea', $input_field,
+            $textarea_value );
     }
-    elsif($input_field->{'type'}) {
-			my $type = $input_field->{'type'};
-        if ( $type =~ /^(?:text|password)$/i )
-        {
+    elsif ( $input_field->{'type'} ) {
+        my $type = $input_field->{'type'};
+        if ( $type =~ /^(?:text|password)$/i ) {
             $input_field->{'class'} .= ' text';
         }
-        elsif ( $type =~ /button|submit/ )
-        {
+        elsif ( $type =~ /button|submit/ ) {
             $input_field->{'class'} .= ' button';
         }
 
-			my $tag = ($type =~ /button|submit/ ? 'button' : 'input');
-			
-			$html = $self->_build_element_and_attributes( $tag, $input_field );
+        my $tag = ( $type =~ /button|submit/ ? 'button' : 'input' );
 
-        if ($type =~ /button|submit/)
-        {
-            $html =qq{<span class="$input_field->{class}">$html</span>};
+        $html = $self->_build_element_and_attributes( $tag, $input_field );
+
+        if ( $type =~ /button|submit/ ) {
+            $html = qq{<span class="$input_field->{class}">$html</span>};
         }
     }
 
     if ($heading) {
-        if ( $input_field->{'type'} && ($input_field->{'type'} =~ /radio|checkbox/i ))
+        if ( $input_field->{'type'}
+            && ( $input_field->{'type'} =~ /radio|checkbox/i ) )
         {
             $html .= qq{<span id="inputheading">$heading</span><br />};
         }
@@ -822,7 +844,8 @@ sub _link_button {
     my $myid     = $args->{'id'} ? 'id="' . $args->{'id'} . '"'      : '';
     my $myspanid = $args->{'id'} ? 'id="span_' . $args->{'id'} . '"' : '';
 
-    return qq{<a class="$myclass" href="$args->{href}" $myid><span class="$myclass" $myspanid>$args->{value}</span></a>};
+    return
+qq{<a class="$myclass" href="$args->{href}" $myid><span class="$myclass" $myspanid>$args->{value}</span></a>};
 
 }
 
@@ -838,7 +861,8 @@ sub _tooltip {
     my $url     = shift;
     $content =~ s/\'/&apos;/g;    # Escape for quoting below
 
-    return qq{ <a href='#' title='$content' rel='tooltip'><img src="$url" /></a>};
+    return
+      qq{ <a href='#' title='$content' rel='tooltip'><img src="$url" /></a>};
 }
 
 #####################################################################

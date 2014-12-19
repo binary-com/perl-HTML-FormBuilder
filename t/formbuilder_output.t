@@ -12,7 +12,8 @@ use HTML::FormBuilder::Select;
 my ( $form_obj, $result, $expect_result );
 
 $form_obj = HTML::FormBuilder->new( { id => 'testid' } );
-my $fieldset_index = $form_obj->add_fieldset( {legend => 'a legend',header => 'header',comment => 'comment'} );
+my $fieldset_index = $form_obj->add_fieldset(
+    { legend => 'a legend', header => 'header', comment => 'comment' } );
 
 my $input_field_amount = {
     'label' => {
@@ -27,27 +28,28 @@ my $input_field_amount = {
     },
     'input' => {
         'heading'   => 'heading',
-				'type'      => 'text',
+        'type'      => 'text',
         'id'        => 'amount',
         'name'      => 'amount',
         'maxlength' => 40,
         'value'     => '',
-							 },
-		'comment' => {text => 'commenttext'},
-													'error' => [{
-																			 text => 'errortext'
-								}],
+    },
+    'comment' => { text => 'commenttext' },
+    'error'   => [
+        {
+            text => 'errortext'
+        }
+    ],
 };
 
-        my $input_field_button = {
-            'input' => {
-                'type'  => 'button',
-                'id'    => 'Button',
-                'name'  => 'Button name',
-                'value' => 'button value',
-            },
-        };
-
+my $input_field_button = {
+    'input' => {
+        'type'  => 'button',
+        'id'    => 'Button',
+        'name'  => 'Button name',
+        'value' => 'button value',
+    },
+};
 
 $form_obj->add_field( $fieldset_index, $input_field_amount );
 $form_obj->add_field( $fieldset_index, $input_field_button );
@@ -67,32 +69,30 @@ EOF
 chomp $expect_result;
 is( $result, $expect_result, 'tooltip and call_customer_support' );
 
-
 # test heading
 $form_obj = HTML::FormBuilder->new( { id => 'testid' } );
 $fieldset_index = $form_obj->add_fieldset( {} );
 
-
 my $input_field1 = {
     'input' => {
         'heading'   => 'text heading',
-				'type'      => 'text',
+        'type'      => 'text',
         'id'        => 'amount',
         'name'      => 'amount',
         'maxlength' => 40,
         'value'     => '',
-							 },
+    },
 };
 
 my $input_field2 = {
-										'input' => {
-								'heading' => 'checkbox heading',
-                'type'  => 'checkbox',
-                'id'    => 'single_checkbox',
-                'name'  => 'single_checkbox',
-                'value' => 'SGLBOX',
-            },
-        };
+    'input' => {
+        'heading' => 'checkbox heading',
+        'type'    => 'checkbox',
+        'id'      => 'single_checkbox',
+        'name'    => 'single_checkbox',
+        'value'   => 'SGLBOX',
+    },
+};
 
 $form_obj->add_field( $fieldset_index, $input_field1 );
 $form_obj->add_field( $fieldset_index, $input_field2 );
@@ -111,26 +111,33 @@ $expect_result = <<EOF;
 EOF
 
 chomp($expect_result);
-is($result, $expect_result, 'heading result ok');
+is( $result, $expect_result, 'heading result ok' );
 
 # test build_confirmation_button_with_all_inputs_hidden
 $form_obj = HTML::FormBuilder->new( { id => 'testid' } );
-$fieldset_index = $form_obj->add_fieldset( {legend => 'a legend',header => 'header',comment => 'comment'} );
+$fieldset_index = $form_obj->add_fieldset(
+    { legend => 'a legend', header => 'header', comment => 'comment' } );
 $form_obj->add_field( $fieldset_index, $input_field_amount );
 
-lives_ok( sub { $result = $form_obj->build_confirmation_button_with_all_inputs_hidden }, 'build_confirmation_button_with_all_inputs_hidden ok' );
+lives_ok(
+    sub {
+        $result = $form_obj->build_confirmation_button_with_all_inputs_hidden;
+    },
+    'build_confirmation_button_with_all_inputs_hidden ok'
+);
 
 $expect_result = <<EOF;
 <form id="testid" method="get"><input type="hidden" name="amount" value=""/><input type="hidden" name="process" value="1"/><a class="button backbutton" href="javascript:history.go(-1)" ><span class="button backbutton" >Back</span></a> <span class="button"><button id="submit" class="button" type="submit">1</button></span></form>
 EOF
 
 chomp($expect_result);
-is($result,$expect_result, 'result of build_confirmation_button_with_all_inputs_hidden');
+is( $result, $expect_result,
+    'result of build_confirmation_button_with_all_inputs_hidden' );
 
 ################################################################################
 # stacked
 $form_obj = HTML::FormBuilder->new( { id => 'testid' } );
-$fieldset_index = $form_obj->add_fieldset( {stacked => 0} );
+$fieldset_index = $form_obj->add_fieldset( { stacked => 0 } );
 lives_ok( sub { $result = $form_obj->build }, 'build field with heading' );
 $expect_result = <<EOF;
 <form id="testid" method="get"><div class="rbox form">
@@ -145,9 +152,7 @@ $expect_result = <<EOF;
 EOF
 
 chomp($expect_result);
-is($result,$expect_result, 'result of stacked=0 fieldset');
-
-
+is( $result, $expect_result, 'result of stacked=0 fieldset' );
 
 $form_obj      = create_multiset_form();
 $expect_result = <<'EOF';
