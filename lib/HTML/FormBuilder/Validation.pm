@@ -337,31 +337,20 @@ sub _validate_field {
 
             if ($validation->{'type'} eq 'regexp') {
                 my $regexp = ($validation->{'case_insensitive'}) ? qr{$validation->{'regexp'}}i : qr{$validation->{'regexp'}};
-                if ($validation->{'error_if_true'}) {
-                    if ($field_value =~ $regexp) {
-                        $self->set_field_error_message($input_element_id, $validation->{'err_msg'});
-                        return 0;
-                    }
-                } else {
-                    if ($field_value !~ $regexp) {
-                        $self->set_field_error_message($input_element_id, $validation->{'err_msg'});
-                        return 0;
-                    }
-                }
+								if($validation->{error_if_true} && $field_value =~ $regexp ||
+									 !$validation->{error_if_true} && $field_value !~ $regexp){
+									$self->set_field_error_message($input_element_id, $validation->{'err_msg'});
+									return 0;
+								}
             }
             # Min amount checking
-            elsif ($validation->{'type'} eq 'min_amount') {
-                if ($field_value < $validation->{'amount'}) {
-                    $self->set_field_error_message($input_element_id, $validation->{'err_msg'});
-                    return 0;
-                }
-            }
-            # Max amount checking
-            elsif ($validation->{'type'} eq 'max_amount') {
-                if ($field_value > $validation->{'amount'}) {
-                    $self->set_field_error_message($input_element_id, $validation->{'err_msg'});
-                    return 0;
-                }
+            elsif ($validation->{'type'} eq 'min_amount' &&
+									 $field_value < $validation->{'amount'} ||
+									 $validation->{'type'} eq 'max_amount' &&
+									 $field_value > $validation->{'amount'}
+									) {
+							$self->set_field_error_message($input_element_id, $validation->{'err_msg'});
+							return 0;
             }
         }
     }
