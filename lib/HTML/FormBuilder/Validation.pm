@@ -282,16 +282,7 @@ sub _build_single_javascript_validation{
 	}
 	# Max amount checking
 	elsif ($validation->{'type'} eq 'max_amount') {
-		$javascript .=
-			'if (bInputResult && input_element_'
-			. $input_element_id
-			. '.value > '
-			. $validation->{'amount'} . ')' . '{'
-			. 'error_element_'
-			. $error_element_id
-			. '.innerHTML = decodeURIComponent(\''
-			. $err_msg . '\');'
-			. 'bInputResult = false;' . '}';
+		$javascript .= qq[if (bInputResult && input_element_$input_element_id.value > $validation->{amount}){error_element_$error_element_id.innerHTML = decodeURIComponent('$err_msg');bInputResult = false;}];
 	}
 	# Custom checking
 	elsif ($validation->{'type'} eq 'custom') {
