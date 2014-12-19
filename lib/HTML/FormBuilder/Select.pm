@@ -7,6 +7,8 @@ HTML::FormBuilder::Select - Select Element Handling for BOM Forms
 
 package HTML::FormBuilder::Select;
 
+our $VERSION = '0.01';
+
 use Moo;
 use namespace::autoclean;
 use Carp;

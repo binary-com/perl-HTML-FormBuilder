@@ -1,6 +1,7 @@
 package HTML::FormBuilder::Validation;
 use strict;
 use warnings;
+our $VERSION = '0.01';
 use base 'HTML::FormBuilder';
 
 use strict;
