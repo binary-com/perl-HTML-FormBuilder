@@ -287,23 +287,9 @@ sub _build_single_javascript_validation{
 	# Custom checking
 	elsif ($validation->{'type'} eq 'custom') {
 		if ($validation->{'error_if_true'}) {
-			$javascript .=
-				'if (bInputResult && '
-				. $validation->{'function'} . ')' . '{'
-				. 'error_element_'
-				. $error_element_id
-				. '.innerHTML = decodeURIComponent(\''
-				. $err_msg . '\');'
-				. 'bInputResult = false;' . '}';
+			$javascript .= qq[if (bInputResult && $validation->{function}){error_element_$error_element_id.innerHTML = decodeURIComponent('$err_msg');bInputResult = false;}];
 		} else {
-			$javascript .=
-				'if (bInputResult && !'
-				. $validation->{'function'} . ')' . '{'
-				. 'error_element_'
-				. $error_element_id
-				. '.innerHTML = decodeURIComponent(\''
-				. $err_msg . '\');'
-				. 'bInputResult = false;' . '}';
+			$javascript .=qq[if (bInputResult && !$validation->{function}){error_element_$error_element_id.innerHTML = decodeURIComponent('$err_msg');bInputResult = false;}];
 		}
 	}
 	return $javascript;
