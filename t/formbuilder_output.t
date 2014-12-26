@@ -64,7 +64,7 @@ $expect_result = <<EOF;
         
         
     </div>
-</div></form><p class="required"><em class="required_asterisk">**</em> - 1</p>
+</div></form><p class="required"><em class="required_asterisk">**</em> - To change your name, date of birth, or country of residence, please contact Customer Support.</p>
 EOF
 chomp $expect_result;
 is( $result, $expect_result, 'tooltip and call_customer_support' );
@@ -127,7 +127,7 @@ lives_ok(
 );
 
 $expect_result = <<EOF;
-<form id="testid" method="get"><input type="hidden" name="amount" value=""/><input type="hidden" name="process" value="1"/><a class="button backbutton" href="javascript:history.go(-1)" ><span class="button backbutton" >Back</span></a> <span class="button"><button id="submit" class="button" type="submit">1</button></span></form>
+<form id="testid" method="get"><input type="hidden" name="amount" value=""/><input type="hidden" name="process" value="1"/><a class="button backbutton" href="javascript:history.go(-1)" ><span class="button backbutton" >Back</span></a> <span class="button"><button id="submit" class="button" type="submit">Confirm</button></span></form>
 EOF
 
 chomp($expect_result);
