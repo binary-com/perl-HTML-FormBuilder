@@ -299,13 +299,6 @@ sub _build_field {
         my $label_text = $input_field->{'label'}->{'text'} || '';
         undef $input_field->{'label'}->{'text'};
 
-        # default is optional = false (mandatory)
-        my $is_optional;
-        if ( defined $input_field->{'label'}->{'optional'} ) {
-            $is_optional = $input_field->{'label'}->{'optional'};
-            undef $input_field->{'label'}->{'optional'};
-        }
-
         # default is call_customer_support = false
         my $call_customer_support;
         if ( defined $input_field->{'label'}->{'call_customer_support'} ) {
@@ -319,7 +312,6 @@ sub _build_field {
             $input_field->{'label'},
             $label_text,
             {
-                'is_optional'           => $is_optional,
                 'call_customer_support' => $call_customer_support
             },
         );
@@ -711,14 +703,6 @@ sub _build_element_and_attributes {
         $html .= '>';
     }
 
-  # we actually pass this option as a string, not an integer
-  # weired usage. why not use a number and just test !$optional->{is_optioanl} ?
-    if ( $options->{'is_optional'} and $options->{'is_optional'} eq '0' ) {
-        $self->{option}{'has_required_field'} = 1;
-        if ( not $self->{option}{'hide_required_text'} ) {
-            $html .= '<em class="required_asterisk">*</em> ';
-        }
-    }
 
     if ( $options->{'call_customer_support'} ) {
         $self->{option}{'has_call_customer_support_field'} = 1;
