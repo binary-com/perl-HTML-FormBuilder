@@ -19,7 +19,6 @@ my $input_field_amount = {
     'label' => {
         'text'                  => 'Amount',
         'for'                   => 'amount',
-        'optional'              => '0',
         'call_customer_support' => 1,
         'tooltip'               => {
             desc    => "this is a tool tip",
@@ -233,7 +232,6 @@ sub create_multiset_form {
             'label' => {
                 'text'     => 'Amount',
                 'for'      => 'amount',
-                'optional' => '0',
             },
             'input' => {
                 'type'      => 'text',
@@ -280,7 +278,6 @@ sub create_multiset_form {
             'label' => {
                 'text'     => 'gender',
                 'for'      => 'gender',
-                'optional' => '0',
             },
             'input' => HTML::FormBuilder::Select->new(
                 'id'      => 'gender',
@@ -310,7 +307,6 @@ sub create_multiset_form {
             'label' => {
                 'text'     => 'select_text',
                 'for'      => 'select_text',
-                'optional' => '0',
             },
             'input' => [ $select_curr, $input_amount ],
             'error' => {
@@ -324,7 +320,6 @@ sub create_multiset_form {
             'label' => {
                 'text'     => 'Textarea',
                 'for'      => 'Textarea',
-                'optional' => '0',
             },
             'input' => {
                 'type'  => 'textarea',
@@ -343,7 +338,6 @@ sub create_multiset_form {
             'label' => {
                 'text'     => 'Password',
                 'for'      => 'Password',
-                'optional' => '0',
             },
             'input' => {
                 'type'  => 'password',
@@ -362,7 +356,6 @@ sub create_multiset_form {
             'label' => {
                 'text'     => 'Single Checkbox',
                 'for'      => 'single_checkbox',
-                'optional' => '0',
             },
             'input' => {
                 'type'  => 'checkbox',
@@ -376,7 +369,6 @@ sub create_multiset_form {
             'label' => {
                 'text'     => 'Single Checkbox',
                 'for'      => 'single_checkbox',
-                'optional' => '0',
             },
             'input' => [
                 {

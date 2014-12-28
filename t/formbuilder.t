@@ -211,7 +211,6 @@ sub create_form_object {
         'label' => {
             'text'     => 'Amount',
             'for'      => 'amount',
-            'optional' => '0',
         },
         'input' => {
             'type'      => 'text',
@@ -258,7 +257,6 @@ sub create_form_object {
         'label' => {
             'text'     => 'gender',
             'for'      => 'gender',
-            'optional' => '0',
         },
         'input' => HTML::FormBuilder::Select->new(
             'id'      => 'gender',
@@ -288,7 +286,6 @@ sub create_form_object {
         'label' => {
             'text'     => 'select_text',
             'for'      => 'select_text',
-            'optional' => '0',
         },
         'input' => [ $select_curr, $input_amount ],
         'error' => {
@@ -302,7 +299,6 @@ sub create_form_object {
         'label' => {
             'text'     => 'Textarea',
             'for'      => 'Textarea',
-            'optional' => '0',
         },
         'input' => {
             'type'  => 'textarea',
@@ -321,7 +317,6 @@ sub create_form_object {
         'label' => {
             'text'     => 'Password',
             'for'      => 'Password',
-            'optional' => '0',
         },
         'input' => {
             'type'  => 'password',
@@ -340,7 +335,6 @@ sub create_form_object {
         'label' => {
             'text'     => 'Single Checkbox',
             'for'      => 'single_checkbox',
-            'optional' => '0',
         },
         'input' => {
             'type'  => 'checkbox',
@@ -354,7 +348,6 @@ sub create_form_object {
         'label' => {
             'text'     => 'Single Checkbox',
             'for'      => 'single_checkbox',
-            'optional' => '0',
         },
         'input' => [
             {
