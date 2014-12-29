@@ -45,6 +45,7 @@ sub new {
 									 RowPadding => 'grd-row-padding',
 									 row => 'row',
 									 comment => 'comment',
+									 extra_tooltip_container => 'extra_tooltip_container'
 									};
 		
 
@@ -298,7 +299,7 @@ sub _build_field {
             $stacked_attr->{class} = $class;
         }
         else {
-            $stacked_attr->{class} = "$self->{classes}{RowPadding} row clear$class";
+            $stacked_attr->{class} = "$self->{classes}{RowPadding} $self->{classes}{row} clear$class";
         }
     }
 
@@ -324,7 +325,7 @@ sub _build_field {
             );
 
             $input_fields_html .=
-qq{<div class="extra_tooltip_container">$label_html$tooltip</div>};
+qq{<div class="$self->{classes}{extra_tooltip_container}">$label_html$tooltip</div>};
         }
         else {
 
