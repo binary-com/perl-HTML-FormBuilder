@@ -42,6 +42,7 @@ sub new {
 		my $classes = {
 									 fieldset_group => 'toggle-content',
 									 NoStackFieldParent => 'grd-grid-12',
+									 RowPadding => 'grd-row-padding',
 									 row => 'row',
 									 comment => 'comment',
 									};
@@ -297,7 +298,7 @@ sub _build_field {
             $stacked_attr->{class} = $class;
         }
         else {
-            $stacked_attr->{class} = "grd-row-padding row clear$class";
+            $stacked_attr->{class} = "$self->{classes}{RowPadding} row clear$class";
         }
     }
 
