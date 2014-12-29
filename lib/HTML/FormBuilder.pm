@@ -38,6 +38,7 @@ sub new {
 		################################################################################
 		# move classes together
 		# TODO move it to the CGIFORM
+		# and add a initial function to initial non-exist class
 		my $classes = {
 									 fieldset_group => 'toggle-content',
 									 NoStackFieldParent => 'grd-grid-12',
@@ -173,7 +174,7 @@ sub build {
     foreach my $fieldset_group ( sort keys %grouped_fieldset ) {
         if ( $fieldset_group ne 'no-group' ) {
             $fieldsets_html .=
-              '<div id="' . $fieldset_group . '" class="' . $self->class('fieldset_group'). '"abc>';
+              '<div id="' . $fieldset_group . '" class="' . $self->{classes}{fieldset_group}. '"abc>';
         }
 
         foreach my $fieldset_html ( @{ $grouped_fieldset{$fieldset_group} } ) {
@@ -226,7 +227,7 @@ sub _build_fieldset {
     if ( $stacked == 0 ) {
         $input_fields_html =
           $self->_build_element_and_attributes( 'div',
-            { class => $self->class('NoStackFieldParent') },
+            { class => $self->{classes}{'NoStackFieldParent'} },
             $input_fields_html );
     }
 
@@ -905,13 +906,6 @@ sub set_after_form{
 	my $self = shift;
 	my $html = shift;
 	$self->{option}{after_form} = $html;
-}
-
-sub class{
-	my $self = shift;
-	my $class = shift;
-	return $self->{classes}{$class} || '';
-	
 }
 
 1;

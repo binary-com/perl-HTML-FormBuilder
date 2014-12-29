@@ -97,8 +97,8 @@ $form_obj = HTML::FormBuilder->new(
 		 classes => {test_class => 'test-class'},
     }
 );
-is($form_obj->class('test_class'), 'test-class', 'test class method ok');
-is($form_obj->class('no_such_class'), '', 'test class method ok');
+is($form_obj->{classes}{'test_class'}, 'test-class', 'test class method ok');
+#is($form_obj->class('no_such_class'), '', 'test class method ok');
 
 ################################################################################
 # test add_field
