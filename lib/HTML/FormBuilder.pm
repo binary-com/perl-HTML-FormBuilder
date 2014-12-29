@@ -171,8 +171,7 @@ sub build {
       $self->_build_element_and_attributes( 'form', $self->{data},
         $fieldsets_html );
 
-    if ( not $self->{option}{'hide_required_text'} ) {
-        if ( $self->{option}{'has_call_customer_support_field'} ) {
+    if ( ! $self->{option}{'hide_required_text'} && $self->{option}{'has_call_customer_support_field'} ) {
             my $info = $self->_localize(
 'To change your name, date of birth, or country of residence, please contact Customer Support.'
             );
@@ -180,7 +179,7 @@ sub build {
             $html .=
 qq{<p class="required"><em class="required_asterisk">**</em> - $info</p>};
 
-        }
+        
 
     }
 
