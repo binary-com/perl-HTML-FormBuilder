@@ -85,7 +85,7 @@ $form_obj = HTML::FormBuilder->new(
 );
 $fieldset_index = $form_obj->add_fieldset({group => 'fieldsetgroup'});
 lives_ok( sub { $result = $form_obj->build }, 'build form with some args' );
-like( $result,  qr{<fieldset group="fieldsetgroup"></fieldset>},
+like( $result,  qr{<div id="fieldsetgroup" class="toggle-content">},
     'has fieldsetgroup'
 );
 

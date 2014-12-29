@@ -174,7 +174,7 @@ sub build {
     foreach my $fieldset_group ( sort keys %grouped_fieldset ) {
         if ( $fieldset_group ne 'no-group' ) {
             $fieldsets_html .=
-              '<div id="' . $fieldset_group . '" class="$self->{classes}{fieldset_group}"abc>';
+              qq[<div id="$fieldset_group" class="$self->{classes}{fieldset_group}">];
         }
 
         foreach my $fieldset_html ( @{ $grouped_fieldset{$fieldset_group} } ) {
