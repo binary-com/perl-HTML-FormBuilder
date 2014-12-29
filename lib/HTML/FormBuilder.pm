@@ -46,7 +46,8 @@ sub new {
 									 fieldset_footer => 'row comment',
 									 comment => 'grd-grid-12',
 									 row => 'row',
-									 extra_tooltip_container => 'extra_tooltip_container'
+									 extra_tooltip_container => 'extra_tooltip_container',
+									 backbutton => 'backbutton',
 									};
 		
 
@@ -465,7 +466,7 @@ sub build_confirmation_button_with_all_inputs_hidden {
     $html .= _link_button(
         {
             value => $self->_localize('Back'),
-            class => 'backbutton',
+            class => $self->{classes}{backbutton},
             href  => 'javascript:history.go(-1)',
         }
     );
