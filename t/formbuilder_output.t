@@ -11,7 +11,7 @@ use HTML::FormBuilder::Select;
 
 my ( $form_obj, $result, $expect_result );
 
-$form_obj = HTML::FormBuilder->new( { id => 'testid' } );
+$form_obj = create_form( { id => 'testid' } );
 my $fieldset_index = $form_obj->add_fieldset(
     { legend => 'a legend', header => 'header', comment => 'comment' } );
 
@@ -69,7 +69,7 @@ chomp $expect_result;
 is( $result, $expect_result, 'tooltip and call_customer_support' );
 
 # test heading
-$form_obj = HTML::FormBuilder->new( { id => 'testid' } );
+$form_obj = create_form( { id => 'testid' } );
 $fieldset_index = $form_obj->add_fieldset( {} );
 
 my $input_field1 = {
@@ -113,7 +113,7 @@ chomp($expect_result);
 is( $result, $expect_result, 'heading result ok' );
 
 # test build_confirmation_button_with_all_inputs_hidden
-$form_obj = HTML::FormBuilder->new( { id => 'testid' } );
+$form_obj = create_form( { id => 'testid' } );
 $fieldset_index = $form_obj->add_fieldset(
     { legend => 'a legend', header => 'header', comment => 'comment' } );
 $form_obj->add_field( $fieldset_index, $input_field_amount );
@@ -135,7 +135,7 @@ is( $result, $expect_result,
 
 ################################################################################
 # stacked
-$form_obj = HTML::FormBuilder->new( { id => 'testid' } );
+$form_obj = create_form( { id => 'testid' } );
 $fieldset_index = $form_obj->add_fieldset( { stacked => 0 } );
 lives_ok( sub { $result = $form_obj->build }, 'build field with heading' );
 $expect_result = <<EOF;
@@ -217,7 +217,7 @@ sub create_multiset_form {
 
     # Create new form object
     Test::Exception::lives_ok {
-        $form_obj = HTML::FormBuilder->new($form_attributes);
+        $form_obj = create_form($form_attributes);
     }
     'Create Form';
 
@@ -406,3 +406,26 @@ sub create_multiset_form {
     return $form_obj;
 }
 
+sub _create_form_helper{
+	my $form_class = shift;
+	my $form_attributes = shift;
+	my $form_classes = {
+									 fieldset_group => 'toggle-content',
+									 NoStackFieldParent => 'grd-grid-12',
+									 RowPadding => 'grd-row-padding',
+									 fieldset_footer => 'row comment',
+									 comment => 'grd-grid-12',
+									 row => 'row',
+									 extra_tooltip_container => 'extra_tooltip_container',
+									 backbutton => 'backbutton',
+									 required_asterisk => 'required_asterisk',
+									 inputtrailing => 'inputtrailing',
+										 };
+	$form_attributes->{classes} = $form_classes;
+	return $form_class->new($form_attributes);
+}
+
+sub create_form{
+	my $class = 'HTML::FormBuilder';
+	return _create_form_helper($class, @_);
+}

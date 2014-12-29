@@ -35,29 +35,24 @@ sub new {
     $self->{option} = shift || {};
 
 
-		################################################################################
-		# move classes together
-		# TODO move it to the CGIFORM
-		# and add a initial function to initial non-exist class
-		my $classes = {
-									 fieldset_group => 'toggle-content',
-									 NoStackFieldParent => 'grd-grid-12',
-									 RowPadding => 'grd-row-padding',
-									 fieldset_footer => 'row comment',
-									 comment => 'grd-grid-12',
-									 row => 'row',
-									 extra_tooltip_container => 'extra_tooltip_container',
-									 backbutton => 'backbutton',
-									 required_asterisk => 'required_asterisk',
-									 inputtrailing => 'inputtrailing',
-									};
-		
+		# set default class 
+		my @class_names = qw( fieldset_group
+													NoStackFieldParent
+													RowPadding
+													fieldset_footer
+													comment
+													row
+													extra_tooltip_container
+													backbutton
+													required_asterisk
+													inputtrailing);
 
-
+		my %classes = map {$_ => $_} @class_names;
+		%classes = (%classes, %{delete $_args->{classes} ||{}});
 		#
 		################################################################################
 		
-		$self->{classes} = delete $_args->{classes} || $classes;
+		$self->{classes} = \%classes;
 		
     for my $opt (
         qw(option text hide_required_text localize)
