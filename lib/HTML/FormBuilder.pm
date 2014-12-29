@@ -43,7 +43,7 @@ sub new {
 									 fieldset_group => 'toggle-content',
 									 NoStackFieldParent => 'grd-grid-12',
 									 row => 'row',
-									 comment => 'comment ',
+									 comment => 'comment',
 									};
 		
 

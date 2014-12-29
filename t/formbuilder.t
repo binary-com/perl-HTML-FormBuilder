@@ -109,7 +109,7 @@ $form_obj = HTML::FormBuilder->new(
 );
 $fieldset_index = $form_obj->add_fieldset({footer => 'this is footer of fieldset'});
 lives_ok( sub { $result = $form_obj->build }, 'build form with some args' );
-like( $result,  qr{<div class="row comment ">this is footer of fieldset</div></fieldset>},
+like( $result,  qr{<div class="row comment">this is footer of fieldset</div></fieldset>},
     'has footer'
 );
 
