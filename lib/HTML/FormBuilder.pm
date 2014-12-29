@@ -43,8 +43,9 @@ sub new {
 									 fieldset_group => 'toggle-content',
 									 NoStackFieldParent => 'grd-grid-12',
 									 RowPadding => 'grd-row-padding',
+									 fieldset_footer => 'row comment',
+									 comment => 'grd-grid-12',
 									 row => 'row',
-									 comment => 'comment',
 									 extra_tooltip_container => 'extra_tooltip_container'
 									};
 		
@@ -241,7 +242,7 @@ sub _build_fieldset {
     # message at the bottom of the fieldset
     if ( defined $fieldset->{'footer'} ) {
         my $footer = delete $fieldset->{'footer'};
-        $fieldset_html .= qq{<div class="$self->{classes}{row} $self->{classes}{comment}">$footer</div>};
+        $fieldset_html .= qq{<div class="$self->{classes}{fieldset_footer}">$footer</div>};
     }
 
     $fieldset_html =
@@ -421,7 +422,7 @@ sub _build_fieldset_foreword {
     my $comment = '';
     if ( defined $fieldset->{'comment'} ) {
         $comment =
-          qq{<div class="grd-grid-12"><p>$fieldset->{comment}</p></div>};
+          qq{<div class="$self->{classes}{comment}"><p>$fieldset->{comment}</p></div>};
         undef $fieldset->{'comment'};
     }
 
