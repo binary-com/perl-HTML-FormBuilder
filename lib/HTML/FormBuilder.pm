@@ -32,15 +32,16 @@ sub new {
     my $self = {};
     $self->{data} = $_args;
 
-    $self->{option} = {};
+    $self->{option} = shift || {};
 
     for my $opt (
-        qw(option text hide_required_text localize has_call_customer_support_field)
+        qw(option text hide_required_text localize)
       )
     {
         if ( $_args->{$opt} ) {
             $self->{option}{$opt} = delete $_args->{$opt};
-        }
+					}
+				
     }
 
     $self->{data}{method} ||= 'get';
@@ -171,18 +172,10 @@ sub build {
       $self->_build_element_and_attributes( 'form', $self->{data},
         $fieldsets_html );
 
-    if ( ! $self->{option}{'hide_required_text'} && $self->{option}{'has_call_customer_support_field'} ) {
-            my $info = $self->_localize(
-'To change your name, date of birth, or country of residence, please contact Customer Support.'
-            );
-
-            $html .=
-qq{<p class="required"><em class="required_asterisk">**</em> - $info</p>};
-
-        
-
-    }
-
+		if($self->{option}{after_form}){
+			$html .= $self->{option}{after_form};
+		}
+		
     return $html;
 }
 
@@ -292,23 +285,13 @@ sub _build_field {
     if ( defined $input_field->{'label'} ) {
         my $label_text = $input_field->{'label'}->{'text'} || '';
         undef $input_field->{'label'}->{'text'};
-
-        # default is call_customer_support = false
-        my $call_customer_support;
-        if ( defined $input_field->{'label'}->{'call_customer_support'} ) {
-            $call_customer_support =
-              $input_field->{'label'}->{'call_customer_support'};
-            undef $input_field->{'label'}->{'call_customer_support'};
-        }
-
+				my $required_mark = delete $input_field->{label}{required_mark} || 0;
         my $label_html = $self->_build_element_and_attributes(
             'label',
             $input_field->{'label'},
             $label_text,
-            {
-                'call_customer_support' => $call_customer_support
-            },
-        );
+						{required_mark => $required_mark},
+																														 );
 
         # add a tooltip explanation if given
         if ( $input_field->{'label'}{'tooltip'} ) {
@@ -698,13 +681,10 @@ sub _build_element_and_attributes {
     }
 
 
-    if ( $options->{'call_customer_support'} ) {
-        $self->{option}{'has_call_customer_support_field'} = 1;
-        if ( not $self->{option}{'hide_required_text'} ) {
-            $html .= '<em class="required_asterisk">**</em>';
-        }
-    }
-
+		if($options->{required_mark} && ! $self->{option}{hide_required_text}){
+			$html .= '<em class="required_asterisk">**</em>';
+		}
+		
     #close the tag
     my $end_tag = "</$element_tag>";
 
@@ -902,6 +882,13 @@ EOF
         \$output
     );
     return $output;
+}
+
+
+sub set_after_form{
+	my $self = shift;
+	my $html = shift;
+	$self->{option}{after_form} = $html;
 }
 
 1;

@@ -43,19 +43,40 @@ is( $result, $expect_result,
 'the result of build confirmation_button_with_all_inputs_hidden with arg localize'
 );
 
+
+################################################################################
+# test set_after_from
+
 $form_obj = HTML::FormBuilder->new(
     {
         id                              => 'testid',
-        has_call_customer_support_field => 1,
-        localize                        => sub { uc(shift) }
     }
 );
+$form_obj->set_after_form("<div>afterform</div>");
 lives_ok( sub { $result = $form_obj->build }, 'build form with some args' );
 like(
     $result,
-    qr/CHANGE YOUR NAME/,
-    'has_call_customer_support_field branch executed'
+    qr/<div>afterform<\/div>/,
+    'add afterform info'
 );
+
+################################################################################
+# test required_mark
+
+$form_obj = HTML::FormBuilder->new(
+    {
+        id                              => 'testid',
+    }
+);
+my $fieldset_index = $form_obj->add_fieldset({});
+$form_obj->add_field($fieldset_index,{label => {text=>"it is a label", required_mark => 1}});
+
+lives_ok( sub { $result = $form_obj->build }, 'build form with some args' );
+like( $result,  qr/<em class="required_asterisk">\*\*<\/em>/,
+    'has em'
+);
+
+
 
 ################################################################################
 # test add_field

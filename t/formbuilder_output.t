@@ -19,12 +19,12 @@ my $input_field_amount = {
     'label' => {
         'text'                  => 'Amount',
         'for'                   => 'amount',
-        'call_customer_support' => 1,
         'tooltip'               => {
             desc    => "this is a tool tip",
             img_url => "test.png"
         },
-    },
+				'required_mark' => 1,
+		},
     'input' => {
         'heading'   => 'heading',
         'type'      => 'text',
@@ -63,7 +63,7 @@ $expect_result = <<EOF;
         
         
     </div>
-</div></form><p class="required"><em class="required_asterisk">**</em> - To change your name, date of birth, or country of residence, please contact Customer Support.</p>
+</div></form>
 EOF
 chomp $expect_result;
 is( $result, $expect_result, 'tooltip and call_customer_support' );
