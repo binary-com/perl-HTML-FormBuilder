@@ -49,6 +49,7 @@ sub new {
 									 extra_tooltip_container => 'extra_tooltip_container',
 									 backbutton => 'backbutton',
 									 required_asterisk => 'required_asterisk',
+									 inputtrailing => 'inputtrailing',
 									};
 		
 
@@ -792,7 +793,7 @@ sub _build_input {
     }
 
     if ($trailing) {
-        $html .= qq{<span class="inputtrailing">$trailing</span>};
+        $html .= qq{<span class="$self->{classes}{inputtrailing}">$trailing</span>};
     }
 
     return $html;

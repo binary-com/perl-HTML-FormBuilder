@@ -113,6 +113,20 @@ like( $result,  qr{<div class="row comment">this is footer of fieldset</div></fi
     'has footer'
 );
 
+################################################################################
+# test input trailling
+$form_obj = HTML::FormBuilder->new(
+    {
+        id                              => 'testid',
+    }
+);
+$fieldset_index = $form_obj->add_fieldset({});
+$form_obj->add_field($fieldset_index, {input => {trailing => "This is trailling"}});
+lives_ok( sub { $result = $form_obj->build }, 'build form with some args' );
+like( $result,  qr{<span class="inputtrailing">This is trailling</span>},
+    'has footer'
+);
+
 
 ################################################################################
 # test add_field
