@@ -101,6 +101,20 @@ is($form_obj->{classes}{'test_class'}, 'test-class', 'test class method ok');
 #is($form_obj->class('no_such_class'), '', 'test class method ok');
 
 ################################################################################
+# test fieldset footer
+$form_obj = HTML::FormBuilder->new(
+    {
+        id                              => 'testid',
+    }
+);
+$fieldset_index = $form_obj->add_fieldset({footer => 'this is footer of fieldset'});
+lives_ok( sub { $result = $form_obj->build }, 'build form with some args' );
+like( $result,  qr{<div class="row comment ">this is footer of fieldset</div></fieldset>},
+    'has footer'
+);
+
+
+################################################################################
 # test add_field
 $form_obj = HTML::FormBuilder->new( { id => 'testid' } );
 throws_ok(

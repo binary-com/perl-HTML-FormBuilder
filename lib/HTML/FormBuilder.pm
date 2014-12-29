@@ -42,6 +42,8 @@ sub new {
 		my $classes = {
 									 fieldset_group => 'toggle-content',
 									 NoStackFieldParent => 'grd-grid-12',
+									 row => 'row',
+									 comment => 'comment ',
 									};
 		
 
@@ -209,6 +211,7 @@ sub _build_fieldset {
     my $self     = shift;
     my $fieldset = shift;
 
+		#FIXME this attribute should be deleted, or it will emit to the html code
     my $fieldset_group = $fieldset->{'group'};
     my $stacked = defined $fieldset->{'stacked'} ? $fieldset->{'stacked'} : 1;
 
@@ -236,7 +239,7 @@ sub _build_fieldset {
     # message at the bottom of the fieldset
     if ( defined $fieldset->{'footer'} ) {
         my $footer = delete $fieldset->{'footer'};
-        $fieldset_html .= qq{<div class="row comment">$footer</div>};
+        $fieldset_html .= qq{<div class="$self->{classes}{row} $self->{classes}{comment}">$footer</div>};
     }
 
     $fieldset_html =
