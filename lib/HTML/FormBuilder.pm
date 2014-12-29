@@ -34,6 +34,22 @@ sub new {
 
     $self->{option} = shift || {};
 
+
+		################################################################################
+		# move classes together
+		# TODO move it to the CGIFORM
+		my $classes = {
+									 fieldset_group => 'toggle-content',
+									 
+									};
+		
+
+
+		#
+		################################################################################
+		
+		$self->{classes} = delete $_args->{classes} || $classes;
+		
     for my $opt (
         qw(option text hide_required_text localize)
       )
@@ -157,7 +173,7 @@ sub build {
     foreach my $fieldset_group ( sort keys %grouped_fieldset ) {
         if ( $fieldset_group ne 'no-group' ) {
             $fieldsets_html .=
-              '<div id="' . $fieldset_group . '" class="toggle-content">';
+              '<div id="' . $fieldset_group . '" class="' . $self->class('fieldset_group'). '"abc>';
         }
 
         foreach my $fieldset_html ( @{ $grouped_fieldset{$fieldset_group} } ) {
@@ -889,6 +905,13 @@ sub set_after_form{
 	my $self = shift;
 	my $html = shift;
 	$self->{option}{after_form} = $html;
+}
+
+sub class{
+	my $self = shift;
+	my $class = shift;
+	return $self->{classes}{$class} || '';
+	
 }
 
 1;

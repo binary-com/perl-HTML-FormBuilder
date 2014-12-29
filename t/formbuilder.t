@@ -76,7 +76,29 @@ like( $result,  qr/<em class="required_asterisk">\*\*<\/em>/,
     'has em'
 );
 
+################################################################################
+# test fieldset_group
+$form_obj = HTML::FormBuilder->new(
+    {
+        id                              => 'testid',
+    }
+);
+$fieldset_index = $form_obj->add_fieldset({group => 'fieldsetgroup'});
+lives_ok( sub { $result = $form_obj->build }, 'build form with some args' );
+like( $result,  qr{<fieldset group="fieldsetgroup"></fieldset>},
+    'has fieldsetgroup'
+);
 
+################################################################################
+# test class
+$form_obj = HTML::FormBuilder->new(
+    {
+		 id                              => 'testid',
+		 classes => {test_class => 'test-class'},
+    }
+);
+is($form_obj->class('test_class'), 'test-class', 'test class method ok');
+is($form_obj->class('no_such_class'), '', 'test class method ok');
 
 ################################################################################
 # test add_field
