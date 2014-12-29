@@ -48,6 +48,7 @@ sub new {
 									 row => 'row',
 									 extra_tooltip_container => 'extra_tooltip_container',
 									 backbutton => 'backbutton',
+									 required_asterisk => 'required_asterisk',
 									};
 		
 
@@ -706,7 +707,7 @@ sub _build_element_and_attributes {
 
 
 		if($options->{required_mark} && ! $self->{option}{hide_required_text}){
-			$html .= '<em class="required_asterisk">**</em>';
+			$html .= qq[<em class="$self->{classes}{required_asterisk}">**</em>];
 		}
 		
     #close the tag
