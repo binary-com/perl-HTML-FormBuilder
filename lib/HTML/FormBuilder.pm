@@ -35,7 +35,7 @@ sub new {
     $self->{option} = {};
 
     for my $opt (
-        qw(option text hide_required_text has_required_field localize has_call_customer_support_field)
+        qw(option text hide_required_text localize has_call_customer_support_field)
       )
     {
         if ( $_args->{$opt} ) {
@@ -172,11 +172,6 @@ sub build {
         $fieldsets_html );
 
     if ( not $self->{option}{'hide_required_text'} ) {
-        $html .=
-          '<p class="required"><em class="required_asterisk">*</em> - '
-          . $self->_localize('Required') . '</p>'
-          if ( $self->{option}{'has_required_field'} );
-
         if ( $self->{option}{'has_call_customer_support_field'} ) {
             my $info = $self->_localize(
 'To change your name, date of birth, or country of residence, please contact Customer Support.'
