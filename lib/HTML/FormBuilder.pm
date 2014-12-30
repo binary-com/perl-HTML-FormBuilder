@@ -6,7 +6,6 @@ use 5.008_005;
 our $VERSION = '0.01';
 
 use Carp;
-use Template;
 
 #####################################################################
 # Usage      : Instantiate a Form object.
@@ -844,21 +843,6 @@ sub _tooltip {
       qq{ <a href='#' title='$content' rel='tooltip'><img src="$url" /></a>};
 }
 
-#####################################################################
-# Usage      : $self->_template
-# Returns    : temlate object
-# Comments   :
-# See Also   :
-#####################################################################
-sub _template {
-    return Template->new(
-        ENCODING    => 'utf8',
-        INTERPOLATE => 1,
-        PRE_CHOMP   => $Template::CHOMP_GREEDY,
-        POST_CHOMP  => $Template::CHOMP_GREEDY,
-        TRIM        => 1,
-    );
-}
 
 #####################################################################
 # Usage      : $self->_wrap_fieldset($fieldset_html)
@@ -871,38 +855,16 @@ sub _wrap_fieldset {
     my ( $self, $fieldset_html ) = @_;
     my $output            = '';
     my $fieldset_template = <<EOF;
-<div[% IF id %] id="[% id %]"[% END %] class="[% IF extra_class %]rbox [% extra_class %][% ELSE %]rbox[% END %][% IF expandable %] expandable[% END %][% IF collapsible %] collapsible[% END %]">
+<div class="rbox form">
     <div class="rbox-wrap">
-        [% IF heading %]
-            <div class="rbox-heading">
-                <h4 class="[% IF class %][% class %][% END %]">[% heading %]</h4>
-            </div>
-        [% END %]
-        [% content %]
+        $fieldset_html
         <span class="tl">&nbsp;</span><span class="tr">&nbsp;</span><span class="bl">&nbsp;</span><span class="br">&nbsp;</span>
-        [% IF expandable OR collapsible %]
-            <div class="arrow-expand-collapse">
-                <div class="arrow-expand-collapse-text">
-                    <span class="show-all[% IF collapsible %] invisible[% END%]">show all</span>
-                    <span class="hide-all[% IF expandable %] invisible[% END%]">hide bets</span>
-                </div>
-            </div>
-        [% END %]
-        [% IF close_button %]<div class="close_button"></div>[% END %]
     </div>
 </div>
-
 EOF
 
-    $self->_template->process(
-        \$fieldset_template,
-        {
-            content     => $fieldset_html,
-            extra_class => 'form'
-        },
-        \$output
-    );
-    return $output;
+		return $fieldset_template;
+
 }
 
 

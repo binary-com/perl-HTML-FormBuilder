@@ -60,13 +60,11 @@ lives_ok( sub { $result = $form_obj->build }, 'build tooltip ok' );
 $expect_result = <<EOF;
 <form id="testid" method="get"><div class="rbox form">
     <div class="rbox-wrap">
-        
         <fieldset><legend>a legend</legend><h2>header</h2><div class="grd-grid-12"><p>comment</p></div><div class="grd-row-padding row clear"><div class="extra_tooltip_container"><label for="amount"><em class="required_asterisk">**</em>Amount</label> <a href='#' title='this is a tool tip' rel='tooltip'><img src="test.png" /></a></div><div class="grd-grid-8"><span id="inputheading">heading</span><input class=" text" id="amount" maxlength="40" name="amount" type="text"><br><p>commenttext</p><p>errortext</p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-8"><span class=" button"><button class=" button" id="Button" name="Button name" type="button" value="button value">button value</button></button></span></div></div></fieldset>
         <span class="tl">&nbsp;</span><span class="tr">&nbsp;</span><span class="bl">&nbsp;</span><span class="br">&nbsp;</span>
-        
-        
     </div>
-</div></form>
+</div>
+</form>
 EOF
 chomp $expect_result;
 is( $result, $expect_result, 'tooltip and call_customer_support' );
@@ -103,13 +101,11 @@ lives_ok( sub { $result = $form_obj->build }, 'build field with heading' );
 $expect_result = <<EOF;
 <form id="testid" method="get"><div class="rbox form">
     <div class="rbox-wrap">
-        
         <fieldset><div class="grd-row-padding row clear"><div class="grd-grid-8"><span id="inputheading">text heading</span><input class=" text" id="amount" maxlength="40" name="amount" type="text"></div></div><div class="grd-row-padding row clear"><div class="grd-grid-8"><input id="single_checkbox" name="single_checkbox" type="checkbox" value="SGLBOX"><span id="inputheading">checkbox heading</span><br /></div></div></fieldset>
         <span class="tl">&nbsp;</span><span class="tr">&nbsp;</span><span class="bl">&nbsp;</span><span class="br">&nbsp;</span>
-        
-        
     </div>
-</div></form>
+</div>
+</form>
 EOF
 
 chomp($expect_result);
@@ -144,13 +140,11 @@ lives_ok( sub { $result = $form_obj->build }, 'build field with heading' );
 $expect_result = <<EOF;
 <form id="testid" method="get"><div class="rbox form">
     <div class="rbox-wrap">
-        
         <fieldset><div class="grd-grid-12"></div></fieldset>
         <span class="tl">&nbsp;</span><span class="tr">&nbsp;</span><span class="bl">&nbsp;</span><span class="br">&nbsp;</span>
-        
-        
     </div>
-</div></form>
+</div>
+</form>
 EOF
 
 chomp($expect_result);
@@ -160,45 +154,35 @@ $form_obj      = create_multiset_form();
 $expect_result = <<'EOF';
 <form action="http://localhost/some/where/test.cgi" class="formObject" id="id_test_form" method="post" name="name_test_form"><div class="rbox form">
     <div class="rbox-wrap">
-        
         <fieldset><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="amount">Amount</label></div><div class="grd-grid-8"><input class=" text" id="amount" maxlength="40" name="amount" type="text"><p class="errorfield" id="error_amount"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="gender">gender</label></div><div class="grd-grid-8"><select id="gender" name="gender"><option value="male" SELECTED >male</option><option value="female" >female</option></select><p class="errorfield" id="error_gender"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="select_text">select_text</label></div><div class="grd-grid-8"><select id="select_text_curr" name="select_text_curr"><option value="USD" >USD</option><option value="EUR" >EUR</option></select><input class=" text" id="select_text_amount" name="select_text_amount" type="text" value="20"><p class="errorfield" id="error_select_text"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="Textarea">Textarea</label></div><div class="grd-grid-8"><textarea id="Textarea" name="Textarea">This is default value of textarea</textarea><p class="errorfield" id="error_Textarea"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="Password">Password</label></div><div class="grd-grid-8"><input class=" text" id="Password" name="Password" type="password" value="pa$$w0rd"><p class="errorfield" id="error_Password"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="single_checkbox">Single Checkbox</label></div><div class="grd-grid-8"><input id="single_checkbox" name="single_checkbox" type="checkbox" value="SGLBOX"></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="single_checkbox">Single Checkbox</label></div><div class="grd-grid-8"><input id="checkbox1" name="checkbox1" type="checkbox" value="BOX1"><input id="checkbox2" name="checkbox2" type="checkbox" value="BOX2"></div></div><div class="grd-row-padding row clear"><p class="errorfield" id="error_general"></p></div></fieldset>
         <span class="tl">&nbsp;</span><span class="tr">&nbsp;</span><span class="bl">&nbsp;</span><span class="br">&nbsp;</span>
-        
-        
     </div>
-</div><div class="rbox form">
+</div>
+<div class="rbox form">
     <div class="rbox-wrap">
-        
         <fieldset><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="amount">Amount</label></div><div class="grd-grid-8"><input class=" text" id="amount" maxlength="40" name="amount" type="text"><p class="errorfield" id="error_amount"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="gender">gender</label></div><div class="grd-grid-8"><select id="gender" name="gender"><option value="male" SELECTED >male</option><option value="female" >female</option></select><p class="errorfield" id="error_gender"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="select_text">select_text</label></div><div class="grd-grid-8"><select id="select_text_curr" name="select_text_curr"><option value="USD" >USD</option><option value="EUR" >EUR</option></select><input class=" text" id="select_text_amount" name="select_text_amount" type="text" value="20"><p class="errorfield" id="error_select_text"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="Textarea">Textarea</label></div><div class="grd-grid-8"><textarea id="Textarea" name="Textarea">This is default value of textarea</textarea><p class="errorfield" id="error_Textarea"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="Password">Password</label></div><div class="grd-grid-8"><input class=" text" id="Password" name="Password" type="password" value="pa$$w0rd"><p class="errorfield" id="error_Password"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="single_checkbox">Single Checkbox</label></div><div class="grd-grid-8"><input id="single_checkbox" name="single_checkbox" type="checkbox" value="SGLBOX"></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="single_checkbox">Single Checkbox</label></div><div class="grd-grid-8"><input id="checkbox1" name="checkbox1" type="checkbox" value="BOX1"><input id="checkbox2" name="checkbox2" type="checkbox" value="BOX2"></div></div><div class="grd-row-padding row clear"><p class="errorfield" id="error_general"></p></div></fieldset>
         <span class="tl">&nbsp;</span><span class="tr">&nbsp;</span><span class="bl">&nbsp;</span><span class="br">&nbsp;</span>
-        
-        
     </div>
-</div><div class="rbox form">
+</div>
+<div class="rbox form">
     <div class="rbox-wrap">
-        
         <fieldset><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="amount">Amount</label></div><div class="grd-grid-8"><input class=" text" id="amount" maxlength="40" name="amount" type="text"><p class="errorfield" id="error_amount"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="gender">gender</label></div><div class="grd-grid-8"><select id="gender" name="gender"><option value="male" SELECTED >male</option><option value="female" >female</option></select><p class="errorfield" id="error_gender"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="select_text">select_text</label></div><div class="grd-grid-8"><select id="select_text_curr" name="select_text_curr"><option value="USD" >USD</option><option value="EUR" >EUR</option></select><input class=" text" id="select_text_amount" name="select_text_amount" type="text" value="20"><p class="errorfield" id="error_select_text"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="Textarea">Textarea</label></div><div class="grd-grid-8"><textarea id="Textarea" name="Textarea">This is default value of textarea</textarea><p class="errorfield" id="error_Textarea"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="Password">Password</label></div><div class="grd-grid-8"><input class=" text" id="Password" name="Password" type="password" value="pa$$w0rd"><p class="errorfield" id="error_Password"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="single_checkbox">Single Checkbox</label></div><div class="grd-grid-8"><input id="single_checkbox" name="single_checkbox" type="checkbox" value="SGLBOX"></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="single_checkbox">Single Checkbox</label></div><div class="grd-grid-8"><input id="checkbox1" name="checkbox1" type="checkbox" value="BOX1"><input id="checkbox2" name="checkbox2" type="checkbox" value="BOX2"></div></div><div class="grd-row-padding row clear"><p class="errorfield" id="error_general"></p></div></fieldset>
         <span class="tl">&nbsp;</span><span class="tr">&nbsp;</span><span class="bl">&nbsp;</span><span class="br">&nbsp;</span>
-        
-        
     </div>
-</div><div class="rbox form">
+</div>
+<div class="rbox form">
     <div class="rbox-wrap">
-        
         <fieldset><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="amount">Amount</label></div><div class="grd-grid-8"><input class=" text" id="amount" maxlength="40" name="amount" type="text"><p class="errorfield" id="error_amount"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="gender">gender</label></div><div class="grd-grid-8"><select id="gender" name="gender"><option value="male" SELECTED >male</option><option value="female" >female</option></select><p class="errorfield" id="error_gender"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="select_text">select_text</label></div><div class="grd-grid-8"><select id="select_text_curr" name="select_text_curr"><option value="USD" >USD</option><option value="EUR" >EUR</option></select><input class=" text" id="select_text_amount" name="select_text_amount" type="text" value="20"><p class="errorfield" id="error_select_text"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="Textarea">Textarea</label></div><div class="grd-grid-8"><textarea id="Textarea" name="Textarea">This is default value of textarea</textarea><p class="errorfield" id="error_Textarea"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="Password">Password</label></div><div class="grd-grid-8"><input class=" text" id="Password" name="Password" type="password" value="pa$$w0rd"><p class="errorfield" id="error_Password"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="single_checkbox">Single Checkbox</label></div><div class="grd-grid-8"><input id="single_checkbox" name="single_checkbox" type="checkbox" value="SGLBOX"></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="single_checkbox">Single Checkbox</label></div><div class="grd-grid-8"><input id="checkbox1" name="checkbox1" type="checkbox" value="BOX1"><input id="checkbox2" name="checkbox2" type="checkbox" value="BOX2"></div></div><div class="grd-row-padding row clear"><p class="errorfield" id="error_general"></p></div></fieldset>
         <span class="tl">&nbsp;</span><span class="tr">&nbsp;</span><span class="bl">&nbsp;</span><span class="br">&nbsp;</span>
-        
-        
     </div>
-</div><div class="rbox form">
+</div>
+<div class="rbox form">
     <div class="rbox-wrap">
-        
         <fieldset><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="amount">Amount</label></div><div class="grd-grid-8"><input class=" text" id="amount" maxlength="40" name="amount" type="text"><p class="errorfield" id="error_amount"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="gender">gender</label></div><div class="grd-grid-8"><select id="gender" name="gender"><option value="male" SELECTED >male</option><option value="female" >female</option></select><p class="errorfield" id="error_gender"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="select_text">select_text</label></div><div class="grd-grid-8"><select id="select_text_curr" name="select_text_curr"><option value="USD" >USD</option><option value="EUR" >EUR</option></select><input class=" text" id="select_text_amount" name="select_text_amount" type="text" value="20"><p class="errorfield" id="error_select_text"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="Textarea">Textarea</label></div><div class="grd-grid-8"><textarea id="Textarea" name="Textarea">This is default value of textarea</textarea><p class="errorfield" id="error_Textarea"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="Password">Password</label></div><div class="grd-grid-8"><input class=" text" id="Password" name="Password" type="password" value="pa$$w0rd"><p class="errorfield" id="error_Password"></p></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="single_checkbox">Single Checkbox</label></div><div class="grd-grid-8"><input id="single_checkbox" name="single_checkbox" type="checkbox" value="SGLBOX"></div></div><div class="grd-row-padding row clear"><div class="grd-grid-4  form_label"><label for="single_checkbox">Single Checkbox</label></div><div class="grd-grid-8"><input id="checkbox1" name="checkbox1" type="checkbox" value="BOX1"><input id="checkbox2" name="checkbox2" type="checkbox" value="BOX2"></div></div><div class="grd-row-padding row clear"><p class="errorfield" id="error_general"></p></div></fieldset>
         <span class="tl">&nbsp;</span><span class="tr">&nbsp;</span><span class="bl">&nbsp;</span><span class="br">&nbsp;</span>
-        
-        
     </div>
-</div></form>
+</div>
+</form>
 EOF
 
 chomp $expect_result;
