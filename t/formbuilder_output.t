@@ -3,6 +3,9 @@
 use strict;
 use warnings;
 
+use FindBin qw/$Bin/;
+use lib "$Bin/lib";
+use TestHelper;
 use Test::More;
 use Test::FailWarnings;
 use Test::Exception;
@@ -406,26 +409,3 @@ sub create_multiset_form {
     return $form_obj;
 }
 
-sub _create_form_helper{
-	my $form_class = shift;
-	my $form_attributes = shift;
-	my $form_classes = {
-									 fieldset_group => 'toggle-content',
-									 NoStackFieldParent => 'grd-grid-12',
-									 RowPadding => 'grd-row-padding',
-									 fieldset_footer => 'row comment',
-									 comment => 'grd-grid-12',
-									 row => 'row',
-									 extra_tooltip_container => 'extra_tooltip_container',
-									 backbutton => 'backbutton',
-									 required_asterisk => 'required_asterisk',
-									 inputtrailing => 'inputtrailing',
-										 };
-	$form_attributes->{classes} = $form_classes;
-	return $form_class->new($form_attributes);
-}
-
-sub create_form{
-	my $class = 'HTML::FormBuilder';
-	return _create_form_helper($class, @_);
-}
