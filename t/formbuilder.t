@@ -46,49 +46,45 @@ is( $result, $expect_result,
 'the result of build confirmation_button_with_all_inputs_hidden with arg localize'
 );
 
-
 ################################################################################
 # test set_after_from
 
 $form_obj = create_form(
     {
-        id                              => 'testid',
+        id => 'testid',
     }
 );
 $form_obj->set_after_form("<div>afterform</div>");
 lives_ok( sub { $result = $form_obj->build }, 'build form with some args' );
-like(
-    $result,
-    qr/<div>afterform<\/div>/,
-    'add afterform info'
-);
+like( $result, qr/<div>afterform<\/div>/, 'add afterform info' );
 
 ################################################################################
 # test required_mark
 
 $form_obj = create_form(
     {
-        id                              => 'testid',
+        id => 'testid',
     }
 );
-my $fieldset_index = $form_obj->add_fieldset({});
-$form_obj->add_field($fieldset_index,{label => {text=>"it is a label", required_mark => 1}});
+my $fieldset_index = $form_obj->add_fieldset( {} );
+$form_obj->add_field( $fieldset_index,
+    { label => { text => "it is a label", required_mark => 1 } } );
 
 lives_ok( sub { $result = $form_obj->build }, 'build form with some args' );
-like( $result,  qr/<em class="required_asterisk">\*\*<\/em>/,
-    'has em'
-);
+like( $result, qr/<em class="required_asterisk">\*\*<\/em>/, 'has em' );
 
 ################################################################################
 # test fieldset_group
 $form_obj = create_form(
     {
-        id                              => 'testid',
+        id => 'testid',
     }
 );
-$fieldset_index = $form_obj->add_fieldset({group => 'fieldsetgroup'});
+$fieldset_index = $form_obj->add_fieldset( { group => 'fieldsetgroup' } );
 lives_ok( sub { $result = $form_obj->build }, 'build form with some args' );
-like( $result,  qr{<div id="fieldsetgroup" class="toggle-content">},
+like(
+    $result,
+    qr{<div id="fieldsetgroup" class="toggle-content">},
     'has fieldsetgroup'
 );
 
@@ -96,41 +92,42 @@ like( $result,  qr{<div id="fieldsetgroup" class="toggle-content">},
 # test class
 $form_obj = HTML::FormBuilder->new(
     {
-		 id                              => 'testid',
-		 classes => {test_class => 'test-class'},
+        id      => 'testid',
+        classes => { test_class => 'test-class' },
     }
 );
-is($form_obj->{classes}{'test_class'}, 'test-class', 'test class method ok');
-is($form_obj->{classes}{'RowPadding'}, 'RowPadding', 'test class method ok');
+is( $form_obj->{classes}{'test_class'}, 'test-class', 'test class method ok' );
+is( $form_obj->{classes}{'RowPadding'}, 'RowPadding', 'test class method ok' );
+
 #is($form_obj->class('no_such_class'), '', 'test class method ok');
 
 ################################################################################
 # test fieldset footer
 $form_obj = create_form(
     {
-        id                              => 'testid',
+        id => 'testid',
     }
 );
-$fieldset_index = $form_obj->add_fieldset({footer => 'this is footer of fieldset'});
+$fieldset_index =
+  $form_obj->add_fieldset( { footer => 'this is footer of fieldset' } );
 lives_ok( sub { $result = $form_obj->build }, 'build form with some args' );
-like( $result,  qr{<div class="row comment">this is footer of fieldset</div></fieldset>},
-    'has footer'
-);
+like( $result,
+    qr{<div class="row comment">this is footer of fieldset</div></fieldset>},
+    'has footer' );
 
 ################################################################################
 # test input trailling
 $form_obj = create_form(
     {
-        id                              => 'testid',
+        id => 'testid',
     }
 );
-$fieldset_index = $form_obj->add_fieldset({});
-$form_obj->add_field($fieldset_index, {input => {trailing => "This is trailling"}});
+$fieldset_index = $form_obj->add_fieldset( {} );
+$form_obj->add_field( $fieldset_index,
+    { input => { trailing => "This is trailling" } } );
 lives_ok( sub { $result = $form_obj->build }, 'build form with some args' );
-like( $result,  qr{<span class="inputtrailing">This is trailling</span>},
-    'has footer'
-);
-
+like( $result, qr{<span class="inputtrailing">This is trailling</span>},
+    'has footer' );
 
 ################################################################################
 # test add_field
@@ -282,8 +279,8 @@ sub create_form_object {
 
     my $input_field_amount = {
         'label' => {
-            'text'     => 'Amount',
-            'for'      => 'amount',
+            'text' => 'Amount',
+            'for'  => 'amount',
         },
         'input' => {
             'type'      => 'text',
@@ -328,8 +325,8 @@ sub create_form_object {
 
     my $input_field_gender = {
         'label' => {
-            'text'     => 'gender',
-            'for'      => 'gender',
+            'text' => 'gender',
+            'for'  => 'gender',
         },
         'input' => HTML::FormBuilder::Select->new(
             'id'      => 'gender',
@@ -357,8 +354,8 @@ sub create_form_object {
     };
     my $input_field_select_text = {
         'label' => {
-            'text'     => 'select_text',
-            'for'      => 'select_text',
+            'text' => 'select_text',
+            'for'  => 'select_text',
         },
         'input' => [ $select_curr, $input_amount ],
         'error' => {
@@ -370,8 +367,8 @@ sub create_form_object {
 
     my $input_field_textarea = {
         'label' => {
-            'text'     => 'Textarea',
-            'for'      => 'Textarea',
+            'text' => 'Textarea',
+            'for'  => 'Textarea',
         },
         'input' => {
             'type'  => 'textarea',
@@ -388,8 +385,8 @@ sub create_form_object {
 
     my $input_field_password = {
         'label' => {
-            'text'     => 'Password',
-            'for'      => 'Password',
+            'text' => 'Password',
+            'for'  => 'Password',
         },
         'input' => {
             'type'  => 'password',
@@ -406,8 +403,8 @@ sub create_form_object {
 
     my $input_field_single_checkbox = {
         'label' => {
-            'text'     => 'Single Checkbox',
-            'for'      => 'single_checkbox',
+            'text' => 'Single Checkbox',
+            'for'  => 'single_checkbox',
         },
         'input' => {
             'type'  => 'checkbox',
@@ -419,8 +416,8 @@ sub create_form_object {
 
     my $input_field_array_checkbox = {
         'label' => {
-            'text'     => 'Single Checkbox',
-            'for'      => 'single_checkbox',
+            'text' => 'Single Checkbox',
+            'for'  => 'single_checkbox',
         },
         'input' => [
             {
@@ -480,7 +477,5 @@ EOF
 chomp($expect_result);
 is( create_form_object()->build(), $expect_result, ' the result is right' );
 
-
 done_testing;
-
 

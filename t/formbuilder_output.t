@@ -20,14 +20,14 @@ my $fieldset_index = $form_obj->add_fieldset(
 
 my $input_field_amount = {
     'label' => {
-        'text'                  => 'Amount',
-        'for'                   => 'amount',
-        'tooltip'               => {
+        'text'    => 'Amount',
+        'for'     => 'amount',
+        'tooltip' => {
             desc    => "this is a tool tip",
             img_url => "test.png"
         },
-				'required_mark' => 1,
-		},
+        'required_mark' => 1,
+    },
     'input' => {
         'heading'   => 'heading',
         'type'      => 'text',
@@ -217,8 +217,8 @@ sub create_multiset_form {
 
         my $input_field_amount = {
             'label' => {
-                'text'     => 'Amount',
-                'for'      => 'amount',
+                'text' => 'Amount',
+                'for'  => 'amount',
             },
             'input' => {
                 'type'      => 'text',
@@ -263,8 +263,8 @@ sub create_multiset_form {
 
         my $input_field_gender = {
             'label' => {
-                'text'     => 'gender',
-                'for'      => 'gender',
+                'text' => 'gender',
+                'for'  => 'gender',
             },
             'input' => HTML::FormBuilder::Select->new(
                 'id'      => 'gender',
@@ -292,8 +292,8 @@ sub create_multiset_form {
         };
         my $input_field_select_text = {
             'label' => {
-                'text'     => 'select_text',
-                'for'      => 'select_text',
+                'text' => 'select_text',
+                'for'  => 'select_text',
             },
             'input' => [ $select_curr, $input_amount ],
             'error' => {
@@ -305,8 +305,8 @@ sub create_multiset_form {
 
         my $input_field_textarea = {
             'label' => {
-                'text'     => 'Textarea',
-                'for'      => 'Textarea',
+                'text' => 'Textarea',
+                'for'  => 'Textarea',
             },
             'input' => {
                 'type'  => 'textarea',
@@ -323,8 +323,8 @@ sub create_multiset_form {
 
         my $input_field_password = {
             'label' => {
-                'text'     => 'Password',
-                'for'      => 'Password',
+                'text' => 'Password',
+                'for'  => 'Password',
             },
             'input' => {
                 'type'  => 'password',
@@ -341,8 +341,8 @@ sub create_multiset_form {
 
         my $input_field_single_checkbox = {
             'label' => {
-                'text'     => 'Single Checkbox',
-                'for'      => 'single_checkbox',
+                'text' => 'Single Checkbox',
+                'for'  => 'single_checkbox',
             },
             'input' => {
                 'type'  => 'checkbox',
@@ -354,8 +354,8 @@ sub create_multiset_form {
 
         my $input_field_array_checkbox = {
             'label' => {
-                'text'     => 'Single Checkbox',
-                'for'      => 'single_checkbox',
+                'text' => 'Single Checkbox',
+                'for'  => 'single_checkbox',
             },
             'input' => [
                 {

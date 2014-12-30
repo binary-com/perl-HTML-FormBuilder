@@ -33,34 +33,30 @@ sub new {
 
     $self->{option} = shift || {};
 
+    # set default class
+    my @class_names = qw( fieldset_group
+      NoStackFieldParent
+      RowPadding
+      fieldset_footer
+      comment
+      row
+      extra_tooltip_container
+      backbutton
+      required_asterisk
+      inputtrailing);
 
-		# set default class 
-		my @class_names = qw( fieldset_group
-													NoStackFieldParent
-													RowPadding
-													fieldset_footer
-													comment
-													row
-													extra_tooltip_container
-													backbutton
-													required_asterisk
-													inputtrailing);
+    my %classes = map { $_ => $_ } @class_names;
+    %classes = ( %classes, %{ delete $_args->{classes} || {} } );
+    #
+    ################################################################################
 
-		my %classes = map {$_ => $_} @class_names;
-		%classes = (%classes, %{delete $_args->{classes} ||{}});
-		#
-		################################################################################
-		
-		$self->{classes} = \%classes;
-		
-    for my $opt (
-        qw(option text hide_required_text localize)
-      )
-    {
+    $self->{classes} = \%classes;
+
+    for my $opt ( qw(option text hide_required_text localize) ) {
         if ( $_args->{$opt} ) {
             $self->{option}{$opt} = delete $_args->{$opt};
-					}
-				
+        }
+
     }
 
     $self->{data}{method} ||= 'get';
@@ -176,7 +172,7 @@ sub build {
     foreach my $fieldset_group ( sort keys %grouped_fieldset ) {
         if ( $fieldset_group ne 'no-group' ) {
             $fieldsets_html .=
-              qq[<div id="$fieldset_group" class="$self->{classes}{fieldset_group}">];
+qq[<div id="$fieldset_group" class="$self->{classes}{fieldset_group}">];
         }
 
         foreach my $fieldset_html ( @{ $grouped_fieldset{$fieldset_group} } ) {
@@ -191,10 +187,10 @@ sub build {
       $self->_build_element_and_attributes( 'form', $self->{data},
         $fieldsets_html );
 
-		if($self->{option}{after_form}){
-			$html .= $self->{option}{after_form};
-		}
-		
+    if ( $self->{option}{after_form} ) {
+        $html .= $self->{option}{after_form};
+    }
+
     return $html;
 }
 
@@ -211,7 +207,7 @@ sub _build_fieldset {
     my $self     = shift;
     my $fieldset = shift;
 
-		#FIXME this attribute should be deleted, or it will emit to the html code
+    #FIXME this attribute should be deleted, or it will emit to the html code
     my $fieldset_group = $fieldset->{'group'};
     my $stacked = defined $fieldset->{'stacked'} ? $fieldset->{'stacked'} : 1;
 
@@ -239,7 +235,8 @@ sub _build_fieldset {
     # message at the bottom of the fieldset
     if ( defined $fieldset->{'footer'} ) {
         my $footer = delete $fieldset->{'footer'};
-        $fieldset_html .= qq{<div class="$self->{classes}{fieldset_footer}">$footer</div>};
+        $fieldset_html .=
+          qq{<div class="$self->{classes}{fieldset_footer}">$footer</div>};
     }
 
     $fieldset_html =
@@ -297,7 +294,8 @@ sub _build_field {
             $stacked_attr->{class} = $class;
         }
         else {
-            $stacked_attr->{class} = "$self->{classes}{RowPadding} $self->{classes}{row} clear$class";
+            $stacked_attr->{class} =
+              "$self->{classes}{RowPadding} $self->{classes}{row} clear$class";
         }
     }
 
@@ -305,13 +303,11 @@ sub _build_field {
     if ( defined $input_field->{'label'} ) {
         my $label_text = $input_field->{'label'}->{'text'} || '';
         undef $input_field->{'label'}->{'text'};
-				my $required_mark = delete $input_field->{label}{required_mark} || 0;
+        my $required_mark = delete $input_field->{label}{required_mark} || 0;
         my $label_html = $self->_build_element_and_attributes(
-            'label',
-            $input_field->{'label'},
-            $label_text,
-						{required_mark => $required_mark},
-																														 );
+            'label', $input_field->{'label'},
+            $label_text, { required_mark => $required_mark },
+        );
 
         # add a tooltip explanation if given
         if ( $input_field->{'label'}{'tooltip'} ) {
@@ -419,7 +415,7 @@ sub _build_fieldset_foreword {
     my $comment = '';
     if ( defined $fieldset->{'comment'} ) {
         $comment =
-          qq{<div class="$self->{classes}{comment}"><p>$fieldset->{comment}</p></div>};
+qq{<div class="$self->{classes}{comment}"><p>$fieldset->{comment}</p></div>};
         undef $fieldset->{'comment'};
     }
 
@@ -700,11 +696,10 @@ sub _build_element_and_attributes {
         $html .= '>';
     }
 
+    if ( $options->{required_mark} && !$self->{option}{hide_required_text} ) {
+        $html .= qq[<em class="$self->{classes}{required_asterisk}">**</em>];
+    }
 
-		if($options->{required_mark} && ! $self->{option}{hide_required_text}){
-			$html .= qq[<em class="$self->{classes}{required_asterisk}">**</em>];
-		}
-		
     #close the tag
     my $end_tag = "</$element_tag>";
 
@@ -787,7 +782,8 @@ sub _build_input {
     }
 
     if ($trailing) {
-        $html .= qq{<span class="$self->{classes}{inputtrailing}">$trailing</span>};
+        $html .=
+          qq{<span class="$self->{classes}{inputtrailing}">$trailing</span>};
     }
 
     return $html;
@@ -843,7 +839,6 @@ sub _tooltip {
       qq{ <a href='#' title='$content' rel='tooltip'><img src="$url" /></a>};
 }
 
-
 #####################################################################
 # Usage      : $self->_wrap_fieldset($fieldset_html)
 # Purpose    : wrap fieldset html by template
@@ -863,15 +858,14 @@ sub _wrap_fieldset {
 </div>
 EOF
 
-		return $fieldset_template;
+    return $fieldset_template;
 
 }
 
-
-sub set_after_form{
-	my $self = shift;
-	my $html = shift;
-	$self->{option}{after_form} = $html;
+sub set_after_form {
+    my $self = shift;
+    my $html = shift;
+    $self->{option}{after_form} = $html;
 }
 
 1;
