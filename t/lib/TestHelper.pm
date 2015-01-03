@@ -16,7 +16,9 @@ sub _create_form_helper {
         backbutton              => 'backbutton',
         required_asterisk       => 'required_asterisk',
         inputtrailing           => 'inputtrailing',
-    };
+        label_column            => 'grd-grid-4',
+				input_column            => 'grd-grid-8',
+													};
     $form_attributes->{classes} = $form_classes;
     return $form_class->new($form_attributes);
 }

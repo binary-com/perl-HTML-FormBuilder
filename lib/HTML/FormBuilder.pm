@@ -43,7 +43,10 @@ sub new {
       extra_tooltip_container
       backbutton
       required_asterisk
-      inputtrailing);
+      inputtrailing
+			label_column
+			input_column
+);
 
     my %classes = map { $_ => $_ } @class_names;
     %classes = ( %classes, %{ delete $_args->{classes} || {} } );
@@ -275,8 +278,8 @@ sub _build_field {
 #my ($stacked, $div_span, $label_column, $input_column) = @{$option}{qw(stacked div_span label_column input_column)};
 
     my $div_span     = "div";
-    my $label_column = "grd-grid-4";
-    my $input_column = "grd-grid-8";
+    my $label_column = $self->{classes}{label_column};#"grd-grid-4";
+    my $input_column = $self->{classes}{input_column};#"grd-grid-8";
 
     if ( $stacked == 0 ) {
         $div_span     = "span";
