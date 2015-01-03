@@ -74,6 +74,22 @@ lives_ok( sub { $result = $form_obj->build }, 'build form with some args' );
 like( $result, qr/<em class="required_asterisk">\*\*<\/em>/, 'has em' );
 
 ################################################################################
+# test hide_mobile
+
+$form_obj = create_form(
+    {
+        id => 'testid',
+    }
+);
+$fieldset_index = $form_obj->add_fieldset( {} );
+$form_obj->add_field( $fieldset_index,
+    { label => {} } );
+
+lives_ok( sub { $result = $form_obj->build }, 'build form with some args' );
+like( $result,qr{<fieldset><div class="grd-row-padding row clear"><div class="grd-grid-4 grd-hide-mobile form_label"><label></label></div></div></fieldset>} , 'hide mobile' );
+
+
+################################################################################
 # test fieldset_group
 $form_obj = create_form(
     {

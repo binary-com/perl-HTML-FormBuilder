@@ -46,6 +46,7 @@ sub new {
       inputtrailing
 			label_column
 			input_column
+			hide_mobile
 );
 
     my %classes = map { $_ => $_ } @class_names;
