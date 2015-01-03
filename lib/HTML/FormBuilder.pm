@@ -324,11 +324,7 @@ sub _build_field {
 qq{<div class="$self->{classes}{extra_tooltip_container}">$label_html$tooltip</div>};
         }
         else {
-
-            my $hide_mobile = "";
-            if ( length($label_text) == 0 ) {
-                $hide_mobile .= "grd-hide-mobile";
-            }
+            my $hide_mobile = $label_text ?  "" : $self->{classes}{hide_mobile};
 
             $input_fields_html .=
 qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_span>};
