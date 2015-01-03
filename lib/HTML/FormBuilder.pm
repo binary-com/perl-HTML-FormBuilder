@@ -275,11 +275,9 @@ sub _build_field {
     my $input_field = shift;
     my $stacked     = shift;
 
-#my ($stacked, $div_span, $label_column, $input_column) = @{$option}{qw(stacked div_span label_column input_column)};
-
     my $div_span     = "div";
-    my $label_column = $self->{classes}{label_column};#"grd-grid-4";
-    my $input_column = $self->{classes}{input_column};#"grd-grid-8";
+    my $label_column = $self->{classes}{label_column};
+    my $input_column = $self->{classes}{input_column};
 
     if ( $stacked == 0 ) {
         $div_span     = "span";
