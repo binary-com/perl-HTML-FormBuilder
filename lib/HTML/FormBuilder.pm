@@ -729,15 +729,6 @@ sub _build_input {
     my $heading  = delete $input_field->{'heading'};
     my $trailing = delete $input_field->{'trailing'};
 
-    #construct the required verification from the input
-    #TODO are these code really useful ?
-    if ( $input_field->{'verification'} ) {
-        my $verifications = delete $input_field->{'verification'};
-        $verifications =
-          ref($verifications) eq 'ARRAY' ? $verifications : [$verifications];
-        $self->{option}{'verify'}{ $input_field->{id} } = $verifications;
-    }
-
     #create the filed input
     if ( eval { $input_field->can('widget_html') } ) {
         $html = $input_field->widget_html;
