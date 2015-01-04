@@ -6,7 +6,7 @@ use 5.008_005;
 our $VERSION = '0.01';
 
 use Carp;
-
+use HTML::FormBuilder::FieldSet;
 #####################################################################
 # Usage      : Instantiate a Form object.
 # Purpose    : Ensure Statement object is been instantiate with an id
@@ -87,17 +87,13 @@ sub add_fieldset {
     my $self  = shift;
     my $_args = shift;
 
-    #check if the Form object is created
-    croak("Please instantiate the Form object first in $0.")
-      if ( !defined $self->{data}{'id'} );
-
     #check if the $args is a ref HASH
     croak("Parameters must in HASH reference in $0.")
       if ( ref $_args ne 'HASH' );
 
-    $_args->{'fields'} = [];
-
-    push @{ $self->{fieldsets} }, $_args;
+		my $fieldset = HTML::FormBuilder::FieldSet->new(data => $_args, parent => $self);
+		
+    push @{ $self->{fieldsets} }, $fieldset;
 
     #return fieldset id/index that was created
     return $#{ $self->{fieldsets} };
@@ -211,9 +207,10 @@ sub _build_fieldset {
     my $self     = shift;
     my $fieldset = shift;
 
+		my $data = $fieldset->{data};
     #FIXME this attribute should be deleted, or it will emit to the html code
-    my $fieldset_group = $fieldset->{'group'};
-    my $stacked = defined $fieldset->{'stacked'} ? $fieldset->{'stacked'} : 1;
+    my $fieldset_group = $data->{'group'};
+    my $stacked = defined $data->{'stacked'} ? $data->{'stacked'} : 1;
 
     if ( not $fieldset_group ) {
         $fieldset_group = 'no-group';
@@ -237,23 +234,23 @@ sub _build_fieldset {
     $fieldset_html .= $input_fields_html;
 
     # message at the bottom of the fieldset
-    if ( defined $fieldset->{'footer'} ) {
-        my $footer = delete $fieldset->{'footer'};
+    if ( defined $data->{'footer'} ) {
+        my $footer = delete $data->{'footer'};
         $fieldset_html .=
           qq{<div class="$self->{classes}{fieldset_footer}">$footer</div>};
     }
 
     $fieldset_html =
-      $self->_build_element_and_attributes( 'fieldset', $fieldset,
+      $self->_build_element_and_attributes( 'fieldset', $data,
         $fieldset_html );
 
     if (
         (
-            not $fieldset->{'id'}
-            or $fieldset->{'id'} ne 'formlayout'
+            not $data->{'id'}
+            or $data->{'id'} ne 'formlayout'
         )
-        and ( not $fieldset->{'class'}
-            or $fieldset->{'class'} !~ /no-wrap|invisible/ )
+        and ( not $data->{'class'}
+            or $data->{'class'} !~ /no-wrap|invisible/ )
       )
     {
         $fieldset_html = $self->_wrap_fieldset($fieldset_html);
@@ -394,27 +391,28 @@ qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_sp
 sub _build_fieldset_foreword {
     my $self     = shift;
     my $fieldset = shift;
-
+		my $data = $fieldset->{data};
+		
     # fieldset legend
     my $legend = '';
-    if ( defined $fieldset->{'legend'} ) {
-        $legend = qq{<legend>$fieldset->{legend}</legend>};
-        undef $fieldset->{'legend'};
+    if ( defined $data->{'legend'} ) {
+        $legend = qq{<legend>$data->{legend}</legend>};
+        undef $data->{'legend'};
     }
 
     # header at the top of the fieldset
     my $header = '';
-    if ( defined $fieldset->{'header'} ) {
-        $header = qq{<h2>$fieldset->{header}</h2>};
-        undef $fieldset->{'header'};
+    if ( defined $data->{'header'} ) {
+        $header = qq{<h2>$data->{header}</h2>};
+        undef $data->{'header'};
     }
 
     # message at the top of the fieldset
     my $comment = '';
-    if ( defined $fieldset->{'comment'} ) {
+    if ( defined $data->{'comment'} ) {
         $comment =
-qq{<div class="$self->{classes}{comment}"><p>$fieldset->{comment}</p></div>};
-        undef $fieldset->{'comment'};
+qq{<div class="$self->{classes}{comment}"><p>$data->{comment}</p></div>};
+        undef $data->{'comment'};
     }
 
     return $legend . $header . $comment;
