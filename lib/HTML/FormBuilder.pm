@@ -67,7 +67,7 @@ sub new {
     $self->{data}{'method'} =
       ( $self->{data}{'method'} eq 'post' ) ? 'post' : 'get';
     $self->{option}{localize} ||= sub { return shift };
-    $self->{data}{fieldsets} ||= [];
+    $self->{fieldsets} ||= [];
     bless $self, $class;
 
     return $self;
@@ -97,10 +97,10 @@ sub add_fieldset {
 
     $_args->{'fields'} = [];
 
-    push @{ $self->{data}{fieldsets} }, $_args;
+    push @{ $self->{fieldsets} }, $_args;
 
     #return fieldset id/index that was created
-    return $#{ $self->{data}{fieldsets} };
+    return $#{ $self->{fieldsets} };
 }
 
 #####################################################################
@@ -128,14 +128,14 @@ sub add_field {
 
     #check if the fieldset array is already created
     croak("The fieldset does not exist in $0. form_id[$self->{data}{'id'}]")
-      if ( $fieldset_index > $#{ $self->{data}{fieldsets} } );
+      if ( $fieldset_index > $#{ $self->{fieldsets} } );
 
     # normalize: if 'input' is not an array, then make it as an array, so that
     # we can process the array directly
     if ( $_args->{input} && ref( $_args->{input} ) ne 'ARRAY' ) {
         $_args->{input} = [ $_args->{input} ];
     }
-    push @{ $self->{data}{'fieldsets'}[$fieldset_index]{'fields'} }, $_args;
+    push @{ $self->{'fieldsets'}[$fieldset_index]{'fields'} }, $_args;
 
     return 1;
 }
@@ -157,10 +157,10 @@ sub build {
     # we only generate that praticular fieldset with that index
     my @fieldsets;
     if ( defined $print_fieldset_index ) {
-        push @fieldsets, $self->{data}{'fieldsets'}[$print_fieldset_index];
+        push @fieldsets, $self->{'fieldsets'}[$print_fieldset_index];
     }
     else {
-        @fieldsets = @{ $self->{data}{'fieldsets'} };
+        @fieldsets = @{ $self->{'fieldsets'} };
     }
 
     my %grouped_fieldset;
@@ -433,7 +433,7 @@ sub build_confirmation_button_with_all_inputs_hidden {
     my @inputs;
 
     # get all inputs that are to be output as hidden
-    foreach my $fieldset ( @{ $self->{data}{'fieldsets'} } ) {
+    foreach my $fieldset ( @{ $self->{'fieldsets'} } ) {
       INPUT:
         foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
             next INPUT if ( not defined $input_field->{'input'} );
@@ -610,7 +610,7 @@ sub _get_input_field {
     my $field_id = shift;
 
     return unless $field_id;
-    foreach my $fieldset ( @{ $self->{data}{'fieldsets'} } ) {
+    foreach my $fieldset ( @{ $self->{'fieldsets'} } ) {
         foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
             my $inputs = $input_field->{input};
             foreach my $sub_input_field (@$inputs) {
@@ -641,7 +641,7 @@ sub _get_error_field {
     return unless $error_id;
 
     #build the form fieldset
-    foreach my $fieldset ( @{ $self->{data}{'fieldsets'} } ) {
+    foreach my $fieldset ( @{ $self->{'fieldsets'} } ) {
         foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
             if (    $input_field->{error}{id}
                 and $input_field->{error}{id} eq $error_id )
