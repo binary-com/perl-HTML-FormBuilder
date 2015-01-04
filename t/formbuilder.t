@@ -19,7 +19,7 @@ my $form_obj;
 lives_ok( sub { $form_obj = create_form( { id => 'form1' } ) },
     'create form ok' );
 is( $form_obj->{data}{method}, 'get', 'default method of form' );
-is_deeply( $form_obj->{data}{fieldset}, [], 'default fieldset' );
+is_deeply( $form_obj->{data}{fieldsets}, [], 'default fieldset' );
 is(
     $form_obj->build,
     '<form id="form1" method="get"></form>',

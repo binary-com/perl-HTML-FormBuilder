@@ -66,10 +66,10 @@ sub build {
 #build the fieldset, if $print_fieldset_index is specifed then we only generate that praticular fieldset with that index
     my @fieldsets;
     if ( defined $print_fieldset_index ) {
-        push @fieldsets, $self->{data}{'fieldset'}->[$print_fieldset_index];
+        push @fieldsets, $self->{data}{'fieldsets'}->[$print_fieldset_index];
     }
     else {
-        @fieldsets = @{ $self->{data}{'fieldset'} };
+        @fieldsets = @{ $self->{data}{'fieldsets'} };
     }
 
     #build the form fieldset
@@ -100,7 +100,7 @@ sub build {
 ########################################################################
 sub validate {
     my $self      = shift;
-    my @fieldsets = @{ $self->{data}{'fieldset'} };
+    my @fieldsets = @{ $self->{data}{'fieldsets'} };
 
     foreach my $fieldset (@fieldsets) {
       INPUT_FIELD:
