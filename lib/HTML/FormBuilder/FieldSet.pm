@@ -19,3 +19,16 @@ sub new{
 	return $self;
 }
 
+sub add_field{
+	my $self = shift;
+	my $_args = shift;
+
+	# normalize: if 'input' is not an array, then make it as an array, so that
+	# we can process the array directly
+	if ( $_args->{input} && ref( $_args->{input} ) ne 'ARRAY' ) {
+		$_args->{input} = [ $_args->{input} ];
+	}
+	push @{ $self->{'fields'} }, $_args;
+
+	return 1;
+}
