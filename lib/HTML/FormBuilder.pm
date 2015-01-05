@@ -83,6 +83,7 @@ sub new {
 #              input fields.
 # See Also   :
 #####################################################################
+# TODO return the created fieldset should be better
 sub add_fieldset {
     my $self  = shift;
     my $_args = shift;
