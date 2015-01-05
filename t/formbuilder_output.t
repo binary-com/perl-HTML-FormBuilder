@@ -15,7 +15,7 @@ use HTML::FormBuilder::Select;
 my ( $form_obj, $result, $expect_result );
 
 $form_obj = create_form( { id => 'testid' } );
-my $fieldset_index = $form_obj->add_fieldset(
+my $fieldset = $form_obj->add_fieldset(
     { legend => 'a legend', header => 'header', comment => 'comment' } );
 
 my $input_field_amount = {
@@ -53,8 +53,8 @@ my $input_field_button = {
     },
 };
 
-$form_obj->add_field( $fieldset_index, $input_field_amount );
-$form_obj->add_field( $fieldset_index, $input_field_button );
+$fieldset->add_field( $input_field_amount );
+$fieldset->add_field( $input_field_button );
 
 lives_ok( sub { $result = $form_obj->build }, 'build tooltip ok' );
 $expect_result = <<EOF;
@@ -71,7 +71,7 @@ is( $result, $expect_result, 'tooltip and call_customer_support' );
 
 # test heading
 $form_obj = create_form( { id => 'testid' } );
-$fieldset_index = $form_obj->add_fieldset( {} );
+$fieldset = $form_obj->add_fieldset( {} );
 
 my $input_field1 = {
     'input' => {
@@ -94,8 +94,8 @@ my $input_field2 = {
     },
 };
 
-$form_obj->add_field( $fieldset_index, $input_field1 );
-$form_obj->add_field( $fieldset_index, $input_field2 );
+$fieldset->add_field( $input_field1 );
+$fieldset->add_field( $input_field2 );
 lives_ok( sub { $result = $form_obj->build }, 'build field with heading' );
 
 $expect_result = <<EOF;
@@ -113,9 +113,9 @@ is( $result, $expect_result, 'heading result ok' );
 
 # test build_confirmation_button_with_all_inputs_hidden
 $form_obj = create_form( { id => 'testid' } );
-$fieldset_index = $form_obj->add_fieldset(
+$fieldset = $form_obj->add_fieldset(
     { legend => 'a legend', header => 'header', comment => 'comment' } );
-$form_obj->add_field( $fieldset_index, $input_field_amount );
+$fieldset->add_field( $input_field_amount );
 
 lives_ok(
     sub {
@@ -135,7 +135,7 @@ is( $result, $expect_result,
 ################################################################################
 # stacked
 $form_obj = create_form( { id => 'testid' } );
-$fieldset_index = $form_obj->add_fieldset( { stacked => 0 } );
+$fieldset = $form_obj->add_fieldset( { stacked => 0 } );
 lives_ok( sub { $result = $form_obj->build }, 'build field with heading' );
 $expect_result = <<EOF;
 <form id="testid" method="get"><div class="rbox form">
@@ -213,7 +213,7 @@ sub create_multiset_form {
 
     for my $group ( '', '', 'group1', 'group1', 'group2' ) {
 
-        my $fieldset_index = $form_obj->add_fieldset( {} );
+        my $fieldset = $form_obj->add_fieldset( {} );
 
         my $input_field_amount = {
             'label' => {
@@ -381,14 +381,14 @@ sub create_multiset_form {
             },
         };
 
-        $form_obj->add_field( $fieldset_index, $input_field_amount );
-        $form_obj->add_field( $fieldset_index, $input_field_gender );
-        $form_obj->add_field( $fieldset_index, $input_field_select_text );
-        $form_obj->add_field( $fieldset_index, $input_field_textarea );
-        $form_obj->add_field( $fieldset_index, $input_field_password );
-        $form_obj->add_field( $fieldset_index, $input_field_single_checkbox );
-        $form_obj->add_field( $fieldset_index, $input_field_array_checkbox );
-        $form_obj->add_field( $fieldset_index, $general_error_message_field );
+        $fieldset->add_field( $input_field_amount );
+        $fieldset->add_field( $input_field_gender );
+        $fieldset->add_field( $input_field_select_text );
+        $fieldset->add_field( $input_field_textarea );
+        $fieldset->add_field( $input_field_password );
+        $fieldset->add_field( $input_field_single_checkbox );
+        $fieldset->add_field( $input_field_array_checkbox );
+        $fieldset->add_field( $general_error_message_field );
     }
     return $form_obj;
 }

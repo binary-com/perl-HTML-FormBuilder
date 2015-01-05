@@ -146,7 +146,7 @@ sub create_form_object {
     # Test object type
     isa_ok( $form_obj, 'HTML::FormBuilder::Validation' );
 
-    my $fieldset_index = $form_obj->add_fieldset( {} );
+    my $fieldset = $form_obj->add_fieldset( {} );
 
     my $input_field_name = {
         'label' => {
@@ -270,8 +270,7 @@ sub create_form_object {
         ],
     };
 
-    $form_obj->add_field(
-        $fieldset_index,
+    $fieldset->add_field(
         {
             'error' => {
                 'id'    => 'error_general',
@@ -289,10 +288,10 @@ sub create_form_object {
     };
 
     my $hidden_fields = { 'input' => [ $input_hidden_field_broker, ] };
-    $form_obj->add_field( $fieldset_index, $hidden_fields );
-    $form_obj->add_field( $fieldset_index, $input_field_name );
-    $form_obj->add_field( $fieldset_index, $input_field_amount );
-    $form_obj->add_field( $fieldset_index, $input_field_select_text );
+    $fieldset->add_field( $hidden_fields );
+    $fieldset->add_field( $input_field_name );
+    $fieldset->add_field( $input_field_amount );
+    $fieldset->add_field( $input_field_select_text );
 
     return $form_obj;
 }

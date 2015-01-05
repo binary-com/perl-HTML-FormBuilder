@@ -95,9 +95,8 @@ sub add_fieldset {
 		
     push @{ $self->{fieldsets} }, $fieldset;
 
-    #return fieldset id/index that was created
-    return $#{ $self->{fieldsets} };
-}
+		return $fieldset;
+	}
 
 #####################################################################
 # Usage      : Add a new input fields to the fieldset
