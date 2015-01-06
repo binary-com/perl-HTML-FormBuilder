@@ -162,7 +162,7 @@ sub build {
     # build the form fieldset
     foreach my $fieldset (@fieldsets) {
         my ( $fieldset_group, $fieldset_html ) =
-          $self->_build_fieldset($fieldset);
+          $fieldset->build();
         push @{ $grouped_fieldset{$fieldset_group} }, $fieldset_html;
     }
 
@@ -192,109 +192,6 @@ qq[<div id="$fieldset_group" class="$self->{classes}{fieldset_group}">];
     return $html;
 }
 
-#####################################################################
-# Usage      : generate the form content for a fieldset
-# Purpose    : check and parse the parameters and generate the form
-#              properly
-# Returns    : a piece of form HTML for a fieldset
-# Parameters : fieldset
-# Comments   :
-# See Also   :
-#####################################################################
-sub _build_fieldset {
-    my $self     = shift;
-    my $fieldset = shift;
-
-		my $data = $fieldset->{data};
-    #FIXME this attribute should be deleted, or it will emit to the html code
-    my $fieldset_group = $data->{'group'};
-    my $stacked = defined $data->{'stacked'} ? $data->{'stacked'} : 1;
-
-    if ( not $fieldset_group ) {
-        $fieldset_group = 'no-group';
-    }
-
-    my $fieldset_html = $self->_build_fieldset_foreword($fieldset);
-
-    my $input_fields_html = '';
-
-    foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
-			$input_fields_html .= $input_field->build({stacked => $stacked, classes => $self->{classes}});
-    }
-
-    if ( $stacked == 0 ) {
-        $input_fields_html =
-          $self->_build_element_and_attributes( 'div',
-            { class => $self->{classes}{'NoStackFieldParent'} },
-            $input_fields_html );
-    }
-
-    $fieldset_html .= $input_fields_html;
-
-    # message at the bottom of the fieldset
-    if ( defined $data->{'footer'} ) {
-        my $footer = delete $data->{'footer'};
-        $fieldset_html .=
-          qq{<div class="$self->{classes}{fieldset_footer}">$footer</div>};
-    }
-
-    $fieldset_html =
-      $self->_build_element_and_attributes( 'fieldset', $data,
-        $fieldset_html );
-
-    if (
-        (
-            not $data->{'id'}
-            or $data->{'id'} ne 'formlayout'
-        )
-        and ( not $data->{'class'}
-            or $data->{'class'} !~ /no-wrap|invisible/ )
-      )
-    {
-        $fieldset_html = $self->_wrap_fieldset($fieldset_html);
-
-    }
-    return ( $fieldset_group, $fieldset_html );
-}
-
-#####################################################################
-# Usage      : generate the form content for a fieldset foreword thing
-# Purpose    : check and parse the parameters and generate the form
-#              properly
-# Returns    : a piece of form HTML code for a fieldset foreword
-# Parameters : input_field, stacked
-# Comments   :
-# See Also   :
-#####################################################################
-sub _build_fieldset_foreword {
-    my $self     = shift;
-    my $fieldset = shift;
-		my $data = $fieldset->{data};
-		
-    # fieldset legend
-    my $legend = '';
-    if ( defined $data->{'legend'} ) {
-        $legend = qq{<legend>$data->{legend}</legend>};
-        undef $data->{'legend'};
-    }
-
-    # header at the top of the fieldset
-    my $header = '';
-    if ( defined $data->{'header'} ) {
-        $header = qq{<h2>$data->{header}</h2>};
-        undef $data->{'header'};
-    }
-
-    # message at the top of the fieldset
-    my $comment = '';
-    if ( defined $data->{'comment'} ) {
-        $comment =
-qq{<div class="$self->{classes}{comment}"><p>$data->{comment}</p></div>};
-        undef $data->{'comment'};
-    }
-
-    return $legend . $header . $comment;
-}
 
 #
 # This builds a bare-bone version of the form with all inputs hidden and only
