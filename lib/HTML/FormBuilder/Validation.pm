@@ -104,9 +104,10 @@ sub validate {
 
     foreach my $fieldset (@fieldsets) {
       INPUT_FIELD:
-        foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
-            if ( $input_field->{'input'} and $input_field->{'error'}->{'id'} ) {
-                foreach my $input_element ( @{ $input_field->{'input'} } ) {
+			foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
+				my $data = $input_field->{data};
+            if ( $data->{'input'} and $data->{'error'}->{'id'} ) {
+                foreach my $input_element ( @{ $data->{'input'} } ) {
                     if (
                         eval { $input_element->{'input'}->can('value') }
                         and (
@@ -122,14 +123,14 @@ sub validate {
             }
 
             # Validate each field
-            if (    defined $input_field->{'validation'}
-                and $input_field->{'input'}
-                and $input_field->{'error'}->{'id'} )
+            if (    defined $data->{'validation'}
+                and $data->{'input'}
+                and $data->{'error'}->{'id'} )
             {
                 $self->_validate_field(
                     {
-                        'validation'    => $input_field->{'validation'},
-                        'input_element' => $input_field->{'input'},
+                        'validation'    => $data->{'validation'},
+                        'input_element' => $data->{'input'},
                     }
                 );
             }
@@ -218,14 +219,15 @@ sub _build_javascript_validation {
 
     my $input_field = $arg_ref->{'input_field'};
 
-    if (    defined $input_field->{'validation'}
-        and $input_field->{'input'}
-        and $input_field->{'error'}->{'id'} )
+		my $data = $input_field->{data};
+    if (    defined $data->{'validation'}
+        and $data->{'input'}
+        and $data->{'error'}->{'id'} )
     {
 
-        my @validations      = @{ $input_field->{'validation'} };
-        my $input_element    = $input_field->{'input'};
-        my $error_element_id = $input_field->{'error'}->{'id'};
+        my @validations      = @{ $data->{'validation'} };
+        my $input_element    = $data->{'input'};
+        my $error_element_id = $data->{'error'}->{'id'};
 
         my $input_element_id;
         my $input_element_conditions;
@@ -262,10 +264,10 @@ sub _build_javascript_validation {
     }
 
     # get the general error field (contain only error message without input)
-    elsif ( defined $input_field->{'error'}
-        and defined $input_field->{'error'}->{'id'} )
+    elsif ( defined $data->{'error'}
+        and defined $data->{'error'}->{'id'} )
     {
-        my $error_id = $input_field->{'error'}->{'id'};
+        my $error_id = $data->{'error'}->{'id'};
 
         # Clear the error message
         $javascript =

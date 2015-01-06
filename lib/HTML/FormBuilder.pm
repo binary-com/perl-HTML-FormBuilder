@@ -269,6 +269,7 @@ sub _build_fieldset {
 sub _build_field {
     my $self        = shift;
     my $input_field = shift;
+		my $data = $input_field->{data};
     my $stacked     = shift;
 
     my $div_span     = "div";
@@ -285,9 +286,9 @@ sub _build_field {
     my $stacked_attr = {};
 
     if ( $stacked == 1 ) {
-        my $class = $input_field->{'class'} ? " $input_field->{class}" : '';
+        my $class = $data->{'class'} ? " $data->{class}" : '';
 
-        if ( $input_field->{'type'} and $input_field->{'type'} eq 'hidden' ) {
+        if ( $data->{'type'} and $data->{'type'} eq 'hidden' ) {
             $stacked_attr->{class} = $class;
         }
         else {
@@ -297,22 +298,22 @@ sub _build_field {
     }
 
     #create the field label
-    if ( defined $input_field->{'label'} ) {
-        my $label_text = $input_field->{'label'}->{'text'} || '';
-        undef $input_field->{'label'}->{'text'};
-        my $required_mark = delete $input_field->{label}{required_mark} || 0;
+    if ( defined $data->{'label'} ) {
+        my $label_text = $data->{'label'}->{'text'} || '';
+        undef $data->{'label'}->{'text'};
+        my $required_mark = delete $data->{label}{required_mark} || 0;
         my $label_html = $self->_build_element_and_attributes(
-            'label', $input_field->{'label'},
+            'label', $data->{'label'},
             $label_text, { required_mark => $required_mark },
         );
 
         # add a tooltip explanation if given
-        if ( $input_field->{'label'}{'tooltip'} ) {
+        if ( $data->{'label'}{'tooltip'} ) {
 
             # img_url is the url of question mark picture
             my $tooltip = _tooltip(
-                $input_field->{'label'}{'tooltip'}{'desc'},
-                $input_field->{'label'}{tooltip}{img_url}
+                $data->{'label'}{'tooltip'}{'desc'},
+                $data->{'label'}{tooltip}{img_url}
             );
 
             $input_fields_html .=
@@ -327,32 +328,32 @@ qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_sp
     }
 
     # create the input field
-    if ( defined $input_field->{'input'} ) {
+    if ( defined $data->{'input'} ) {
 
    #if there are more than 1 input field in a single row then we generate 1 by 1
-        my $inputs = $input_field->{input};
+        my $inputs = $data->{input};
         $input_fields_html .= qq{<$div_span class="$input_column">};
         foreach my $input ( @{$inputs} ) {
             $input_fields_html .= $self->_build_input($input);
         }
     }
 
-    if ( defined $input_field->{'comment'} ) {
-        $input_field->{'comment'}{'class'} ||= '';
+    if ( defined $data->{'comment'} ) {
+        $data->{'comment'}{'class'} ||= '';
         $input_fields_html .= '<br>'
           . $self->_build_element_and_attributes(
             'p',
-            $input_field->{'comment'},
-            $input_field->{'comment'}->{'text'}
+            $data->{'comment'},
+            $data->{'comment'}->{'text'}
           );
     }
 
-    if ( defined $input_field->{'error'} ) {
+    if ( defined $data->{'error'} ) {
 
         my @errors =
-          ref( $input_field->{'error'} ) eq 'ARRAY'
-          ? @{ $input_field->{error} }
-          : $input_field->{error};
+          ref( $data->{'error'} ) eq 'ARRAY'
+          ? @{ $data->{error} }
+          : $data->{error};
 
         foreach my $error_box (@errors) {
             $input_fields_html .=
@@ -363,7 +364,7 @@ qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_sp
     }
 
     #close the input tag
-    if ( defined $input_field->{'input'} ) {
+    if ( defined $data->{'input'} ) {
         $input_fields_html .= '</' . $div_span . '>';
     }
 
@@ -431,10 +432,11 @@ sub build_confirmation_button_with_all_inputs_hidden {
     # get all inputs that are to be output as hidden
     foreach my $fieldset ( @{ $self->{'fieldsets'} } ) {
       INPUT:
-        foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
-            next INPUT if ( not defined $input_field->{'input'} );
+			foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
+				my $data = $input_field->{data};
+            next INPUT if ( not defined $data->{'input'} );
 
-            push @inputs, @{ $input_field->{'input'} };
+            push @inputs, @{ $data->{'input'} };
 
         }
     }
@@ -484,7 +486,9 @@ sub set_field_value {
 
     return unless $input_field;
 
-    my $inputs = $input_field->{input};
+		my $data = $input_field->{data};
+		
+    my $inputs = $data->{input};
 
     map {
 
@@ -522,7 +526,7 @@ sub get_field_value {
 
     return unless $input_field;
 
-    my $inputs = $input_field->{input};
+    my $inputs = $input_field->{data}{input};
 
     foreach my $input (@$inputs) {
         if ( $input->{'id'} and $input->{'id'} eq $field_id ) {
@@ -559,13 +563,13 @@ sub set_field_error_message {
 
     my $input_field = $self->_get_input_field($field_id);
     if ($input_field) {
-        $input_field->{'error'}{'text'} = $error_msg;
+        $input_field->{data}{'error'}{'text'} = $error_msg;
         return;
     }
 
     my $error_field = $self->_get_error_field($field_id);
     if ($error_field) {
-        $error_field->{'error'}{'text'} = $error_msg;
+        $error_field->{data}{'error'}{'text'} = $error_msg;
         return;
     }
     return;
@@ -585,10 +589,10 @@ sub get_field_error_message {
     my $field_id = shift;
 
     my $input_field = $self->_get_input_field($field_id);
-    return $input_field->{'error'}{'text'} if $input_field;
+    return $input_field->{data}{'error'}{'text'} if $input_field;
 
     my $error_field = $self->_get_error_field($field_id);
-    return $error_field->{'error'}{'text'} if $error_field;
+    return $error_field->{data}{'error'}{'text'} if $error_field;
 
     return;
 }
@@ -608,7 +612,7 @@ sub _get_input_field {
     return unless $field_id;
     foreach my $fieldset ( @{ $self->{'fieldsets'} } ) {
         foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
-            my $inputs = $input_field->{input};
+            my $inputs = $input_field->{data}{input};
             foreach my $sub_input_field (@$inputs) {
                 if (    $sub_input_field->{id}
                     and $sub_input_field->{id} eq $field_id )
@@ -639,8 +643,8 @@ sub _get_error_field {
     #build the form fieldset
     foreach my $fieldset ( @{ $self->{'fieldsets'} } ) {
         foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
-            if (    $input_field->{error}{id}
-                and $input_field->{error}{id} eq $error_id )
+            if (    $input_field->{data}{error}{id}
+                and $input_field->{data}{error}{id} eq $error_id )
             {
                 return $input_field;
             }

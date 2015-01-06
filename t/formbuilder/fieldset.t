@@ -14,5 +14,5 @@ my $index = $form->add_fieldset({});
 my $fieldset = $form->{fieldsets}[$index];
 isa_ok($fieldset, 'HTML::FormBuilder::FieldSet');
 lives_ok(sub{$fieldset->add_field( { input => { trailing => "This is trailling" } } );}, 'add field ok');
-is($fieldset->{fields}[0]{input}[0]{trailing}, 'This is trailling');
+is($fieldset->{fields}[0]{data}{input}[0]{trailing}, 'This is trailling');
 done_testing;
