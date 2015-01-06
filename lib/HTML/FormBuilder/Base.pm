@@ -59,3 +59,15 @@ sub _build_element_and_attributes {
     return $html . $content . $end_tag;
 }
 
+#####################################################################
+# Usage      : call $self->{option}{localize} to localize a string
+# Purpose    : localize string
+# Returns    : a localized string
+# Parameters : string
+# Comments   :
+# See Also   : new
+#####################################################################
+sub _localize {
+    my $self = shift;
+    $self->{option}{localize}->(@_);
+}

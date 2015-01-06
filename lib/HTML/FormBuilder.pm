@@ -534,18 +534,6 @@ sub _get_error_field {
 }
 
 
-#####################################################################
-# Usage      : call $self->{option}{localize} to localize a string
-# Purpose    : localize string
-# Returns    : a localized string
-# Parameters : string
-# Comments   :
-# See Also   : new
-#####################################################################
-sub _localize {
-    my $self = shift;
-    $self->{option}{localize}->(@_);
-}
 
 #####################################################################
 # Usage      : $self->_link_button({value => 'back', class => 'backbutton', href => '})
