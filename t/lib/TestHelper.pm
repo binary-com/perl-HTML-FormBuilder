@@ -1,6 +1,6 @@
 package TestHelper;
 use Exporter 'import';
-our @EXPORT = qw(create_form create_validation_form $classes);
+our @EXPORT = qw($classes);
 
 our $classes = {
         fieldset_group          => 'toggle-content',
@@ -19,20 +19,6 @@ our $classes = {
 													};
 
 
-sub _create_form_helper {
-    my $form_class      = shift;
-    my $form_attributes = shift;
-    return $form_class->new(data => $form_attributes, classes => $classes);
-}
 
-sub create_form {
-    my $class = 'HTML::FormBuilder';
-    return _create_form_helper( $class, @_ );
-}
-
-sub create_validation_form {
-    my $class = 'HTML::FormBuilder::Validation';
-    return _create_form_helper( $class, @_ );
-}
 1;
 

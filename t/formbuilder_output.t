@@ -14,7 +14,7 @@ use HTML::FormBuilder::Select;
 
 my ( $form_obj, $result, $expect_result );
 
-$form_obj = create_form( { id => 'testid' } );
+$form_obj = HTML::FormBuilder->new( data => { id => 'testid' }, classes => $classes );
 my $fieldset_index = $form_obj->add_fieldset(
     { legend => 'a legend', header => 'header', comment => 'comment' } );
 
@@ -70,7 +70,7 @@ chomp $expect_result;
 is( $result, $expect_result, 'tooltip and call_customer_support' );
 
 # test heading
-$form_obj = create_form( { id => 'testid' } );
+$form_obj = HTML::FormBuilder->new( data => { id => 'testid' }, classes => $classes );
 $fieldset_index = $form_obj->add_fieldset( {} );
 
 my $input_field1 = {
@@ -112,7 +112,7 @@ chomp($expect_result);
 is( $result, $expect_result, 'heading result ok' );
 
 # test build_confirmation_button_with_all_inputs_hidden
-$form_obj = create_form( { id => 'testid' } );
+$form_obj = HTML::FormBuilder->new( data => { id => 'testid' }, classes => $classes );
 $fieldset_index = $form_obj->add_fieldset(
     { legend => 'a legend', header => 'header', comment => 'comment' } );
 $form_obj->add_field( $fieldset_index, $input_field_amount );
@@ -134,7 +134,7 @@ is( $result, $expect_result,
 
 ################################################################################
 # stacked
-$form_obj = create_form( { id => 'testid' } );
+$form_obj = HTML::FormBuilder->new( data => { id => 'testid' }, classes => $classes );
 $fieldset_index = $form_obj->add_fieldset( { stacked => 0 } );
 lives_ok( sub { $result = $form_obj->build }, 'build field with heading' );
 $expect_result = <<EOF;
@@ -204,7 +204,7 @@ sub create_multiset_form {
 
     # Create new form object
     Test::Exception::lives_ok {
-        $form_obj = create_form($form_attributes);
+        $form_obj = HTML::FormBuilder->new(data => $form_attributes, classes => $classes);
     }
     'Create Form';
 
