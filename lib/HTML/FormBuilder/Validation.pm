@@ -26,8 +26,7 @@ my %custom_server_side_check_of;
 ########################################################################
 sub new {
     my $class = shift;
-    my $_arg  = shift;
-    my $self  = $class->SUPER::new($_arg);
+    my $self  = $class->SUPER::new(@_);
 
     bless( $self, $class );
     $has_error_of{ ident $self} = 0;

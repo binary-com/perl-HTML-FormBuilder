@@ -23,18 +23,12 @@ use HTML::FormBuilder::FieldSet;
 #####################################################################
 sub new {
     my $class = shift;
-    my $_args = shift;
-
+		my $self = {@_};
+		
     # fields & id must be given when instantiating a new object
     croak(
 "Form must be given an id when instantiating a HTML::FormBuilder->new object in $0."
-    ) if !defined $_args->{'id'};
-
-    #split data and options
-    my $self = {};
-    $self->{data} = $_args;
-
-    $self->{option} = shift || {};
+    ) if !defined $self->{data}{'id'};
 
     # set default class
     my @class_names = qw( fieldset_group
@@ -53,18 +47,11 @@ sub new {
 );
 
     my %classes = map { $_ => $_ } @class_names;
-    %classes = ( %classes, %{ delete $_args->{classes} || {} } );
+    %classes = ( %classes, %{ $self->{classes} || {} } );
     #
     ################################################################################
 
     $self->{classes} = \%classes;
-
-    for my $opt ( qw(hide_required_text localize) ) {
-        if ( $_args->{$opt} ) {
-            $self->{option}{$opt} = delete $_args->{$opt};
-        }
-
-    }
 
     $self->{data}{method} ||= 'get';
     $self->{data}{'method'} =

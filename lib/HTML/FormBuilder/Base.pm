@@ -70,8 +70,8 @@ sub _build_element_and_attributes {
 sub _localize {
 	my $self = shift;
 	my $str = shift;
-	if($self->{option}{localize}){
-    $self->{option}{localize}->($str);
+	if($self->{localize}){
+    $self->{localize}->($str);
 	}
 	else{
 		return $str;

@@ -28,11 +28,14 @@ is(
 lives_ok( sub { create_form_object()->build }, 'build ok' );
 
 my $result;
-$form_obj = create_form(
-    {
-        id       => 'testid',
-        localize => sub { "will " . shift }
-    }
+$form_obj = HTML::FormBuilder->new(
+																	 data => 
+																	 {
+																		id       => 'testid',
+																	 },
+																	 localize => sub { "will " . shift },
+																	 classes => $classes,
+
 );
 my $expect_result =
 '<form id="testid" method="get"><input type="hidden" name="process" value="1"/><a class="button backbutton" href="javascript:history.go(-1)" ><span class="button backbutton" >will Back</span></a> <span class="button"><button id="submit" class="button" type="submit">will Confirm</button></span></form>';
@@ -107,10 +110,10 @@ like(
 ################################################################################
 # test class
 $form_obj = HTML::FormBuilder->new(
-    {
-        id      => 'testid',
-        classes => { test_class => 'test-class' },
-    }
+																	 data =>    {
+																							 id      => 'testid',
+																							},
+																	 classes => { test_class => 'test-class' },
 );
 is( $form_obj->{classes}{'test_class'}, 'test-class', 'test class method ok' );
 is( $form_obj->{classes}{'RowPadding'}, 'RowPadding', 'test class method ok' );
