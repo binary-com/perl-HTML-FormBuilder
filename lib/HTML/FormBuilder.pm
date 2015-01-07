@@ -68,7 +68,6 @@ sub new {
     $self->{data}{method} ||= 'get';
     $self->{data}{'method'} =
       ( $self->{data}{'method'} eq 'post' ) ? 'post' : 'get';
-    $self->{option}{localize} ||= sub { return shift };
     $self->{fieldsets} ||= [];
     bless $self, $class;
 

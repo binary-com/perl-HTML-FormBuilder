@@ -68,6 +68,12 @@ sub _build_element_and_attributes {
 # See Also   : new
 #####################################################################
 sub _localize {
-    my $self = shift;
-    $self->{option}{localize}->(@_);
+	my $self = shift;
+	my $str = shift;
+	if($self->{option}{localize}){
+    $self->{option}{localize}->($str);
+	}
+	else{
+		return $str;
+	}
 }
