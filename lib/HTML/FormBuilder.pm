@@ -16,7 +16,8 @@ use HTML::FormBuilder::FieldSet;
 # Parameters : Hash reference with keys
 #              'id'     => 'id_of_the_form',
 #              'method' => 'post' #or get,
-#              'localize' => localize sub ref
+#              'localize' => sub localize{},
+#              'classes'  => {'itemclass' => 'classname},
 # Comments   :
 # See Also   :
 #####################################################################
@@ -58,7 +59,7 @@ sub new {
 
     $self->{classes} = \%classes;
 
-    for my $opt ( qw(option text hide_required_text localize) ) {
+    for my $opt ( qw(hide_required_text localize) ) {
         if ( $_args->{$opt} ) {
             $self->{option}{$opt} = delete $_args->{$opt};
         }
@@ -113,7 +114,6 @@ sub add_fieldset {
 #              'comment' => $ref_hash
 # Comments   : check pod below to understand how to create different input fields
 # See Also   :
-# TODO here should be changed
 #####################################################################
 sub add_field {
     my $self           = shift;
@@ -141,6 +141,7 @@ sub add_field {
 # Parameters : Fieldset index that would like to print, null to print all
 # Comments   :
 # See Also   :
+# TODO       : seems the parameter fieldset index useless.
 #####################################################################
 sub build {
     my $self                 = shift;
@@ -475,6 +476,13 @@ EOF
 
 }
 
+#####################################################################
+# Usage      : $self->set_after_form($htmlcode)
+# Purpose    : wrap fieldset html by template
+# Returns    : HTML
+# Comments   :
+# See Also   :
+#####################################################################
 sub set_after_form {
     my $self = shift;
     my $html = shift;
@@ -489,13 +497,19 @@ Form - A Multi-part HTML form
 
 =head1 SYNOPSIS
 
+  # Before create a form, create a classes hash for the form
+  my $classes = {comment => 'comment', 'input_column' => 'column'};
+  # And maybe you need a localize function to translate something
+  my $locaolize = sub {i18n(shift)};
+
   # First, create the Form object. The keys in the HASH reference is the attributes of the form
   $form_attributes => {'id'     => 'id_of_the_form',
                        'name'   => 'name_of_the_form',
                        'method' => 'post', # or get
                        'action' => 'page_to_submit',
           					   'header' => 'My Form',
-                       'localize' => \&Localize::translate,
+                       'localize' => $localize,
+                       'classes'  => $classes,
                        };	#header of the form
   my $form = HTML::FormBuilder->new($form_attributes);
 
@@ -541,7 +555,7 @@ Form - A Multi-part HTML form
 
       my $input_select = {'label' => {'text' => 'Title', for => 'mrms'},
                           'input' => {'type' => 'select', 'id' => 'mrms', 'name' => 'mrms', 'options' => \@options},
-					      'error' => {'text' => 'Please select a title', 'class' => 'errorfield hidden'}};
+					                'error' => {'text' => 'Please select a title', 'class' => 'errorfield hidden'}};
 
 
   ####################################
@@ -565,7 +579,7 @@ Form - A Multi-part HTML form
   my $input_select_dobyy = {'type' => 'select', 'id' => 'dobyy', 'name' => 'dobyy', 'options' => \@yyoptions};
   my $input_select = {'label' => {'text' => 'Birthday', for => 'dobdd'},
                       'input' => [$input_select_dobdd, $input_select_dobmm, $input_select_dobyy],
-			          'error' => {'text' => 'Invalid date.'}};
+			                'error' => {'text' => 'Invalid date.'}};
 
   #Then we add the input field into the Fieldset
   #You can add using index of the fieldset
@@ -603,7 +617,7 @@ The root of the structure is the <form> element and follow by multiple <fieldset
 
 In each <fieldset>, you can create rows which contain label, different input types, error message and comment <p> element.
 
-=head3 Full sample based on form definition given in SYNOPSIS
+=head2 Full sample based on form definition given in SYNOPSIS
 
     <form id="onlineIDForm" method="post" action="">
        <fieldset id="fieldset_one" name="fieldset_one" class="formclass">
@@ -646,10 +660,18 @@ In each <fieldset>, you can create rows which contain label, different input typ
        </fieldset>
 	</form>
 
+=head1 Methods
+
+=head2 new
+
+    my $form = HTML::FormBuilder->new(
+        {id    => 'formid', 
+         class => 'formclass', 
+         classes => {row => 'rowdev'}})
+
 =head1 AUTHOR
 
 Bond Lim L<kheyeng@my.regentmarkets.com>
-Chylli, L<chylli@binary.com>
 
 =head1 COPYRIGHT AND LICENSE
 
