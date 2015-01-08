@@ -9,19 +9,28 @@ use HTML::FormBuilder::Field;
 use Carp;
 use Scalar::Util qw(weaken blessed);
 
-use parent qw(HTML::FormBuilder::Base);
+use Moo;
+use namespace::clean;
+extends qw(HTML::FormBuilder::Base);
 
-sub new{
-	my $class = shift;
-	my $self = {@_};
+has data => (
+						 is => 'ro',
+						 isa => sub {
+							 my $data = shift;
+							 croak('data should be a hashref') unless ref($data) eq 'HASH';
+						 },
+						 default => sub{{}},
+						);
 
-#	croak("parent form must be given when create a new fieldset")
-#		unless ($self->{parent} && blessed($self->{parent}) && $self->{parent}->isa('HTML::FormBuilder'));
-#	weaken($self->{parent});
-	$self->{fields} ||= [];
-	bless $self, $class;
-	return $self;
-}
+has fields => (
+									is => 'rw',
+									isa => sub{
+										my $fields = shift;
+										croak('fields should be an arrayref') unless ref($fields) eq 'ARRAY';
+									},
+									default => sub{[]},
+								 );
+
 
 sub add_field{
 	my $self = shift;
@@ -158,3 +167,5 @@ EOF
     return $fieldset_template;
 
 }
+
+1;

@@ -13,27 +13,43 @@ use Encode;
 use URI::Escape;
 use HTML::Entities;
 
-my %has_error_of;
-my %custom_server_side_check_of;
+use Moo;
+use namespace::clean;
+extends qw(HTML::FormBuilder);
 
-########################################################################
-# Usage      : HTML::FormBuilder::Validation->new($arg_ref);
-# Purpose    : Form validation object constructor
-# Returns    : HTML::FormBuilder::Validation object
-# Parameters : Same as Form
-# Comments   : Public
-# See Also   : POD
-########################################################################
-sub new {
-    my $class = shift;
-    my $self  = $class->SUPER::new(@_);
+has has_error_of => (
+										 is => 'rw',
+										 default => 0,
+										 isa => sub {
+											 croak('has_error_of should be 0 or 1') unless $_[0] == 0 || $_[0] == 1;
+										 },
+										);
 
-    bless( $self, $class );
-    $has_error_of{ ident $self} = 0;
+has custom_server_side_check_of => (
+																		is => 'rw',
+																		isa => sub {
+																			croak('custom_server_side_check_of should be code') unless ref $_[0] eq 'CODE';
+																		}
+																	 );
 
-    return $self;
-}
-
+#########################################################################
+## Usage      : HTML::FormBuilder::Validation->new($arg_ref);
+## Purpose    : Form validation object constructor
+## Returns    : HTML::FormBuilder::Validation object
+## Parameters : Same as Form
+## Comments   : Public
+## See Also   : POD
+#########################################################################
+#sub new {
+#    my $class = shift;
+#    my $self  = $class->SUPER::new(@_);
+#
+#    bless( $self, $class );
+#    $has_error_of{ ident $self} = 0;
+#
+#    return $self;
+#}
+#
 ########################################################################
 # Usage      : $form_validation_obj->set_input_fields(\%input);
 # Purpose    : Set input fields value based on last submit form.
@@ -136,8 +152,8 @@ sub validate {
         }
     }
 
-    if ( $custom_server_side_check_of{ ident $self} ) {
-        &{ $custom_server_side_check_of{ ident $self} }();
+    if ( $self->custom_server_side_check_of ) {
+        $self->custom_server_side_check_of->();
 
     }
 
@@ -163,7 +179,7 @@ sub is_error_found_in {
 sub _set_has_error {
     my $self = shift;
 
-    $has_error_of{ ident $self} = 1;
+    $self->has_error_of(1);
     return;
 }
 
@@ -177,8 +193,7 @@ sub _set_has_error {
 ########################################################################
 sub get_has_error {
     my $self = shift;
-
-    return $has_error_of{ ident $self};
+		return $self->has_error_of;
 }
 
 sub set_field_error_message {
@@ -341,7 +356,7 @@ qq[if (bInputResult && $test){error_element_$error_element_id.innerHTML = decode
 sub set_server_side_checks {
     my $self                      = shift;
     my $server_side_check_sub_ref = shift;
-    $custom_server_side_check_of{ ident $self} = $server_side_check_sub_ref;
+    $self->custom_server_side_check_of($server_side_check_sub_ref);
     return;
 }
 

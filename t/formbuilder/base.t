@@ -5,13 +5,9 @@ use Test::More;
 use Test::Exception;
 
 package TestModule;
-use parent qw(HTML::FormBuilder::Base);
-
-sub new{
-	my $class = shift;
-	my $self =  {@_};
-	bless $self, $class;
-}
+use Moo;
+use namespace::clean;
+extends qw(HTML::FormBuilder::Base);
 
 1;
 

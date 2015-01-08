@@ -8,20 +8,53 @@ our $VERSION = '0.01';
 use Carp;
 use Scalar::Util qw(weaken blessed);
 
-use parent qw(HTML::FormBuilder::Base);
+use Moo;
+use namespace::clean;
 
-sub new{
+extends qw(HTML::FormBuilder::Base);
+
+has data => (
+						 is => 'ro',
+						 isa => sub {
+							 my $data = shift;
+							 croak('data should be a hashref') unless ref($data) eq 'HASH';
+						 },
+						 default => sub{{}},
+						);
+
+sub BUILDARGS{
 	my $class = shift;
-	my $self = {@_};
+	my %args;
+	if(@_ == 1){
+		%args = %{$_[0]};
+	}
+	else {
+		%args = @_;
+	}
+
+	my $data = $args{data};
 
 	# normalize: if 'input' is not an array, then make it as an array, so that
 	# we can process the array directly
-	if($self->{data}{input} && ref($self->{data}{input}) ne 'ARRAY'){
-		$self->{data}{input} = [$self->{data}{input}];
+	if($data->{input} && ref($data->{input}) ne 'ARRAY'){
+		$data->{input} = [$data->{input}];
 	}
-	bless $self, $class;
-	return $self;
+
+	return \%args;
 }
+
+#sub new{
+#	my $class = shift;
+#	my $self = {@_};
+#
+#	# normalize: if 'input' is not an array, then make it as an array, so that
+#	# we can process the array directly
+#	if($self->{data}{input} && ref($self->{data}{input}) ne 'ARRAY'){
+#		$self->{data}{input} = [$self->{data}{input}];
+#	}
+#	bless $self, $class;
+#	return $self;
+#}
 
 sub build{
 	my $self = shift;
@@ -224,3 +257,5 @@ sub _tooltip {
     return
       qq{ <a href='#' title='$content' rel='tooltip'><img src="$url" /></a>};
 }
+
+1;

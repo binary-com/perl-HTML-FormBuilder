@@ -5,33 +5,53 @@ use warnings;
 use 5.008_005;
 our $VERSION = '0.01';
 
-use parent qw(HTML::FormBuilder::Base);
-
 use Carp;
 use HTML::FormBuilder::FieldSet;
-#####################################################################
-# Usage      : Instantiate a Form object.
-# Purpose    : Ensure Statement object is been instantiate with an id
-# Returns    : Form object.
-# Parameters : Hash reference with keys
-#              'id'     => 'id_of_the_form',
-#              'method' => 'post' #or get,
-#              'localize' => sub localize{},
-#              'classes'  => {'itemclass' => 'classname},
-# Comments   :
-# See Also   :
-#####################################################################
-sub new {
-    my $class = shift;
-		my $self = {@_};
-		
-    # fields & id must be given when instantiating a new object
-    croak(
-"Form must be given an id when instantiating a HTML::FormBuilder->new object in $0."
-    ) if !defined $self->{data}{'id'};
+use Moo;
+use namespace::clean;
+extends qw(HTML::FormBuilder::Base);
 
-    # set default class
-    my @class_names = qw( fieldset_group
+
+has data => (
+						 is => 'ro',
+						 isa => sub {
+							 my $data = shift;
+							 croak('data should be a hashref') unless ref($data) eq 'HASH';
+							 croak(
+										 "Form must be given an id when instantiating a HTML::FormBuilder->new object in $0."
+										) if !defined $data->{'id'};
+						 },
+						 default => sub {{}},
+						);
+
+has fieldsets => (
+									is => 'rw',
+									isa => sub{
+										my $fieldsets = shift;
+										return 1 unless $fieldsets;
+										croak('fieldsets should be an arrayref') unless ref($fieldsets) eq 'ARRAY';
+									},
+									default => sub{[]},
+								 );
+
+has after_form => (
+									 is => 'rw',
+									 isa => sub{
+										 return !ref($_[0]);
+									 }
+									);
+
+sub BUILDARGS{
+	my $class = shift;
+	my %args;
+	if(@_ == 1){
+		%args = %{$_[0]};
+	}
+	else {
+		%args = @_;
+	}
+	# set default class
+	my @class_names = qw( fieldset_group
       NoStackFieldParent
       RowPadding
       fieldset_footer
@@ -44,23 +64,71 @@ sub new {
 			label_column
 			input_column
 			hide_mobile
-);
+										 );
 
-    my %classes = map { $_ => $_ } @class_names;
-    %classes = ( %classes, %{ $self->{classes} || {} } );
-    #
-    ################################################################################
+	my %classes = map { $_ => $_ } @class_names;
+	%classes = ( %classes, %{ $args{classes} || {} } );
 
-    $self->{classes} = \%classes;
+	$args{classes} = \%classes;
 
-    $self->{data}{method} ||= 'get';
-    $self->{data}{'method'} =
-      ( $self->{data}{'method'} eq 'post' ) ? 'post' : 'get';
-    $self->{fieldsets} ||= [];
-    bless $self, $class;
 
-    return $self;
+	$args{data}{method} ||= 'get';
+	$args{data}{method} = 'get' if $args{data}{method} ne 'post';
+	return \%args;
 }
+
+#####################################################################
+# Usage      : Instantiate a Form object.
+# Purpose    : Ensure Statement object is been instantiate with an id
+# Returns    : Form object.
+# Parameters : Hash reference with keys
+#              'id'     => 'id_of_the_form',
+#              'method' => 'post' #or get,
+#              'localize' => sub localize{},
+#              'classes'  => {'itemclass' => 'classname},
+# Comments   :
+# See Also   :
+#####################################################################
+#sub new {
+#    my $class = shift;
+#		my $self = {@_};
+#		
+#    # fields & id must be given when instantiating a new object
+#    croak(
+#"Form must be given an id when instantiating a HTML::FormBuilder->new object in $0."
+#    ) if !defined $self->{data}{'id'};
+#
+#    # set default class
+#    my @class_names = qw( fieldset_group
+#      NoStackFieldParent
+#      RowPadding
+#      fieldset_footer
+#      comment
+#      row
+#      extra_tooltip_container
+#      backbutton
+#      required_asterisk
+#      inputtrailing
+#			label_column
+#			input_column
+#			hide_mobile
+#);
+#
+#    my %classes = map { $_ => $_ } @class_names;
+#    %classes = ( %classes, %{ $self->{classes} || {} } );
+#    #
+#    ################################################################################
+#
+#    $self->{classes} = \%classes;
+#
+#    $self->{data}{method} ||= 'get';
+#    $self->{data}{'method'} =
+#      ( $self->{data}{'method'} eq 'post' ) ? 'post' : 'get';
+#    $self->{fieldsets} ||= [];
+#    bless $self, $class;
+#
+#    return $self;
+#}
 
 #####################################################################
 # Usage      : Add a new fieldset to the form
@@ -463,23 +531,6 @@ EOF
 
 }
 
-#####################################################################
-# Usage      : $self->after_form($htmlcode)
-# Purpose    : wrap fieldset html by template
-# Returns    : HTML
-# Comments   :
-# See Also   :
-#####################################################################
-sub after_form {
-    my $self = shift;
-    my $html = shift;
-		if($html){
-			$self->{after_form} = $html;
-		}
-		else{
-			return $self->{after_form};
-		}
-}
 
 1;
 
