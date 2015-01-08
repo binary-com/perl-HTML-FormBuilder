@@ -81,7 +81,7 @@ sub add_fieldset {
     croak("Parameters must in HASH reference in $0.")
       if ( ref $_args ne 'HASH' );
 
-		my $fieldset = HTML::FormBuilder::FieldSet->new(data => $_args, option => $self->{option}, classes => $self->{classes});
+		my $fieldset = HTML::FormBuilder::FieldSet->new(data => $_args, classes => $self->{classes});
 		
     push @{ $self->{fieldsets} }, $fieldset;
 
@@ -172,8 +172,8 @@ qq[<div id="$fieldset_group" class="$self->{classes}{fieldset_group}">];
       $self->_build_element_and_attributes( 'form', $self->{data},
         $fieldsets_html );
 
-    if ( $self->{option}{after_form} ) {
-        $html .= $self->{option}{after_form};
+    if ( $self->after_form ) {
+        $html .= $self->after_form;
     }
 
     return $html;
@@ -464,16 +464,21 @@ EOF
 }
 
 #####################################################################
-# Usage      : $self->set_after_form($htmlcode)
+# Usage      : $self->after_form($htmlcode)
 # Purpose    : wrap fieldset html by template
 # Returns    : HTML
 # Comments   :
 # See Also   :
 #####################################################################
-sub set_after_form {
+sub after_form {
     my $self = shift;
     my $html = shift;
-    $self->{option}{after_form} = $html;
+		if($html){
+			$self->{after_form} = $html;
+		}
+		else{
+			return $self->{after_form};
+		}
 }
 
 1;

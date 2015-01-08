@@ -50,14 +50,14 @@ is( $result, $expect_result,
 );
 
 ################################################################################
-# test set_after_from
+# test after_from
 
 $form_obj = HTML::FormBuilder->new(data =>
     {
         id => 'testid',
     }
 );
-$form_obj->set_after_form("<div>afterform</div>");
+$form_obj->after_form("<div>afterform</div>");
 lives_ok( sub { $result = $form_obj->build }, 'build form with some args' );
 like( $result, qr/<div>afterform<\/div>/, 'add afterform info' );
 

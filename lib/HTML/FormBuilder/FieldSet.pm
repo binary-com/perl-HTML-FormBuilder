@@ -27,7 +27,7 @@ sub add_field{
 	my $self = shift;
 	my $_args = shift;
 
-	my $field = HTML::FormBuilder::Field->new(data => $_args, option => $self->{option}, classes => $self->{classes});
+	my $field = HTML::FormBuilder::Field->new(data => $_args, classes => $self->{classes});
 	push @{ $self->{'fields'} }, $field;
 
 	return $field;
