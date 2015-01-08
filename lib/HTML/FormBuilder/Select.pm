@@ -9,9 +9,9 @@ package HTML::FormBuilder::Select;
 
 our $VERSION = '0.01';
 
-use Moo;
-use namespace::autoclean;
 use Carp;
+use Moo;
+use namespace::clean;
 
 =head1 Synopsis
 
