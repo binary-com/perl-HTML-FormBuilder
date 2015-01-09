@@ -96,3 +96,20 @@ sub _localize {
 }
 
 1;
+
+=head1 NAME
+
+HTML::FormBuilder::Base - HTML::FormBuilder and HTML::FormBuilder::Fieldset, HTML::FormBuilder::Field base class
+
+=head1 Attributes
+
+=head2 classes
+
+please refer to L<HTML::FormBuilder>.
+
+=head2 localize
+
+please refer to L<HTML::FormBuilder>.
+
+=cut
+

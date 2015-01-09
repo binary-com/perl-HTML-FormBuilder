@@ -140,3 +140,11 @@ sub is_str {
 
 __PACKAGE__->meta->make_immutable;
 1;
+
+
+=head1 NAME
+
+HTML::FormBuilder - A Multi-part HTML form
+
+=head1 SYNOPSIS
+

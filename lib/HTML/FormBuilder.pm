@@ -78,59 +78,6 @@ sub BUILDARGS {
 }
 
 #####################################################################
-# Usage      : Instantiate a Form object.
-# Purpose    : Ensure Statement object is been instantiate with an id
-# Returns    : Form object.
-# Parameters : Hash reference with keys
-#              'id'     => 'id_of_the_form',
-#              'method' => 'post' #or get,
-#              'localize' => sub localize{},
-#              'classes'  => {'itemclass' => 'classname},
-# Comments   :
-# See Also   :
-#####################################################################
-#sub new {
-#    my $class = shift;
-#		my $self = {@_};
-#
-#    # fields & id must be given when instantiating a new object
-#    croak(
-#"Form must be given an id when instantiating a HTML::FormBuilder->new object in $0."
-#    ) if !defined $self->{data}{'id'};
-#
-#    # set default class
-#    my @class_names = qw( fieldset_group
-#      NoStackFieldParent
-#      RowPadding
-#      fieldset_footer
-#      comment
-#      row
-#      extra_tooltip_container
-#      backbutton
-#      required_asterisk
-#      inputtrailing
-#			label_column
-#			input_column
-#			hide_mobile
-#);
-#
-#    my %classes = map { $_ => $_ } @class_names;
-#    %classes = ( %classes, %{ $self->{classes} || {} } );
-#    #
-#    ################################################################################
-#
-#    $self->{classes} = \%classes;
-#
-#    $self->{data}{method} ||= 'get';
-#    $self->{data}{'method'} =
-#      ( $self->{data}{'method'} eq 'post' ) ? 'post' : 'get';
-#    $self->{fieldsets} ||= [];
-#    bless $self, $class;
-#
-#    return $self;
-#}
-
-#####################################################################
 # Usage      : Add a new fieldset to the form
 # Purpose    : Allow the form object to carry more than 1 fieldsets
 # Returns    :
@@ -534,7 +481,7 @@ EOF
 
 =head1 NAME
 
-Form - A Multi-part HTML form
+HTML::FormBuilder - A Multi-part HTML form
 
 =head1 SYNOPSIS
 
@@ -552,7 +499,7 @@ Form - A Multi-part HTML form
                        'localize' => $localize,
                        'classes'  => $classes,
                        };	#header of the form
-  my $form = HTML::FormBuilder->new($form_attributes);
+  my $form = HTML::FormBuilder->new(data => $form_attributes, classes => $classes, localize => $localize);
 
   #Then create fieldset, the form is allow to have more than 1 fieldset
   #The keys in the HASH reference is the attributes of the fieldset
@@ -701,14 +648,68 @@ In each <fieldset>, you can create rows which contain label, different input typ
        </fieldset>
 	</form>
 
+=head1 Attributes
+
+=head2 data
+
+The form attributes. It should be a hashref.
+
+=head2 classes
+
+The form classes. It should be a hashref. You can customize the form's layout by  the classes. 
+The class names used are:
+
+      fieldset_group
+      NoStackFieldParent
+      RowPadding
+      fieldset_footer
+      comment
+      row
+      extra_tooltip_container
+      backbutton
+      required_asterisk
+      inputtrailing
+      label_column
+      input_column
+      hide_mobile
+
+=head2 localize
+
+The subroutine ref which can be called when translate something like 'Confirm'. The default value is no translating.
+
+=head2 fieldsets
+
+The fieldsets the form have.
+
 =head1 Methods
 
 =head2 new
 
     my $form = HTML::FormBuilder->new(
-        {id    => 'formid', 
-         class => 'formclass', 
-         classes => {row => 'rowdev'}})
+        data =>{id    => 'formid', 
+                class => 'formclass'},
+        classes => {row => 'rowdev'})
+
+The id is rquired for the form.
+
+=head2 add_fieldset
+
+    my $fieldset_index = $form->add_fieldset({id => 'fieldset1});
+
+the parameter is the fieldset attributes.
+It will return the fielset index.
+
+=head2 add_field
+
+      $form->add_field(0, {input => {type => 'text', value => 'Join'}});
+
+The parameter is the fieldset index to which you want to add the filed and the field attributes.
+
+=head2 build
+
+      print $form->build;
+
+the data in the $form will be changed when build the form. So you cannot get the same result if you call build twice.
 
 =head1 AUTHOR
 

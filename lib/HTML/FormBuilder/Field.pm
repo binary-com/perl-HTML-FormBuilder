@@ -42,19 +42,6 @@ sub BUILDARGS {
     return \%args;
 }
 
-#sub new{
-#	my $class = shift;
-#	my $self = {@_};
-#
-#	# normalize: if 'input' is not an array, then make it as an array, so that
-#	# we can process the array directly
-#	if($self->{data}{input} && ref($self->{data}{input}) ne 'ARRAY'){
-#		$self->{data}{input} = [$self->{data}{input}];
-#	}
-#	bless $self, $class;
-#	return $self;
-#}
-
 sub build {
     my $self = shift;
     my $env  = shift;
@@ -238,7 +225,7 @@ sub _build_input {
 }
 
 #####################################################################
-# Usage      : $self->_link_button($content, $url)
+# Usage      : _tooltip($content, $url)
 # Purpose    : create tooltip html code
 # Returns    : HTML
 # Comments   :
@@ -254,3 +241,18 @@ sub _tooltip {
 }
 
 1;
+
+=head1 NAME
+
+HTML::FormBuilder::Fieldset - Fieldset container used by HTML::FormBuilder
+
+=head1 SYNOPSIS
+
+    my $form = HTML::FormBuilder->new(data => {id => 'testform});
+
+    my $fieldset_index = $form->add_fieldset({id => 'fieldset1'});
+
+   $form->add_field(fieldset_index, {input => {type => 'text', value => 'Join'}});
+
+=cut
+
