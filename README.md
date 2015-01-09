@@ -3,9 +3,14 @@
 
 # NAME
 
-Form - A Multi-part HTML form
+HTML::FormBuilder - A Multi-part HTML form
 
 # SYNOPSIS
+
+    # Before create a form, create a classes hash for the form
+    my $classes = {comment => 'comment', 'input_column' => 'column'};
+    # And maybe you need a localize function to translate something
+    my $locaolize = sub {i18n(shift)};
 
     # First, create the Form object. The keys in the HASH reference is the attributes of the form
     $form_attributes => {'id'     => 'id_of_the_form',
@@ -13,9 +18,10 @@ Form - A Multi-part HTML form
                          'method' => 'post', # or get
                          'action' => 'page_to_submit',
                                                      'header' => 'My Form',
-                         'localize' => \&Localize::translate,
+                         'localize' => $localize,
+                         'classes'  => $classes,
                          };       #header of the form
-    my $form = HTML::FormBuilder->new($form_attributes);
+    my $form = HTML::FormBuilder->new(data => $form_attributes, classes => $classes, localize => $localize);
 
     #Then create fieldset, the form is allow to have more than 1 fieldset
     #The keys in the HASH reference is the attributes of the fieldset
@@ -59,7 +65,7 @@ Form - A Multi-part HTML form
 
         my $input_select = {'label' => {'text' => 'Title', for => 'mrms'},
                             'input' => {'type' => 'select', 'id' => 'mrms', 'name' => 'mrms', 'options' => \@options},
-                                                'error' => {'text' => 'Please select a title', 'class' => 'errorfield hidden'}};
+                                                          'error' => {'text' => 'Please select a title', 'class' => 'errorfield hidden'}};
 
 
     ####################################
@@ -83,7 +89,7 @@ Form - A Multi-part HTML form
     my $input_select_dobyy = {'type' => 'select', 'id' => 'dobyy', 'name' => 'dobyy', 'options' => \@yyoptions};
     my $input_select = {'label' => {'text' => 'Birthday', for => 'dobdd'},
                         'input' => [$input_select_dobdd, $input_select_dobmm, $input_select_dobyy],
-                                    'error' => {'text' => 'Invalid date.'}};
+                                          'error' => {'text' => 'Invalid date.'}};
 
     #Then we add the input field into the Fieldset
     #You can add using index of the fieldset
@@ -121,7 +127,7 @@ The root of the structure is the <form> element and follow by multiple <fieldset
 
 In each <fieldset>, you can create rows which contain label, different input types, error message and comment <p> element.
 
-### Full sample based on form definition given in SYNOPSIS
+## Full sample based on form definition given in SYNOPSIS
 
     <form id="onlineIDForm" method="post" action="">
        <fieldset id="fieldset_one" name="fieldset_one" class="formclass">
@@ -164,9 +170,71 @@ In each <fieldset>, you can create rows which contain label, different input typ
        </fieldset>
         </form>
 
+# Attributes
+
+## data
+
+The form attributes. It should be a hashref.
+
+## classes
+
+The form classes. It should be a hashref. You can customize the form's layout by  the classes. 
+The class names used are:
+
+      fieldset_group
+      NoStackFieldParent
+      RowPadding
+      fieldset_footer
+      comment
+      row
+      extra_tooltip_container
+      backbutton
+      required_asterisk
+      inputtrailing
+      label_column
+      input_column
+      hide_mobile
+
+## localize
+
+The subroutine ref which can be called when translate something like 'Confirm'. The default value is no translating.
+
+## fieldsets
+
+The fieldsets the form have.
+
+# Methods
+
+## new
+
+    my $form = HTML::FormBuilder->new(
+        data =>{id    => 'formid', 
+                class => 'formclass'},
+        classes => {row => 'rowdev'})
+
+The id is rquired for the form.
+
+## add\_fieldset
+
+    my $fieldset_index = $form->add_fieldset({id => 'fieldset1});
+
+the parameter is the fieldset attributes.
+It will return the fielset index.
+
+## add\_field
+
+      $form->add_field(0, {input => {type => 'text', value => 'Join'}});
+
+The parameter is the fieldset index to which you want to add the filed and the field attributes.
+
+## build
+
+      print $form->build;
+
+the data in the $form will be changed when build the form. So you cannot get the same result if you call build twice.
+
 # AUTHOR
 
 Bond Lim [kheyeng@my.regentmarkets.com](https://metacpan.org/pod/kheyeng@my.regentmarkets.com)
-Chylli, [chylli@binary.com](https://metacpan.org/pod/chylli@binary.com)
 
 # COPYRIGHT AND LICENSE
