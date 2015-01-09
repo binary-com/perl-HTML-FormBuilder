@@ -27,7 +27,6 @@ my %WriteMakefileArgs = (
     "HTML::Entities" => 0,
     "Moo" => 0,
     "Scalar::Util" => 0,
-    "Text::Trim" => 0,
     "URI::Escape" => 0,
     "namespace::clean" => 0
   },
@@ -54,7 +53,6 @@ my %FallbackPrereqs = (
   "Test::Exception" => 0,
   "Test::FailWarnings" => 0,
   "Test::More" => "0.96",
-  "Text::Trim" => 0,
   "URI::Escape" => 0,
   "namespace::clean" => 0
 );

@@ -178,7 +178,7 @@ The form attributes. It should be a hashref.
 
 ## classes
 
-The form classes. It should be a hashref. You can customize the form's layout by  the classes. 
+The form classes. It should be a hashref. You can customize the form's layout by  the classes.
 The class names used are:
 
       fieldset_group
@@ -208,7 +208,7 @@ The fieldsets the form have.
 ## new
 
     my $form = HTML::FormBuilder->new(
-        data =>{id    => 'formid', 
+        data =>{id    => 'formid',
                 class => 'formclass'},
         classes => {row => 'rowdev'})
 

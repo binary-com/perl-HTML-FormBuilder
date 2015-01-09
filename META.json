@@ -43,7 +43,6 @@
             "HTML::Entities" : "0",
             "Moo" : "0",
             "Scalar::Util" : "0",
-            "Text::Trim" : "0",
             "URI::Escape" : "0",
             "namespace::clean" : "0",
             "perl" : "5.008005"
@@ -72,6 +71,7 @@
    "version" : "0.01",
    "x_contributors" : [
       "Chylli <chylli.email@gmail.com>",
+      "Fayland Lam <fayland@gmail.com>",
       "Jean-Yves Sireau <jy@binary.com>"
    ]
 }
