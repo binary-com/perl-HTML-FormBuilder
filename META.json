@@ -52,6 +52,7 @@
       "test" : {
          "requires" : {
             "Test::Exception" : "0",
+            "Test::FailWarnings" : "0",
             "Test::More" : "0.96"
          }
       }

@@ -33,6 +33,7 @@ my %WriteMakefileArgs = (
   },
   "TEST_REQUIRES" => {
     "Test::Exception" => 0,
+    "Test::FailWarnings" => 0,
     "Test::More" => "0.96"
   },
   "VERSION" => "0.01",
@@ -51,6 +52,7 @@ my %FallbackPrereqs = (
   "Moo" => 0,
   "Scalar::Util" => 0,
   "Test::Exception" => 0,
+  "Test::FailWarnings" => 0,
   "Test::More" => "0.96",
   "Text::Trim" => 0,
   "URI::Escape" => 0,
