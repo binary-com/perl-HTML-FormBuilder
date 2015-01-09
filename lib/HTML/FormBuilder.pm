@@ -44,7 +44,7 @@ has after_form => (
 
 sub BUILDARGS {
     my $class = shift;
-    my %args = (@_ == 1) ? %{$_[0]} : @_;
+    my %args = (@_ % 2) ? %{$_[0]} : @_;
 
     # set default class
     my @class_names = qw( fieldset_group

@@ -1,10 +1,3 @@
-
-=head1 NAME
-
-HTML::FormBuilder::Select - Select Element Handling for BOM Forms
-
-=cut
-
 package HTML::FormBuilder::Select;
 
 our $VERSION = '0.01';
@@ -12,6 +5,12 @@ our $VERSION = '0.01';
 use Carp;
 use Moo;
 use namespace::clean;
+
+=head1 NAME
+
+HTML::FormBuilder::Select - Select Element Handling for BOM Forms
+
+=cut
 
 =head1 Synopsis
 
@@ -34,7 +33,6 @@ use namespace::clean;
 
 has id => (
     is => 'ro',
-
     #isa     => 'Str',
     isa     => \&is_str,
     lazy    => 1,
@@ -79,7 +77,7 @@ has values => (
     default => sub { [] },
 );
 
-=head2 value 
+=head2 value
 
 Actually just a method that grabs the first value from values
 
@@ -115,8 +113,7 @@ sub _option_html {
     my $selected = '';
     $optionhash->{disabled} //= '';
     $selected = ' SELECTED' if grep { $_ eq $value } @{ $self->values };
-    return
-qq|<option value="$value"$selected $optionhash->{disabled}>$text</option>|;
+    return qq|<option value="$value"$selected $optionhash->{disabled}>$text</option>|;
 }
 
 =head2 hidden_html
@@ -138,7 +135,6 @@ sub is_str {
     die "$_[0] is not a string" unless defined( $_[0] ) && !ref( $_[0] );
 }
 
-__PACKAGE__->meta->make_immutable;
 1;
 
 

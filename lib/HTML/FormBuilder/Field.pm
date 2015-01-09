@@ -1,4 +1,5 @@
 package HTML::FormBuilder::Field;
+
 use strict;
 use warnings;
 use 5.008_005;
@@ -9,7 +10,6 @@ use Scalar::Util qw(weaken blessed);
 
 use Moo;
 use namespace::clean;
-
 extends qw(HTML::FormBuilder::Base);
 
 has data => (
@@ -23,13 +23,7 @@ has data => (
 
 sub BUILDARGS {
     my $class = shift;
-    my %args;
-    if ( @_ == 1 ) {
-        %args = %{ $_[0] };
-    }
-    else {
-        %args = @_;
-    }
+    my %args = (@_ % 2) ? %{$_[0]} : @_;
 
     my $data = $args{data};
 

@@ -1,4 +1,5 @@
 package HTML::FormBuilder::FieldSet;
+
 use strict;
 use warnings;
 use 5.008_005;
@@ -166,7 +167,6 @@ sub _wrap_fieldset {
 EOF
 
     return $fieldset_template;
-
 }
 
 1;
