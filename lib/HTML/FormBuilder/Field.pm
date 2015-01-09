@@ -4,7 +4,6 @@ use warnings;
 use 5.008_005;
 our $VERSION = '0.01';
 
-
 use Carp;
 use Scalar::Util qw(weaken blessed);
 
@@ -14,33 +13,33 @@ use namespace::clean;
 extends qw(HTML::FormBuilder::Base);
 
 has data => (
-						 is => 'ro',
-						 isa => sub {
-							 my $data = shift;
-							 croak('data should be a hashref') unless ref($data) eq 'HASH';
-						 },
-						 default => sub{{}},
-						);
+    is  => 'ro',
+    isa => sub {
+        my $data = shift;
+        croak('data should be a hashref') unless ref($data) eq 'HASH';
+    },
+    default => sub { {} },
+);
 
-sub BUILDARGS{
-	my $class = shift;
-	my %args;
-	if(@_ == 1){
-		%args = %{$_[0]};
-	}
-	else {
-		%args = @_;
-	}
+sub BUILDARGS {
+    my $class = shift;
+    my %args;
+    if ( @_ == 1 ) {
+        %args = %{ $_[0] };
+    }
+    else {
+        %args = @_;
+    }
 
-	my $data = $args{data};
+    my $data = $args{data};
 
-	# normalize: if 'input' is not an array, then make it as an array, so that
-	# we can process the array directly
-	if($data->{input} && ref($data->{input}) ne 'ARRAY'){
-		$data->{input} = [$data->{input}];
-	}
+    # normalize: if 'input' is not an array, then make it as an array, so that
+    # we can process the array directly
+    if ( $data->{input} && ref( $data->{input} ) ne 'ARRAY' ) {
+        $data->{input} = [ $data->{input} ];
+    }
 
-	return \%args;
+    return \%args;
 }
 
 #sub new{
@@ -56,21 +55,20 @@ sub BUILDARGS{
 #	return $self;
 #}
 
-sub build{
-	my $self = shift;
-	my $env = shift;
+sub build {
+    my $self = shift;
+    my $env  = shift;
 
-	my $data = $self->{data};
-	
-	my $stacked = $env->{stacked};
-	my $classes = $env->{classes};
+    my $data = $self->{data};
 
-	my $div_span     = "div";
-	my $label_column = $classes->{label_column};
-	my $input_column = $classes->{input_column};
+    my $stacked = $env->{stacked};
+    my $classes = $env->{classes};
 
+    my $div_span     = "div";
+    my $label_column = $classes->{label_column};
+    my $input_column = $classes->{input_column};
 
-	    if ( $stacked == 0 ) {
+    if ( $stacked == 0 ) {
         $div_span     = "span";
         $label_column = "";
         $input_column = "";
@@ -96,10 +94,10 @@ sub build{
         my $label_text = $data->{'label'}->{'text'} || '';
         undef $data->{'label'}->{'text'};
         my $required_mark = delete $data->{label}{required_mark} || 0;
-        my $label_html = $self->_build_element_and_attributes(
-            'label', $data->{'label'},
+        my $label_html =
+          $self->_build_element_and_attributes( 'label', $data->{'label'},
             $label_text, { required_mark => $required_mark },
-        );
+          );
 
         # add a tooltip explanation if given
         if ( $data->{'label'}{'tooltip'} ) {
@@ -114,7 +112,7 @@ sub build{
 qq{<div class="$classes->{extra_tooltip_container}">$label_html$tooltip</div>};
         }
         else {
-            my $hide_mobile = $label_text ?  "" : $classes->{hide_mobile};
+            my $hide_mobile = $label_text ? "" : $classes->{hide_mobile};
 
             $input_fields_html .=
 qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_span>};
@@ -128,18 +126,15 @@ qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_sp
         my $inputs = $data->{input};
         $input_fields_html .= qq{<$div_span class="$input_column">};
         foreach my $input ( @{$inputs} ) {
-            $input_fields_html .= $self->_build_input($input, $env);
+            $input_fields_html .= $self->_build_input( $input, $env );
         }
     }
 
     if ( defined $data->{'comment'} ) {
         $data->{'comment'}{'class'} ||= '';
         $input_fields_html .= '<br>'
-          . $self->_build_element_and_attributes(
-            'p',
-            $data->{'comment'},
-            $data->{'comment'}->{'text'}
-          );
+          . $self->_build_element_and_attributes( 'p', $data->{'comment'},
+            $data->{'comment'}->{'text'} );
     }
 
     if ( defined $data->{'error'} ) {
@@ -184,8 +179,8 @@ qq{<$div_span class="$label_column $hide_mobile form_label">$label_html</$div_sp
 sub _build_input {
     my $self        = shift;
     my $input_field = shift;
-		my $env = shift;
-		
+    my $env         = shift;
+
     my $html = '';
 
     # delete this so that it doesn't carry on to the next field

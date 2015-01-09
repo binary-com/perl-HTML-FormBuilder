@@ -18,19 +18,20 @@ use namespace::clean;
 extends qw(HTML::FormBuilder);
 
 has has_error_of => (
-										 is => 'rw',
-										 default => 0,
-										 isa => sub {
-											 croak('has_error_of should be 0 or 1') unless $_[0] == 0 || $_[0] == 1;
-										 },
-										);
+    is      => 'rw',
+    default => 0,
+    isa     => sub {
+        croak('has_error_of should be 0 or 1') unless $_[0] == 0 || $_[0] == 1;
+    },
+);
 
 has custom_server_side_check_of => (
-																		is => 'rw',
-																		isa => sub {
-																			croak('custom_server_side_check_of should be code') unless ref $_[0] eq 'CODE';
-																		}
-																	 );
+    is  => 'rw',
+    isa => sub {
+        croak('custom_server_side_check_of should be code')
+          unless ref $_[0] eq 'CODE';
+    }
+);
 
 #########################################################################
 ## Usage      : HTML::FormBuilder::Validation->new($arg_ref);
@@ -119,8 +120,8 @@ sub validate {
 
     foreach my $fieldset (@fieldsets) {
       INPUT_FIELD:
-			foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
-				my $data = $input_field->{data};
+        foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
+            my $data = $input_field->{data};
             if ( $data->{'input'} and $data->{'error'}->{'id'} ) {
                 foreach my $input_element ( @{ $data->{'input'} } ) {
                     if (
@@ -193,7 +194,7 @@ sub _set_has_error {
 ########################################################################
 sub get_has_error {
     my $self = shift;
-		return $self->has_error_of;
+    return $self->has_error_of;
 }
 
 sub set_field_error_message {
@@ -233,7 +234,7 @@ sub _build_javascript_validation {
 
     my $input_field = $arg_ref->{'input_field'};
 
-		my $data = $input_field->{data};
+    my $data = $input_field->{data};
     if (    defined $data->{'validation'}
         and $data->{'input'}
         and $data->{'error'}->{'id'} )

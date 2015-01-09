@@ -11,47 +11,48 @@ use Moo;
 use namespace::clean;
 extends qw(HTML::FormBuilder::Base);
 
-
 has data => (
-						 is => 'ro',
-						 isa => sub {
-							 my $data = shift;
-							 croak('data should be a hashref') unless ref($data) eq 'HASH';
-							 croak(
-										 "Form must be given an id when instantiating a HTML::FormBuilder->new object in $0."
-										) if !defined $data->{'id'};
-						 },
-						 default => sub {{}},
-						);
+    is  => 'ro',
+    isa => sub {
+        my $data = shift;
+        croak('data should be a hashref') unless ref($data) eq 'HASH';
+        croak(
+"Form must be given an id when instantiating a HTML::FormBuilder->new object in $0."
+        ) if !defined $data->{'id'};
+    },
+    default => sub { {} },
+);
 
 has fieldsets => (
-									is => 'rw',
-									isa => sub{
-										my $fieldsets = shift;
-										return 1 unless $fieldsets;
-										croak('fieldsets should be an arrayref') unless ref($fieldsets) eq 'ARRAY';
-									},
-									default => sub{[]},
-								 );
+    is  => 'rw',
+    isa => sub {
+        my $fieldsets = shift;
+        return 1 unless $fieldsets;
+        croak('fieldsets should be an arrayref')
+          unless ref($fieldsets) eq 'ARRAY';
+    },
+    default => sub { [] },
+);
 
 has after_form => (
-									 is => 'rw',
-									 isa => sub{
-										 return !ref($_[0]);
-									 }
-									);
+    is  => 'rw',
+    isa => sub {
+        return !ref( $_[0] );
+    }
+);
 
-sub BUILDARGS{
-	my $class = shift;
-	my %args;
-	if(@_ == 1){
-		%args = %{$_[0]};
-	}
-	else {
-		%args = @_;
-	}
-	# set default class
-	my @class_names = qw( fieldset_group
+sub BUILDARGS {
+    my $class = shift;
+    my %args;
+    if ( @_ == 1 ) {
+        %args = %{ $_[0] };
+    }
+    else {
+        %args = @_;
+    }
+
+    # set default class
+    my @class_names = qw( fieldset_group
       NoStackFieldParent
       RowPadding
       fieldset_footer
@@ -61,20 +62,19 @@ sub BUILDARGS{
       backbutton
       required_asterisk
       inputtrailing
-			label_column
-			input_column
-			hide_mobile
-										 );
+      label_column
+      input_column
+      hide_mobile
+    );
 
-	my %classes = map { $_ => $_ } @class_names;
-	%classes = ( %classes, %{ $args{classes} || {} } );
+    my %classes = map { $_ => $_ } @class_names;
+    %classes = ( %classes, %{ $args{classes} || {} } );
 
-	$args{classes} = \%classes;
+    $args{classes} = \%classes;
 
-
-	$args{data}{method} ||= 'get';
-	$args{data}{method} = 'get' if $args{data}{method} ne 'post';
-	return \%args;
+    $args{data}{method} ||= 'get';
+    $args{data}{method} = 'get' if $args{data}{method} ne 'post';
+    return \%args;
 }
 
 #####################################################################
@@ -92,7 +92,7 @@ sub BUILDARGS{
 #sub new {
 #    my $class = shift;
 #		my $self = {@_};
-#		
+#
 #    # fields & id must be given when instantiating a new object
 #    croak(
 #"Form must be given an id when instantiating a HTML::FormBuilder->new object in $0."
@@ -149,8 +149,11 @@ sub add_fieldset {
     croak("Parameters must in HASH reference in $0.")
       if ( ref $_args ne 'HASH' );
 
-		my $fieldset = HTML::FormBuilder::FieldSet->new(data => $_args, classes => $self->{classes});
-		
+    my $fieldset = HTML::FormBuilder::FieldSet->new(
+        data    => $_args,
+        classes => $self->{classes}
+    );
+
     push @{ $self->{fieldsets} }, $fieldset;
 
     #return fieldset id/index that was created
@@ -183,8 +186,8 @@ sub add_field {
     croak("The fieldset does not exist in $0. form_id[$self->{data}{'id'}]")
       if ( $fieldset_index > $#{ $self->{fieldsets} } );
 
-		my $fieldset = $self->{fieldsets}[$fieldset_index];
-		return $fieldset->add_field($_args);
+    my $fieldset = $self->{fieldsets}[$fieldset_index];
+    return $fieldset->add_field($_args);
 
 }
 
@@ -216,8 +219,7 @@ sub build {
 
     # build the form fieldset
     foreach my $fieldset (@fieldsets) {
-        my ( $fieldset_group, $fieldset_html ) =
-          $fieldset->build();
+        my ( $fieldset_group, $fieldset_html ) = $fieldset->build();
         push @{ $grouped_fieldset{$fieldset_group} }, $fieldset_html;
     }
 
@@ -247,7 +249,6 @@ qq[<div id="$fieldset_group" class="$self->{classes}{fieldset_group}">];
     return $html;
 }
 
-
 #
 # This builds a bare-bone version of the form with all inputs hidden and only
 # displays a confirmation button. It can be used for when we'd like to ask
@@ -263,8 +264,8 @@ sub build_confirmation_button_with_all_inputs_hidden {
     # get all inputs that are to be output as hidden
     foreach my $fieldset ( @{ $self->{'fieldsets'} } ) {
       INPUT:
-			foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
-				my $data = $input_field->{data};
+        foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
+            my $data = $input_field->{data};
             next INPUT if ( not defined $data->{'input'} );
 
             push @inputs, @{ $data->{'input'} };
@@ -317,8 +318,8 @@ sub set_field_value {
 
     return unless $input_field;
 
-		my $data = $input_field->{data};
-		
+    my $data = $input_field->{data};
+
     my $inputs = $data->{input};
 
     map {
@@ -485,8 +486,6 @@ sub _get_error_field {
     return;
 }
 
-
-
 #####################################################################
 # Usage      : $self->_link_button({value => 'back', class => 'backbutton', href => '})
 # Purpose    : create link button html
@@ -530,7 +529,6 @@ EOF
     return $fieldset_template;
 
 }
-
 
 1;
 

@@ -4,7 +4,6 @@ use warnings;
 use 5.008_005;
 our $VERSION = '0.01';
 
-
 use HTML::FormBuilder::Field;
 use Carp;
 use Scalar::Util qw(weaken blessed);
@@ -14,34 +13,35 @@ use namespace::clean;
 extends qw(HTML::FormBuilder::Base);
 
 has data => (
-						 is => 'ro',
-						 isa => sub {
-							 my $data = shift;
-							 croak('data should be a hashref') unless ref($data) eq 'HASH';
-						 },
-						 default => sub{{}},
-						);
+    is  => 'ro',
+    isa => sub {
+        my $data = shift;
+        croak('data should be a hashref') unless ref($data) eq 'HASH';
+    },
+    default => sub { {} },
+);
 
 has fields => (
-									is => 'rw',
-									isa => sub{
-										my $fields = shift;
-										croak('fields should be an arrayref') unless ref($fields) eq 'ARRAY';
-									},
-									default => sub{[]},
-								 );
+    is  => 'rw',
+    isa => sub {
+        my $fields = shift;
+        croak('fields should be an arrayref') unless ref($fields) eq 'ARRAY';
+    },
+    default => sub { [] },
+);
 
+sub add_field {
+    my $self  = shift;
+    my $_args = shift;
 
-sub add_field{
-	my $self = shift;
-	my $_args = shift;
+    my $field = HTML::FormBuilder::Field->new(
+        data    => $_args,
+        classes => $self->{classes}
+    );
+    push @{ $self->{'fields'} }, $field;
 
-	my $field = HTML::FormBuilder::Field->new(data => $_args, classes => $self->{classes});
-	push @{ $self->{'fields'} }, $field;
-
-	return $field;
+    return $field;
 }
-
 
 #####################################################################
 # Usage      : generate the form content for a fieldset
@@ -53,9 +53,10 @@ sub add_field{
 # See Also   :
 #####################################################################
 sub build {
-    my $self     = shift;
+    my $self = shift;
 
-		my $data = $self->{data};
+    my $data = $self->{data};
+
     #FIXME this attribute should be deleted, or it will emit to the html code
     my $fieldset_group = $data->{'group'};
     my $stacked = defined $data->{'stacked'} ? $data->{'stacked'} : 1;
@@ -69,7 +70,8 @@ sub build {
     my $input_fields_html = '';
 
     foreach my $input_field ( @{ $self->{'fields'} } ) {
-			$input_fields_html .= $input_field->build({stacked => $stacked, classes => $self->{classes}});
+        $input_fields_html .= $input_field->build(
+            { stacked => $stacked, classes => $self->{classes} } );
     }
 
     if ( $stacked == 0 ) {
@@ -89,8 +91,7 @@ sub build {
     }
 
     $fieldset_html =
-      $self->_build_element_and_attributes( 'fieldset', $data,
-        $fieldset_html );
+      $self->_build_element_and_attributes( 'fieldset', $data, $fieldset_html );
 
     if (
         (
@@ -117,9 +118,9 @@ sub build {
 # See Also   :
 #####################################################################
 sub _build_fieldset_foreword {
-    my $self     = shift;
-		my $data = $self->{data};
-		
+    my $self = shift;
+    my $data = $self->{data};
+
     # fieldset legend
     my $legend = '';
     if ( defined $data->{'legend'} ) {

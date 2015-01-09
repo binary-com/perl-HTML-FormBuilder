@@ -9,21 +9,23 @@ use Moo;
 use namespace::clean;
 
 has classes => (
-								is => 'ro',
-								isa => sub {
-									my $classes = shift;
-									croak('classes should be a hashref') unless ref($classes) eq 'HASH';
-									
-								}
-							 );
+    is  => 'ro',
+    isa => sub {
+        my $classes = shift;
+        croak('classes should be a hashref') unless ref($classes) eq 'HASH';
+
+    }
+);
 has localize => (
-								 is => 'ro',
-								 isa => sub {
-									 my $localize = shift;
-									 croak('localize should be a sub') unless ref($localize) eq 'CODE';
-								 },
-								 default => sub { return sub {return shift;}},
-								);
+    is  => 'ro',
+    isa => sub {
+        my $localize = shift;
+        croak('localize should be a sub') unless ref($localize) eq 'CODE';
+    },
+    default => sub {
+        return sub { return shift; }
+    },
+);
 
 #####################################################################
 # Usage      : build the html element and its own attributes
@@ -88,9 +90,9 @@ sub _build_element_and_attributes {
 # See Also   : new
 #####################################################################
 sub _localize {
-	my $self = shift;
-	my $str = shift;
-	return $self->localize->($str);
+    my $self = shift;
+    my $str  = shift;
+    return $self->localize->($str);
 }
 
 1;

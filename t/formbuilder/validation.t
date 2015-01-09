@@ -139,7 +139,10 @@ sub create_form_object {
 
     # Create new form object
     lives_ok {
-        $form_obj = HTML::FormBuilder::Validation->new(data => $form_attributes, classes => $classes);
+        $form_obj = HTML::FormBuilder::Validation->new(
+            data    => $form_attributes,
+            classes => $classes
+        );
     }
     'Create Form Validation';
 

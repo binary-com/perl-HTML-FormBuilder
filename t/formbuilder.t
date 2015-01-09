@@ -16,7 +16,8 @@ my $form_obj;
 
 ################################################################################
 # test new
-lives_ok( sub { $form_obj = HTML::FormBuilder->new( data => { id => 'form1' } ) },
+lives_ok(
+    sub { $form_obj = HTML::FormBuilder->new( data => { id => 'form1' } ) },
     'create form ok' );
 is( $form_obj->{data}{method}, 'get', 'default method of form' );
 is_deeply( $form_obj->{fieldsets}, [], 'default fieldset' );
@@ -29,12 +30,11 @@ lives_ok( sub { create_form_object()->build }, 'build ok' );
 
 my $result;
 $form_obj = HTML::FormBuilder->new(
-																	 data => 
-																	 {
-																		id       => 'testid',
-																	 },
-																	 localize => sub { "will " . shift },
-																	 classes => $classes,
+    data => {
+        id => 'testid',
+    },
+    localize => sub { "will " . shift },
+    classes  => $classes,
 
 );
 my $expect_result =
@@ -52,8 +52,8 @@ is( $result, $expect_result,
 ################################################################################
 # test after_from
 
-$form_obj = HTML::FormBuilder->new(data =>
-    {
+$form_obj = HTML::FormBuilder->new(
+    data => {
         id => 'testid',
     }
 );
@@ -64,8 +64,8 @@ like( $result, qr/<div>afterform<\/div>/, 'add afterform info' );
 ################################################################################
 # test required_mark
 
-$form_obj = HTML::FormBuilder->new( data =>
-    {
+$form_obj = HTML::FormBuilder->new(
+    data => {
         id => 'testid',
     }
 );
@@ -79,25 +79,29 @@ like( $result, qr/<em class="required_asterisk">\*\*<\/em>/, 'has em' );
 ################################################################################
 # test hide_mobile
 
-$form_obj = HTML::FormBuilder->new( data =>
-    {
+$form_obj = HTML::FormBuilder->new(
+    data => {
         id => 'testid',
-    }, classes => $classes,
+    },
+    classes => $classes,
 );
 $fieldset_index = $form_obj->add_fieldset( {} );
-$form_obj->add_field( $fieldset_index,
-    { label => {} } );
+$form_obj->add_field( $fieldset_index, { label => {} } );
 
 lives_ok( sub { $result = $form_obj->build }, 'build form with some args' );
-like( $result,qr{<fieldset><div class="grd-row-padding row clear"><div class="grd-grid-4 grd-hide-mobile form_label"><label></label></div></div></fieldset>} , 'hide mobile' );
-
+like(
+    $result,
+qr{<fieldset><div class="grd-row-padding row clear"><div class="grd-grid-4 grd-hide-mobile form_label"><label></label></div></div></fieldset>},
+    'hide mobile'
+);
 
 ################################################################################
 # test fieldset_group
-$form_obj = HTML::FormBuilder->new( data =>
-    {
+$form_obj = HTML::FormBuilder->new(
+    data => {
         id => 'testid',
-    }, classes => $classes,
+    },
+    classes => $classes,
 );
 $fieldset_index = $form_obj->add_fieldset( { group => 'fieldsetgroup' } );
 lives_ok( sub { $result = $form_obj->build }, 'build form with some args' );
@@ -110,10 +114,10 @@ like(
 ################################################################################
 # test class
 $form_obj = HTML::FormBuilder->new(
-																	 data =>    {
-																							 id      => 'testid',
-																							},
-																	 classes => { test_class => 'test-class' },
+    data => {
+        id => 'testid',
+    },
+    classes => { test_class => 'test-class' },
 );
 is( $form_obj->{classes}{'test_class'}, 'test-class', 'test class method ok' );
 is( $form_obj->{classes}{'RowPadding'}, 'RowPadding', 'test class method ok' );
@@ -122,10 +126,11 @@ is( $form_obj->{classes}{'RowPadding'}, 'RowPadding', 'test class method ok' );
 
 ################################################################################
 # test fieldset footer
-$form_obj = HTML::FormBuilder->new( data =>
-    {
+$form_obj = HTML::FormBuilder->new(
+    data => {
         id => 'testid',
-    }, classes => $classes,
+    },
+    classes => $classes,
 );
 $fieldset_index =
   $form_obj->add_fieldset( { footer => 'this is footer of fieldset' } );
@@ -136,8 +141,8 @@ like( $result,
 
 ################################################################################
 # test input trailling
-$form_obj = HTML::FormBuilder->new(data => 
-    {
+$form_obj = HTML::FormBuilder->new(
+    data => {
         id => 'testid',
     }
 );
@@ -287,7 +292,10 @@ sub create_form_object {
 
     # Create new form object
     Test::Exception::lives_ok {
-        $form_obj = HTML::FormBuilder->new(data => $form_attributes, classes => $classes);
+        $form_obj = HTML::FormBuilder->new(
+            data    => $form_attributes,
+            classes => $classes
+        );
     }
     'Create Form';
 
