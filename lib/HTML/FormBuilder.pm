@@ -684,7 +684,7 @@ the data in the $form will be changed when build the form. So you cannot get the
 
 =head1 AUTHOR
 
-Bond Lim L<kheyeng@my.regentmarkets.com>
+Chylli L<chylli@binary.com>
 
 =head1 COPYRIGHT AND LICENSE
 
