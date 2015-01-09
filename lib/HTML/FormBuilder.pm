@@ -16,11 +16,11 @@ has data => (
     isa => sub {
         my $data = shift;
         croak('data should be a hashref') unless ref($data) eq 'HASH';
-        croak(
-"Form must be given an id when instantiating a HTML::FormBuilder->new object in $0."
-        ) if !defined $data->{'id'};
+        croak("Form must be given an id when instantiating a HTML::FormBuilder->new object in $0.") if !defined $data->{'id'};
     },
-    default => sub { {} },
+    default => sub {
+        {};
+    },
 );
 
 has fieldsets => (
@@ -29,46 +29,41 @@ has fieldsets => (
         my $fieldsets = shift;
         return 1 unless $fieldsets;
         croak('fieldsets should be an arrayref')
-          unless ref($fieldsets) eq 'ARRAY';
+            unless ref($fieldsets) eq 'ARRAY';
     },
-    default => sub { [] },
+    default => sub {
+        [];
+    },
 );
 
 has after_form => (
     is  => 'rw',
     isa => sub {
-        return !ref( $_[0] );
-    }
-);
+        return !ref($_[0]);
+    });
 
 sub BUILDARGS {
     my $class = shift;
-    my %args;
-    if ( @_ == 1 ) {
-        %args = %{ $_[0] };
-    }
-    else {
-        %args = @_;
-    }
+    my %args = (@_ == 1) ? %{$_[0]} : @_;
 
     # set default class
     my @class_names = qw( fieldset_group
-      NoStackFieldParent
-      RowPadding
-      fieldset_footer
-      comment
-      row
-      extra_tooltip_container
-      backbutton
-      required_asterisk
-      inputtrailing
-      label_column
-      input_column
-      hide_mobile
+        NoStackFieldParent
+        RowPadding
+        fieldset_footer
+        comment
+        row
+        extra_tooltip_container
+        backbutton
+        required_asterisk
+        inputtrailing
+        label_column
+        input_column
+        hide_mobile
     );
 
     my %classes = map { $_ => $_ } @class_names;
-    %classes = ( %classes, %{ $args{classes} || {} } );
+    %classes = (%classes, %{$args{classes} || {}});
 
     $args{classes} = \%classes;
 
@@ -94,17 +89,16 @@ sub add_fieldset {
 
     #check if the $args is a ref HASH
     croak("Parameters must in HASH reference in $0.")
-      if ( ref $_args ne 'HASH' );
+        if (ref $_args ne 'HASH');
 
     my $fieldset = HTML::FormBuilder::FieldSet->new(
         data    => $_args,
-        classes => $self->{classes}
-    );
+        classes => $self->{classes});
 
-    push @{ $self->{fieldsets} }, $fieldset;
+    push @{$self->{fieldsets}}, $fieldset;
 
     #return fieldset id/index that was created
-    return $#{ $self->{fieldsets} };
+    return $#{$self->{fieldsets}};
 }
 
 #####################################################################
@@ -127,11 +121,11 @@ sub add_field {
 
     #check if the fieldset_index is number
     croak("The fieldset_index should be a number")
-      unless ( $fieldset_index =~ /^\d+$/ );
+        unless ($fieldset_index =~ /^\d+$/);
 
     #check if the fieldset array is already created
     croak("The fieldset does not exist in $0. form_id[$self->{data}{'id'}]")
-      if ( $fieldset_index > $#{ $self->{fieldsets} } );
+        if ($fieldset_index > $#{$self->{fieldsets}});
 
     my $fieldset = $self->{fieldsets}[$fieldset_index];
     return $fieldset->add_field($_args);
@@ -155,41 +149,37 @@ sub build {
     # build the fieldset, if $print_fieldset_index is specifed then
     # we only generate that praticular fieldset with that index
     my @fieldsets;
-    if ( defined $print_fieldset_index ) {
+    if (defined $print_fieldset_index) {
         push @fieldsets, $self->{'fieldsets'}[$print_fieldset_index];
-    }
-    else {
-        @fieldsets = @{ $self->{'fieldsets'} };
+    } else {
+        @fieldsets = @{$self->{'fieldsets'}};
     }
 
     my %grouped_fieldset;
 
     # build the form fieldset
     foreach my $fieldset (@fieldsets) {
-        my ( $fieldset_group, $fieldset_html ) = $fieldset->build();
-        push @{ $grouped_fieldset{$fieldset_group} }, $fieldset_html;
+        my ($fieldset_group, $fieldset_html) = $fieldset->build();
+        push @{$grouped_fieldset{$fieldset_group}}, $fieldset_html;
     }
 
     my $fieldsets_html = '';
-    foreach my $fieldset_group ( sort keys %grouped_fieldset ) {
-        if ( $fieldset_group ne 'no-group' ) {
-            $fieldsets_html .=
-qq[<div id="$fieldset_group" class="$self->{classes}{fieldset_group}">];
+    foreach my $fieldset_group (sort keys %grouped_fieldset) {
+        if ($fieldset_group ne 'no-group') {
+            $fieldsets_html .= qq[<div id="$fieldset_group" class="$self->{classes}{fieldset_group}">];
         }
 
-        foreach my $fieldset_html ( @{ $grouped_fieldset{$fieldset_group} } ) {
+        foreach my $fieldset_html (@{$grouped_fieldset{$fieldset_group}}) {
             $fieldsets_html .= $fieldset_html;
         }
 
-        if ( $fieldset_group ne 'no-group' ) {
+        if ($fieldset_group ne 'no-group') {
             $fieldsets_html .= '</div>';
         }
     }
-    my $html =
-      $self->_build_element_and_attributes( 'form', $self->{data},
-        $fieldsets_html );
+    my $html = $self->_build_element_and_attributes('form', $self->{data}, $fieldsets_html);
 
-    if ( $self->after_form ) {
+    if ($self->after_form) {
         $html .= $self->after_form;
     }
 
@@ -209,13 +199,13 @@ sub build_confirmation_button_with_all_inputs_hidden {
     my @inputs;
 
     # get all inputs that are to be output as hidden
-    foreach my $fieldset ( @{ $self->{'fieldsets'} } ) {
-      INPUT:
-        foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
+    foreach my $fieldset (@{$self->{'fieldsets'}}) {
+        INPUT:
+        foreach my $input_field (@{$fieldset->{'fields'}}) {
             my $data = $input_field->{data};
-            next INPUT if ( not defined $data->{'input'} );
+            next INPUT if (not defined $data->{'input'});
 
-            push @inputs, @{ $data->{'input'} };
+            push @inputs, @{$data->{'input'}};
 
         }
     }
@@ -223,26 +213,20 @@ sub build_confirmation_button_with_all_inputs_hidden {
     my $html = '';
 
     foreach my $input (@inputs) {
-        next if ( $input->{'type'} and $input->{'type'} eq 'submit' );
+        next if ($input->{'type'} and $input->{'type'} eq 'submit');
         my $n = $input->{'name'} || '';
-        my $val = $self->get_field_value( $input->{'id'} ) || '';
+        my $val = $self->get_field_value($input->{'id'}) || '';
         $html .= qq{<input type="hidden" name="$n" value="$val"/>};
     }
 
     $html .= '<input type="hidden" name="process" value="1"/>';
-    $html .= _link_button(
-        {
-            value => $self->_localize('Back'),
-            class => $self->{classes}{backbutton},
-            href  => 'javascript:history.go(-1)',
-        }
-    );
-    $html .=
-      ' <span class="button"><button id="submit" class="button" type="submit">'
-      . $self->_localize('Confirm')
-      . '</button></span>';
-    $html =
-      $self->_build_element_and_attributes( 'form', $self->{data}, $html );
+    $html .= _link_button({
+        value => $self->_localize('Back'),
+        class => $self->{classes}{backbutton},
+        href  => 'javascript:history.go(-1)',
+    });
+    $html .= ' <span class="button"><button id="submit" class="button" type="submit">' . $self->_localize('Confirm') . '</button></span>';
+    $html = $self->_build_element_and_attributes('form', $self->{data}, $html);
 
     return $html;
 }
@@ -261,26 +245,21 @@ sub set_field_value {
     my $field_id    = shift;
     my $field_value = shift;
     return unless $field_id;
-    my $input_field = $self->_get_input_field($field_id);
 
+    my $input_field = $self->_get_input_field($field_id);
     return unless $input_field;
 
     my $data = $input_field->{data};
-
     my $inputs = $data->{input};
 
     map {
-
-        if ( $_->{'id'} and $_->{'id'} eq $field_id ) {
-            if ( eval { $_->can('value') } ) {
+        if ($_->{'id'} and $_->{'id'} eq $field_id) {
+            if (eval { $_->can('value') }) {
                 $_->value($field_value);
-            }
-            elsif ( $_->{'type'} =~ /(?:text|textarea|password|hidden|file)/i )
-            {
+            } elsif ($_->{'type'} =~ /(?:text|textarea|password|hidden|file)/i) {
                 $_->{'value'} = $field_value;
-            }
-            elsif ( $_->{'type'} eq 'checkbox'
-                and $field_value eq $_->{'value'} )
+            } elsif ($_->{'type'} eq 'checkbox'
+                and $field_value eq $_->{'value'})
             {
                 $_->{'checked'} = 'checked';
             }
@@ -302,21 +281,17 @@ sub get_field_value {
     my $field_id = shift;
 
     my $input_field = $self->_get_input_field($field_id);
-
     return unless $input_field;
 
     my $inputs = $input_field->{data}{input};
-
     foreach my $input (@$inputs) {
-        if ( $input->{'id'} and $input->{'id'} eq $field_id ) {
-            if ( eval { $input->can('value') } ) {
+        if ($input->{'id'} and $input->{'id'} eq $field_id) {
+            if (eval { $input->can('value') }) {
                 return $input->value;
             }
             return unless $input->{type};
             if (   $input->{type} =~ /(?:text|textarea|password|hidden|file)/i
-                or $input->{type} eq 'checkbox'
-                && $input->{checked}
-                && $input->{checked} eq 'checked' )
+                or $input->{type} eq 'checkbox' && $input->{checked} && $input->{checked} eq 'checked')
             {
                 return $input->{value};
             }
@@ -389,12 +364,12 @@ sub _get_input_field {
     my $field_id = shift;
 
     return unless $field_id;
-    foreach my $fieldset ( @{ $self->{'fieldsets'} } ) {
-        foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
+    foreach my $fieldset (@{$self->{'fieldsets'}}) {
+        foreach my $input_field (@{$fieldset->{'fields'}}) {
             my $inputs = $input_field->{data}{input};
             foreach my $sub_input_field (@$inputs) {
                 if (    $sub_input_field->{id}
-                    and $sub_input_field->{id} eq $field_id )
+                    and $sub_input_field->{id} eq $field_id)
                 {
                     return $input_field;
                 }
@@ -420,16 +395,15 @@ sub _get_error_field {
     return unless $error_id;
 
     #build the form fieldset
-    foreach my $fieldset ( @{ $self->{'fieldsets'} } ) {
-        foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
+    foreach my $fieldset (@{$self->{'fieldsets'}}) {
+        foreach my $input_field (@{$fieldset->{'fields'}}) {
             if (    $input_field->{data}{error}{id}
-                and $input_field->{data}{error}{id} eq $error_id )
+                and $input_field->{data}{error}{id} eq $error_id)
             {
                 return $input_field;
             }
         }
     }
-
     return;
 }
 
@@ -449,9 +423,7 @@ sub _link_button {
     my $myid     = $args->{'id'} ? 'id="' . $args->{'id'} . '"'      : '';
     my $myspanid = $args->{'id'} ? 'id="span_' . $args->{'id'} . '"' : '';
 
-    return
-qq{<a class="$myclass" href="$args->{href}" $myid><span class="$myclass" $myspanid>$args->{value}</span></a>};
-
+    return qq{<a class="$myclass" href="$args->{href}" $myid><span class="$myclass" $myspanid>$args->{value}</span></a>};
 }
 
 #####################################################################
@@ -462,7 +434,7 @@ qq{<a class="$myclass" href="$args->{href}" $myid><span class="$myclass" $myspan
 # See Also   :
 #####################################################################
 sub _wrap_fieldset {
-    my ( $self, $fieldset_html ) = @_;
+    my ($self, $fieldset_html) = @_;
     my $output            = '';
     my $fieldset_template = <<EOF;
 <div class="rbox form">
@@ -474,7 +446,6 @@ sub _wrap_fieldset {
 EOF
 
     return $fieldset_template;
-
 }
 
 1;
@@ -656,7 +627,7 @@ The form attributes. It should be a hashref.
 
 =head2 classes
 
-The form classes. It should be a hashref. You can customize the form's layout by  the classes. 
+The form classes. It should be a hashref. You can customize the form's layout by  the classes.
 The class names used are:
 
       fieldset_group
@@ -686,7 +657,7 @@ The fieldsets the form have.
 =head2 new
 
     my $form = HTML::FormBuilder->new(
-        data =>{id    => 'formid', 
+        data =>{id    => 'formid',
                 class => 'formclass'},
         classes => {row => 'rowdev'})
 

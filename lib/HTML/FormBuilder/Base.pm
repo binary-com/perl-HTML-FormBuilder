@@ -1,4 +1,5 @@
 package HTML::FormBuilder::Base;
+
 use strict;
 use warnings;
 use 5.008_005;
@@ -13,7 +14,6 @@ has classes => (
     isa => sub {
         my $classes = shift;
         croak('classes should be a hashref') unless ref($classes) eq 'HASH';
-
     }
 );
 has localize => (

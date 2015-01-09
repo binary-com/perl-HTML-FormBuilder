@@ -1,10 +1,9 @@
 package HTML::FormBuilder::Validation;
+
 use strict;
 use warnings;
 our $VERSION = '0.01';
-use base 'HTML::FormBuilder';
 
-use strict;
 use Carp;
 use Class::Std::Utils;
 use Text::Trim;
@@ -79,7 +78,7 @@ sub build {
     my $html;
     my $javascript_validation = '';
 
-#build the fieldset, if $print_fieldset_index is specifed then we only generate that praticular fieldset with that index
+    # build the fieldset, if $print_fieldset_index is specifed then we only generate that praticular fieldset with that index
     my @fieldsets;
     if ( defined $print_fieldset_index ) {
         push @fieldsets, $self->{'fieldsets'}->[$print_fieldset_index];
@@ -88,7 +87,7 @@ sub build {
         @fieldsets = @{ $self->{'fieldsets'} };
     }
 
-    #build the form fieldset
+    # build the form fieldset
     foreach my $fieldset (@fieldsets) {
         foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
 
@@ -390,11 +389,11 @@ sub _validate_field {
             and $validation->{'type'} =~ /(?:regexp|min_amount|max_amount)/ )
         {
 
-# The input_element must be an array. so if validation no 'id', then we use the first element's id
-# because the array should be just one element.
+            # The input_element must be an array. so if validation no 'id', then we use the first element's id
+            # because the array should be just one element.
             $input_element_id = $validation->{id} || $input_element->[0]{id};
 
-# Check with whitespace trimmed from both ends to make sure that it's reasonable.
+            # Check with whitespace trimmed from both ends to make sure that it's reasonable.
             $field_value = trim( $self->get_field_value($input_element_id) );
 
             if ( $validation->{'type'} eq 'regexp' ) {
@@ -428,7 +427,6 @@ sub _validate_field {
 }
 
 sub _encode_text {
-
     my $text = shift;
 
     return unless ($text);
