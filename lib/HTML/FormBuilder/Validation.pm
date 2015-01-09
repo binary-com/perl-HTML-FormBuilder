@@ -6,7 +6,6 @@ our $VERSION = '0.01';
 
 use Carp;
 use Class::Std::Utils;
-use Text::Trim;
 
 use Encode;
 use URI::Escape;
@@ -394,7 +393,9 @@ sub _validate_field {
             $input_element_id = $validation->{id} || $input_element->[0]{id};
 
             # Check with whitespace trimmed from both ends to make sure that it's reasonable.
-            $field_value = trim( $self->get_field_value($input_element_id) );
+            $field_value = $self->get_field_value($input_element_id);
+            # $field_value =~ s/^\s+|\s+$//g;
+            $field_value =~ s/\A\s+//; $field_value =~ s/\s+\z//;
 
             if ( $validation->{'type'} eq 'regexp' ) {
                 my $regexp =

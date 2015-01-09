@@ -5,7 +5,6 @@ requires 'Carp';
 requires 'Moo';
 requires 'namespace::clean';
 requires 'Scalar::Util';
-requires 'Text::Trim';
 requires 'Class::Std::Utils';
 requires 'Encode';
 requires 'URI::Escape';
