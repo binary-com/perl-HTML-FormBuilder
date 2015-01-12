@@ -128,6 +128,7 @@ sub hidden_html {
 
 sub is_str {
     die "$_[0] is not a string" unless defined($_[0]) && !ref($_[0]);
+		return 1;
 }
 
 1;

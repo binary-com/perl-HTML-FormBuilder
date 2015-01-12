@@ -43,8 +43,8 @@ has after_form => (
     });
 
 sub BUILDARGS {
-    my $class = shift;
-    my %args = (@_ % 2) ? %{$_[0]} : @_;
+    my ($class, @args) = @_;
+    my %args = (@args % 2) ? %{$args[0]} : @args;
 
     # set default class
     my @class_names = qw( fieldset_group
@@ -291,7 +291,7 @@ sub get_field_value {
             }
             return unless $input->{type};
             if (   $input->{type} =~ /(?:text|textarea|password|hidden|file)/i
-                or $input->{type} eq 'checkbox' && $input->{checked} && $input->{checked} eq 'checked')
+                || $input->{type} eq 'checkbox' && $input->{checked} && $input->{checked} eq 'checked')
             {
                 return $input->{value};
             }

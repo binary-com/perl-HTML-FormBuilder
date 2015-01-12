@@ -24,8 +24,8 @@ has data => (
 );
 
 sub BUILDARGS {
-    my $class = shift;
-    my %args = (@_ % 2) ? %{$_[0]} : @_;
+    my ($class, @args) = @_;
+    my %args = (@args % 2) ? %{$args[0]} : @args;
 
     my $data = $args{data};
 
