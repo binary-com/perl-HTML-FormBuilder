@@ -41,7 +41,8 @@ sub add_field {
 
     my $field = HTML::FormBuilder::Field->new(
         data    => $_args,
-        classes => $self->{classes});
+				classes => $self->classes,
+				localize => $self->localize																		 );
     push @{$self->{'fields'}}, $field;
 
     return $field;
@@ -74,9 +75,7 @@ sub build {
     my $input_fields_html = '';
 
     foreach my $input_field (@{$self->{'fields'}}) {
-        $input_fields_html .= $input_field->build({
-                stacked => $stacked,
-                classes => $self->{classes}});
+        $input_fields_html .= $input_field->build({stacked => $stacked });
     }
 
     if ($stacked == 0) {
@@ -164,3 +163,41 @@ EOF
 }
 
 1;
+
+=head1 NAME
+
+HTML::FormBuilder::Field - Field container used by HTML::FormBuilder
+
+=head1 SYNOPSIS
+
+    my $form = HTML::FormBuilder->new(data => {id => 'testform});
+
+    my $fieldset_index = $form->add_fieldset({id => 'fieldset1'});
+
+    $form->add_field(fieldset_index, {input => {type => 'text', value => 'Join'}});
+
+=head1 Attributes
+
+=head2 fields
+
+The fields included by this fieldset.
+
+=head1 Methods
+
+=head2 build
+
+    my ($fieldset_group, $fieldset_html) = $fieldset->build();
+
+=head2 add_field
+
+    $fieldset->add_field({input => {type => 'text', value => 'name'}});
+
+append the field into fieldsets.
+
+=head1 AUTHOR
+
+Chylli L<chylli@binary.com>
+
+=head1 COPYRIGHT AND LICENSE
+
+=cut

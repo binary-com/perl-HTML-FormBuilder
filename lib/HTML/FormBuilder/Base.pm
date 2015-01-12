@@ -109,5 +109,10 @@ please refer to L<HTML::FormBuilder>.
 
 please refer to L<HTML::FormBuilder>.
 
-=cut
+=head1 AUTHOR
 
+Chylli L<chylli@binary.com>
+
+=head1 COPYRIGHT AND LICENSE
+
+=cut

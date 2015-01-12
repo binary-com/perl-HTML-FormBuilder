@@ -93,7 +93,8 @@ sub add_fieldset {
 
     my $fieldset = HTML::FormBuilder::FieldSet->new(
         data    => $_args,
-        classes => $self->{classes});
+		  	classes => $self->classes,
+   	    localize => $self->localize);
 
     push @{$self->{fieldsets}}, $fieldset;
 

@@ -45,7 +45,7 @@ sub build {
     my $data = $self->{data};
 
     my $stacked = $env->{stacked};
-    my $classes = $env->{classes};
+    my $classes = $self->classes;
 
     my $div_span     = "div";
     my $label_column = $classes->{label_column};
@@ -190,7 +190,7 @@ sub _build_input {
     }
 
     if ($trailing) {
-        $html .= qq{<span class="$env->{classes}{inputtrailing}">$trailing</span>};
+        $html .= qq{<span class="$self->{classes}{inputtrailing}">$trailing</span>};
     }
 
     return $html;
@@ -215,7 +215,7 @@ sub _tooltip {
 
 =head1 NAME
 
-HTML::FormBuilder::Fieldset - Fieldset container used by HTML::FormBuilder
+HTML::FormBuilder::Field - Field container used by HTML::FormBuilder
 
 =head1 SYNOPSIS
 
@@ -223,7 +223,13 @@ HTML::FormBuilder::Fieldset - Fieldset container used by HTML::FormBuilder
 
     my $fieldset_index = $form->add_fieldset({id => 'fieldset1'});
 
-   $form->add_field(fieldset_index, {input => {type => 'text', value => 'Join'}});
+    $form->add_field(fieldset_index, {input => {type => 'text', value => 'Join'}});
+
+=head1 AUTHOR
+
+Chylli L<chylli@binary.com>
+
+=head1 COPYRIGHT AND LICENSE
 
 =cut
 

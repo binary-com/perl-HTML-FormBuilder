@@ -30,24 +30,6 @@ has custom_server_side_check_of => (
             unless ref $_[0] eq 'CODE';
     });
 
-#########################################################################
-## Usage      : HTML::FormBuilder::Validation->new($arg_ref);
-## Purpose    : Form validation object constructor
-## Returns    : HTML::FormBuilder::Validation object
-## Parameters : Same as Form
-## Comments   : Public
-## See Also   : POD
-#########################################################################
-#sub new {
-#    my $class = shift;
-#    my $self  = $class->SUPER::new(@_);
-#
-#    bless( $self, $class );
-#    $has_error_of{ ident $self} = 0;
-#
-#    return $self;
-#}
-#
 ########################################################################
 # Usage      : $form_validation_obj->set_input_fields(\%input);
 # Purpose    : Set input fields value based on last submit form.
@@ -166,7 +148,7 @@ sub is_error_found_in {
 ########################################################################
 sub _set_has_error {
     my $self = shift;
-
+ 
     $self->has_error_of(1);
     return;
 }
@@ -637,11 +619,39 @@ Below:
 
 	code_exit();
 
+=head1 Attributes
+
+=head2 has_error_of
+
+The tag that error happened during validation
+
+=head2 custom_server_side_check_of
+
+The cusotm server side subroutine that will be run on server side.
+
+=head1 METHODS
+
+=head2 set_input_fields
+
+    $form_validation_obj->set_input_fields({username => $username});
+
+assign value to the input fields
+
+=head2 validate
+
+    $form_validation_obj->validate();
+
+validate form input and return true or false
+
+=head2 is_error_found_in
+
+    $form_validation_obj->is_error_found_in($input_element_id);
+
+check the erorr is founded in the input element or not
+
 =head1 AUTHOR
 
-Felix Tan, E<lt>felix@regentmarkets.com<gt>
-
-Omid Houshyar, E<lt>omid@regentmarkets.com<gt>
+Chylli L<chylli@binary.com>
 
 =head1 COPYRIGHT AND LICENSE
 
