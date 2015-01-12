@@ -27,9 +27,8 @@ has custom_server_side_check_of => (
     is  => 'rw',
     isa => sub {
         croak('custom_server_side_check_of should be code')
-          unless ref $_[0] eq 'CODE';
-    }
-);
+            unless ref $_[0] eq 'CODE';
+    });
 
 #########################################################################
 ## Usage      : HTML::FormBuilder::Validation->new($arg_ref);
@@ -64,8 +63,8 @@ sub set_input_fields {
     my $self  = shift;
     my $input = shift;
 
-    for my $element_id ( keys %{$input} ) {
-        $self->set_field_value( $element_id, $input->{$element_id} );
+    for my $element_id (keys %{$input}) {
+        $self->set_field_value($element_id, $input->{$element_id});
     }
     return;
 }
@@ -79,27 +78,24 @@ sub build {
 
     # build the fieldset, if $print_fieldset_index is specifed then we only generate that praticular fieldset with that index
     my @fieldsets;
-    if ( defined $print_fieldset_index ) {
+    if (defined $print_fieldset_index) {
         push @fieldsets, $self->{'fieldsets'}->[$print_fieldset_index];
-    }
-    else {
-        @fieldsets = @{ $self->{'fieldsets'} };
+    } else {
+        @fieldsets = @{$self->{'fieldsets'}};
     }
 
     # build the form fieldset
     foreach my $fieldset (@fieldsets) {
-        foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
+        foreach my $input_field (@{$fieldset->{'fields'}}) {
 
             # build inputs javascript validation
-            my $valition = $self->_build_javascript_validation(
-                { 'input_field' => $input_field } )
-              || '';
+            my $valition = $self->_build_javascript_validation({'input_field' => $input_field})
+                || '';
             $javascript_validation .= $valition;
         }
     }
 
-    $self->{data}{'onsubmit'} =
-"function v() { var bResult = true; $javascript_validation; return bResult; }; return v();";
+    $self->{data}{'onsubmit'} = "function v() { var bResult = true; $javascript_validation; return bResult; }; return v();";
 
     return $self->SUPER::build();
 }
@@ -114,23 +110,18 @@ sub build {
 ########################################################################
 sub validate {
     my $self      = shift;
-    my @fieldsets = @{ $self->{'fieldsets'} };
+    my @fieldsets = @{$self->{'fieldsets'}};
 
     foreach my $fieldset (@fieldsets) {
-      INPUT_FIELD:
-        foreach my $input_field ( @{ $fieldset->{'fields'} } ) {
+        INPUT_FIELD:
+        foreach my $input_field (@{$fieldset->{'fields'}}) {
             my $data = $input_field->{data};
-            if ( $data->{'input'} and $data->{'error'}->{'id'} ) {
-                foreach my $input_element ( @{ $data->{'input'} } ) {
-                    if (
-                        eval { $input_element->{'input'}->can('value') }
-                        and (
-                            not defined $self->get_field_value(
-                                $input_element->{'id'} ) )
-                      )
+            if ($data->{'input'} and $data->{'error'}->{'id'}) {
+                foreach my $input_element (@{$data->{'input'}}) {
+                    if (eval { $input_element->{'input'}->can('value') }
+                        and (not defined $self->get_field_value($input_element->{'id'})))
                     {
-                        $self->set_field_error_message( $input_element->{'id'},
-                            $self->_localize('Invalid amount') );
+                        $self->set_field_error_message($input_element->{'id'}, $self->_localize('Invalid amount'));
                         next INPUT_FIELD;
                     }
                 }
@@ -139,24 +130,22 @@ sub validate {
             # Validate each field
             if (    defined $data->{'validation'}
                 and $data->{'input'}
-                and $data->{'error'}->{'id'} )
+                and $data->{'error'}->{'id'})
             {
-                $self->_validate_field(
-                    {
-                        'validation'    => $data->{'validation'},
-                        'input_element' => $data->{'input'},
-                    }
-                );
+                $self->_validate_field({
+                    'validation'    => $data->{'validation'},
+                    'input_element' => $data->{'input'},
+                });
             }
         }
     }
 
-    if ( $self->custom_server_side_check_of ) {
+    if ($self->custom_server_side_check_of) {
         $self->custom_server_side_check_of->();
 
     }
 
-    return ( $self->get_has_error ) ? 0 : 1;
+    return ($self->get_has_error) ? 0 : 1;
 }
 
 sub is_error_found_in {
@@ -200,7 +189,7 @@ sub set_field_error_message {
     my $element_id    = shift;
     my $error_message = shift;
 
-    $self->SUPER::set_field_error_message( $element_id, $error_message );
+    $self->SUPER::set_field_error_message($element_id, $error_message);
     if ($error_message) {
         $self->_set_has_error();
     }
@@ -235,56 +224,48 @@ sub _build_javascript_validation {
     my $data = $input_field->{data};
     if (    defined $data->{'validation'}
         and $data->{'input'}
-        and $data->{'error'}->{'id'} )
+        and $data->{'error'}->{'id'})
     {
 
-        my @validations      = @{ $data->{'validation'} };
+        my @validations      = @{$data->{'validation'}};
         my $input_element    = $data->{'input'};
         my $error_element_id = $data->{'error'}->{'id'};
 
         my $input_element_id;
         my $input_element_conditions;
 
-        foreach my $input_field ( @{$input_element} ) {
-            if ( defined $input_field->{'id'} ) {
+        foreach my $input_field (@{$input_element}) {
+            if (defined $input_field->{'id'}) {
                 $input_element_id = $input_field->{'id'};
-                $javascript .=
-"var input_element_$input_element_id = document.getElementById('$input_element_id');";
-                $input_element_conditions .=
-                  "input_element_$input_element_id && ";
+                $javascript               .= "var input_element_$input_element_id = document.getElementById('$input_element_id');";
+                $input_element_conditions .= "input_element_$input_element_id && ";
             }
         }
 
         $javascript .=
-"var error_element_$error_element_id = clearInputErrorField('$error_element_id');"
-          . "if ($input_element_conditions error_element_$error_element_id)"
-          . '{'
-          . 'var regexp;'
-          . 'bInputResult = true;';
+              "var error_element_$error_element_id = clearInputErrorField('$error_element_id');"
+            . "if ($input_element_conditions error_element_$error_element_id)" . '{'
+            . 'var regexp;'
+            . 'bInputResult = true;';
 
         foreach my $validation (@validations) {
             next
-              unless ( $validation->{'type'} =~
-                /(?:regexp|min_amount|max_amount|custom)/ );
-            $javascript .=
-              $self->_build_single_javascript_validation( $validation,
-                $input_element_id, $error_element_id );
+                unless ($validation->{'type'} =~ /(?:regexp|min_amount|max_amount|custom)/);
+            $javascript .= $self->_build_single_javascript_validation($validation, $input_element_id, $error_element_id);
         }
 
-        $javascript .=
-          'if (!bInputResult)' . '{' . 'bResult = bInputResult;' . '}' . '}';
+        $javascript .= 'if (!bInputResult)' . '{' . 'bResult = bInputResult;' . '}' . '}';
 
     }
 
     # get the general error field (contain only error message without input)
     elsif ( defined $data->{'error'}
-        and defined $data->{'error'}->{'id'} )
+        and defined $data->{'error'}->{'id'})
     {
         my $error_id = $data->{'error'}->{'id'};
 
         # Clear the error message
-        $javascript =
-          "var error_element_$error_id = clearInputErrorField('$error_id');";
+        $javascript = "var error_element_$error_id = clearInputErrorField('$error_id');";
     }
 
     return $javascript;
@@ -306,40 +287,37 @@ sub _build_single_javascript_validation {
     my $error_element_id = shift;
 
     my $javascript = '';
-    my $err_msg    = _encode_text( $validation->{'err_msg'} );
+    my $err_msg    = _encode_text($validation->{'err_msg'});
 
 # if the id define in the validation hash, meaing input has more than 1 fields, the validation is validated against the id
-    if ( $validation->{'id'} and length $validation->{'id'} > 0 ) {
+    if ($validation->{'id'} and length $validation->{'id'} > 0) {
         $input_element_id = $validation->{'id'};
     }
 
     my $error_if_true = $validation->{error_if_true} ? '' : '!';
     my $test = '';
-    if ( $validation->{'type'} eq 'regexp' ) {
+    if ($validation->{'type'} eq 'regexp') {
         my $regexp = $validation->{'regexp'};
         $regexp =~ s/(\\|')/\\$1/g;
         $javascript .=
-          ( $validation->{'case_insensitive'} )
-          ? "regexp = new RegExp('$regexp', 'i');"
-          : "regexp = new RegExp('$regexp');";
+            ($validation->{'case_insensitive'})
+            ? "regexp = new RegExp('$regexp', 'i');"
+            : "regexp = new RegExp('$regexp');";
 
-        $test =
-qq[${error_if_true}regexp.test(input_element_$input_element_id.value)];
+        $test = qq[${error_if_true}regexp.test(input_element_$input_element_id.value)];
     }
 
     # Min Max amount checking
-    elsif ( $validation->{'type'} =~ /^(min|max)_amount$/ ) {
+    elsif ($validation->{'type'} =~ /^(min|max)_amount$/) {
         my $op = $1 eq 'min' ? '<' : '>';
-        $test =
-          qq[input_element_$input_element_id.value $op $validation->{amount}];
+        $test = qq[input_element_$input_element_id.value $op $validation->{amount}];
     }
 
     # Custom checking
-    elsif ( $validation->{'type'} eq 'custom' ) {
+    elsif ($validation->{'type'} eq 'custom') {
         $test = qq[${error_if_true}$validation->{function}];
     }
-    $javascript .=
-qq[if (bInputResult && $test){error_element_$error_element_id.innerHTML = decodeURIComponent('$err_msg');bInputResult = false;}];
+    $javascript .= qq[if (bInputResult && $test){error_element_$error_element_id.innerHTML = decodeURIComponent('$err_msg');bInputResult = false;}];
 
     return $javascript;
 }
@@ -378,14 +356,14 @@ sub _validate_field {
     my $self    = shift;
     my $arg_ref = shift;
 
-    my @validations   = @{ $arg_ref->{'validation'} };
+    my @validations   = @{$arg_ref->{'validation'}};
     my $input_element = $arg_ref->{'input_element'};
     my $input_element_id;
     my $field_value;
 
     foreach my $validation (@validations) {
         if (    $validation->{'type'}
-            and $validation->{'type'} =~ /(?:regexp|min_amount|max_amount)/ )
+            and $validation->{'type'} =~ /(?:regexp|min_amount|max_amount)/)
         {
 
             # The input_element must be an array. so if validation no 'id', then we use the first element's id
@@ -395,31 +373,27 @@ sub _validate_field {
             # Check with whitespace trimmed from both ends to make sure that it's reasonable.
             $field_value = $self->get_field_value($input_element_id);
             # $field_value =~ s/^\s+|\s+$//g;
-            $field_value =~ s/\A\s+//; $field_value =~ s/\s+\z//;
+            $field_value =~ s/\A\s+//;
+            $field_value =~ s/\s+\z//;
 
-            if ( $validation->{'type'} eq 'regexp' ) {
+            if ($validation->{'type'} eq 'regexp') {
                 my $regexp =
-                  ( $validation->{'case_insensitive'} )
-                  ? qr{$validation->{'regexp'}}i
-                  : qr{$validation->{'regexp'}};
-                if ( $validation->{error_if_true} && $field_value =~ $regexp
-                    || !$validation->{error_if_true}
-                    && $field_value !~ $regexp )
+                    ($validation->{'case_insensitive'})
+                    ? qr{$validation->{'regexp'}}i
+                    : qr{$validation->{'regexp'}};
+                if ($validation->{error_if_true} && $field_value =~ $regexp
+                    || !$validation->{error_if_true} && $field_value !~ $regexp)
                 {
-                    $self->set_field_error_message( $input_element_id,
-                        $validation->{'err_msg'} );
+                    $self->set_field_error_message($input_element_id, $validation->{'err_msg'});
                     return 0;
                 }
             }
 
             # Min amount checking
-            elsif ($validation->{'type'} eq 'min_amount'
-                && $field_value < $validation->{'amount'}
-                || $validation->{'type'} eq 'max_amount'
-                && $field_value > $validation->{'amount'} )
+            elsif ($validation->{'type'} eq 'min_amount' && $field_value < $validation->{'amount'}
+                || $validation->{'type'} eq 'max_amount' && $field_value > $validation->{'amount'})
             {
-                $self->set_field_error_message( $input_element_id,
-                    $validation->{'err_msg'} );
+                $self->set_field_error_message($input_element_id, $validation->{'err_msg'});
                 return 0;
             }
         }
@@ -433,7 +407,7 @@ sub _encode_text {
     return unless ($text);
 
     # javascript cant load html entities
-    $text = Encode::encode( "UTF-8", HTML::Entities::decode_entities($text) );
+    $text = Encode::encode("UTF-8", HTML::Entities::decode_entities($text));
     $text = URI::Escape::uri_escape($text);
     $text =~ s/(['"\\])/\\$1/g;
 

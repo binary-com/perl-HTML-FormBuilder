@@ -249,7 +249,7 @@ sub set_field_value {
     my $input_field = $self->_get_input_field($field_id);
     return unless $input_field;
 
-    my $data = $input_field->{data};
+    my $data   = $input_field->{data};
     my $inputs = $data->{input};
 
     map {

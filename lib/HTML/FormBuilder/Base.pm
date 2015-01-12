@@ -14,8 +14,7 @@ has classes => (
     isa => sub {
         my $classes = shift;
         croak('classes should be a hashref') unless ref($classes) eq 'HASH';
-    }
-);
+    });
 has localize => (
     is  => 'ro',
     isa => sub {
@@ -45,29 +44,28 @@ sub _build_element_and_attributes {
     my $options     = shift || {};
 
     #check if the elemen tag is empty
-    return if ( $element_tag eq '' );
+    return if ($element_tag eq '');
 
     my $html;
     $html = '<' . $element_tag;
-    foreach my $key ( sort keys %{$attributes} ) {
+    foreach my $key (sort keys %{$attributes}) {
         next
-          if ( ref( $attributes->{$key} ) eq 'HASH'
-            or ref( $attributes->{$key} ) eq 'ARRAY' );
+            if (ref($attributes->{$key}) eq 'HASH'
+            or ref($attributes->{$key}) eq 'ARRAY');
 
         # skip attributes that are not intended for HTML
-        next if ( $key =~ /^(?:option|text|hide_required_text|localize)/i );
-        if ( $attributes->{$key} ) {
+        next if ($key =~ /^(?:option|text|hide_required_text|localize)/i);
+        if ($attributes->{$key}) {
             $html .= ' ' . $key . '="' . $attributes->{$key} . '"';
         }
     }
-    if ( $element_tag eq 'button' ) {
+    if ($element_tag eq 'button') {
         $html .= '>' . $attributes->{'value'} . '</' . $element_tag . '>';
-    }
-    else {
+    } else {
         $html .= '>';
     }
 
-    if ( $options->{required_mark} && !$self->{option}{hide_required_text} ) {
+    if ($options->{required_mark} && !$self->{option}{hide_required_text}) {
         $html .= qq[<em class="$self->{classes}{required_asterisk}">**</em>];
     }
 
@@ -75,7 +73,7 @@ sub _build_element_and_attributes {
     my $end_tag = "</$element_tag>";
 
     # input needn't close tag
-    if ( $element_tag =~ /^(input)$/ ) {
+    if ($element_tag =~ /^(input)$/) {
         $end_tag = '';
     }
     return $html . $content . $end_tag;

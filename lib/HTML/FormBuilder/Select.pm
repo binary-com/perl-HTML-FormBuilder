@@ -64,7 +64,7 @@ has options => (
     is  => 'rw',
     isa => sub {
         die "$_[0] is not ArrayRef[HashRef[Any]]"
-          unless ( ref( $_[0] ) eq 'ARRAY' && ref( $_[0][0] ) eq 'HASH' );
+            unless (ref($_[0]) eq 'ARRAY' && ref($_[0][0]) eq 'HASH');
     },
 );
 
@@ -73,9 +73,8 @@ has options => (
 =cut
 
 has values => (
-    is => 'rw',
-    isa =>
-      sub { die "$_[0] is not a Arrayref" unless ( ref( $_[0] ) eq 'ARRAY' ) },
+    is  => 'rw',
+    isa => sub { die "$_[0] is not a Arrayref" unless (ref($_[0]) eq 'ARRAY') },
     default => sub { [] },
 );
 
@@ -90,7 +89,7 @@ sub value {
     my $val    = shift;
     my $values = $self->values;
     return $values->[0] if defined $values and not defined $val;
-    return $self->values( [$val] ) if defined $val;
+    return $self->values([$val]) if defined $val;
     return;
 }
 
@@ -103,18 +102,18 @@ sub value {
 sub widget_html {
     my $self = shift;
     my $html = '<select id="' . $self->id . '" name="' . $self->name . '">';
-    $html .= $self->_option_html($_) for @{ $self->options };
+    $html .= $self->_option_html($_) for @{$self->options};
     $html .= "</select>";
     return $html;
 }
 
 sub _option_html {
-    my ( $self, $optionhash ) = @_;
+    my ($self, $optionhash) = @_;
     my $value    = $optionhash->{value};
     my $text     = $optionhash->{text} // $value;
     my $selected = '';
     $optionhash->{disabled} //= '';
-    $selected = ' SELECTED' if grep { $_ eq $value } @{ $self->values };
+    $selected = ' SELECTED' if grep { $_ eq $value } @{$self->values};
     return qq|<option value="$value"$selected $optionhash->{disabled}>$text</option>|;
 }
 
@@ -124,21 +123,14 @@ sub _option_html {
 
 sub hidden_html {
     my $self = shift;
-    return
-        '<input type="hidden" id="'
-      . $self->id
-      . '" name="'
-      . $self->name
-      . '" value="'
-      . ( $self->value // '' ) . '" />';
+    return '<input type="hidden" id="' . $self->id . '" name="' . $self->name . '" value="' . ($self->value // '') . '" />';
 }
 
 sub is_str {
-    die "$_[0] is not a string" unless defined( $_[0] ) && !ref( $_[0] );
+    die "$_[0] is not a string" unless defined($_[0]) && !ref($_[0]);
 }
 
 1;
-
 
 =head1 NAME
 

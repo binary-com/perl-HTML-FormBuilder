@@ -14,61 +14,45 @@ use HTML::FormBuilder::Select;
 
 my $form_obj = create_form_object();
 
-set_valid_input( \$form_obj );
-is( $form_obj->validate(),      1, '[validate=1]' );
-is( $form_obj->get_has_error(), 0, '[get_has_error=0]' );
+set_valid_input(\$form_obj);
+is($form_obj->validate(),      1, '[validate=1]');
+is($form_obj->get_has_error(), 0, '[get_has_error=0]');
 
-is( $form_obj->get_field_value('amount'), 123, 'amount=123' );
-is( $form_obj->get_field_value('select_text_curr'),
-    'USD', 'select_text_curr=USD' );
-is( $form_obj->get_field_value('w'), 'CR', 'w=CR' );    # test hidden value
+is($form_obj->get_field_value('amount'),           123,   'amount=123');
+is($form_obj->get_field_value('select_text_curr'), 'USD', 'select_text_curr=USD');
+is($form_obj->get_field_value('w'),                'CR',  'w=CR');                   # test hidden value
 
-set_valid_input( \$form_obj );
-$form_obj->set_field_value( 'amount', 5 );
-is( $form_obj->validate(),      0, 'validate=0' );
-is( $form_obj->get_has_error(), 1, 'get_has_error=1' );
-is( $form_obj->get_field_error_message('amount'),
-    'Too little', 'error message=Too little' );
+set_valid_input(\$form_obj);
+$form_obj->set_field_value('amount', 5);
+is($form_obj->validate(),                        0,            'validate=0');
+is($form_obj->get_has_error(),                   1,            'get_has_error=1');
+is($form_obj->get_field_error_message('amount'), 'Too little', 'error message=Too little');
 
-set_valid_input( \$form_obj );
-$form_obj->set_field_value( 'amount', 501 );
-is( $form_obj->validate(), 0, 'validate=0' );
-is( $form_obj->get_field_error_message('amount'),
-    'Too much', 'error message=Too much' );
+set_valid_input(\$form_obj);
+$form_obj->set_field_value('amount', 501);
+is($form_obj->validate(),                        0,          'validate=0');
+is($form_obj->get_field_error_message('amount'), 'Too much', 'error message=Too much');
 
-set_valid_input( \$form_obj );
-$form_obj->set_field_value( 'amount', 'abc' );
-is( $form_obj->validate(), 0, 'validate=0' );
-is(
-    $form_obj->get_field_error_message('amount'),
-    'Must be digit',
-    'error message=Must be digit'
-);
+set_valid_input(\$form_obj);
+$form_obj->set_field_value('amount', 'abc');
+is($form_obj->validate(), 0, 'validate=0');
+is($form_obj->get_field_error_message('amount'), 'Must be digit', 'error message=Must be digit');
 
-set_valid_input( \$form_obj );
-$form_obj->set_field_value( 'select_text_curr', '' );
-is( $form_obj->validate(), 0, 'validate=0' );
-is(
-    $form_obj->get_field_error_message('select_text_curr'),
-    'Must be select',
-    'error message=Must be select'
-);
+set_valid_input(\$form_obj);
+$form_obj->set_field_value('select_text_curr', '');
+is($form_obj->validate(), 0, 'validate=0');
+is($form_obj->get_field_error_message('select_text_curr'), 'Must be select', 'error message=Must be select');
 
-set_valid_input( \$form_obj );
-$form_obj->set_field_value( 'select_text_curr',   'USD' );
-$form_obj->set_field_value( 'select_text_amount', 'abc' );
-is( $form_obj->validate(), 0, 'validate=0' );
-is(
-    $form_obj->get_field_error_message('select_text_amount'),
-    'Must be digits',
-    'error message=Must be digits'
-);
+set_valid_input(\$form_obj);
+$form_obj->set_field_value('select_text_curr',   'USD');
+$form_obj->set_field_value('select_text_amount', 'abc');
+is($form_obj->validate(), 0, 'validate=0');
+is($form_obj->get_field_error_message('select_text_amount'), 'Must be digits', 'error message=Must be digits');
 
-set_valid_input( \$form_obj );
-$form_obj->set_field_value( 'select_text_amount', '5' );
-is( $form_obj->validate(), 0, 'validate=0' );
-is( $form_obj->get_field_error_message('select_text_amount'),
-    'Too little', 'error message=Too little' );
+set_valid_input(\$form_obj);
+$form_obj->set_field_value('select_text_amount', '5');
+is($form_obj->validate(),                                    0,            'validate=0');
+is($form_obj->get_field_error_message('select_text_amount'), 'Too little', 'error message=Too little');
 
 # Test on set_input_fields
 my $input = {
@@ -81,17 +65,15 @@ my $input = {
 };
 
 $form_obj->set_input_fields($input);
-is( $form_obj->get_field_value('name'),   'Eric', 'name = Eric' );
-is( $form_obj->get_field_value('amount'), '123',  'amount = 123' );
-is( $form_obj->get_field_value('select_text_curr'),
-    'EUR', 'select_text_curr = EUR' );
-is( $form_obj->get_field_value('select_text_amount'),
-    '888', 'select_text_amount = 888' );
-is( $form_obj->get_field_value('test'), undef, 'test = undef [not in form])' );
+is($form_obj->get_field_value('name'),               'Eric', 'name = Eric');
+is($form_obj->get_field_value('amount'),             '123',  'amount = 123');
+is($form_obj->get_field_value('select_text_curr'),   'EUR',  'select_text_curr = EUR');
+is($form_obj->get_field_value('select_text_amount'), '888',  'select_text_amount = 888');
+is($form_obj->get_field_value('test'),               undef,  'test = undef [not in form])');
 
 $form_obj = create_form_object();
 
-set_valid_input( \$form_obj );
+set_valid_input(\$form_obj);
 
 my $expected_result = <<EOF;
 <form action="http://localhost/some/where/test.cgi" class="formObject" id="id_test_form" method="post" name="name_test_form" onsubmit="function v() { var bResult = true; var error_element_error_general = clearInputErrorField('error_general');var input_element_name = document.getElementById('name');var error_element_error_name = clearInputErrorField('error_name');if (input_element_name &&  error_element_error_name){var regexp;bInputResult = true;regexp = new RegExp('[a-z]+', 'i');if (bInputResult && !regexp.test(input_element_name.value)){error_element_error_name.innerHTML = decodeURIComponent('Not%20empty');bInputResult = false;}if (!bInputResult){bResult = bInputResult;}}var input_element_amount = document.getElementById('amount');var error_element_error_amount = clearInputErrorField('error_amount');if (input_element_amount &&  error_element_error_amount){var regexp;bInputResult = true;regexp = new RegExp('\\\\w+');if (bInputResult && !regexp.test(input_element_amount.value)){error_element_error_amount.innerHTML = decodeURIComponent('Not%20empty');bInputResult = false;}regexp = new RegExp('\\\\d+');if (bInputResult && !regexp.test(input_element_amount.value)){error_element_error_amount.innerHTML = decodeURIComponent('Must%20be%20digit');bInputResult = false;}if (bInputResult && input_element_amount.value < 50){error_element_error_amount.innerHTML = decodeURIComponent('Too%20little');bInputResult = false;}if (bInputResult && input_element_amount.value > 500){error_element_error_amount.innerHTML = decodeURIComponent('Too%20much');bInputResult = false;}if (bInputResult && !custom_amount_validation()){error_element_error_amount.innerHTML = decodeURIComponent('It%20is%20not%20good');bInputResult = false;}if (!bInputResult){bResult = bInputResult;}}var input_element_select_text_curr = document.getElementById('select_text_curr');var input_element_select_text_amount = document.getElementById('select_text_amount');var error_element_error_select_text = clearInputErrorField('error_select_text');if (input_element_select_text_curr && input_element_select_text_amount &&  error_element_error_select_text){var regexp;bInputResult = true;regexp = new RegExp('\\\\w+');if (bInputResult && !regexp.test(input_element_select_text_curr.value)){error_element_error_select_text.innerHTML = decodeURIComponent('Must%20be%20select');bInputResult = false;}regexp = new RegExp('\\\\d+');if (bInputResult && !regexp.test(input_element_select_text_amount.value)){error_element_error_select_text.innerHTML = decodeURIComponent('Must%20be%20digits');bInputResult = false;}if (bInputResult && input_element_select_text_amount.value < 50){error_element_error_select_text.innerHTML = decodeURIComponent('Too%20little');bInputResult = false;}if (!bInputResult){bResult = bInputResult;}}; return bResult; }; return v();"><div class="rbox form">
@@ -104,15 +86,15 @@ my $expected_result = <<EOF;
 EOF
 
 chomp($expected_result);
-is( $form_obj->build, $expected_result, 'the result of build' );
+is($form_obj->build, $expected_result, 'the result of build');
 
 sub set_valid_input {
     my $arg_ref = shift;
 
-    ${$arg_ref}->set_field_value( 'name',               'Omid' );
-    ${$arg_ref}->set_field_value( 'amount',             '123' );
-    ${$arg_ref}->set_field_value( 'select_text_curr',   'USD' );
-    ${$arg_ref}->set_field_value( 'select_text_amount', '50' );
+    ${$arg_ref}->set_field_value('name',               'Omid');
+    ${$arg_ref}->set_field_value('amount',             '123');
+    ${$arg_ref}->set_field_value('select_text_curr',   'USD');
+    ${$arg_ref}->set_field_value('select_text_amount', '50');
 }
 
 sub check_existance_on_builded_html {
@@ -147,9 +129,9 @@ sub create_form_object {
     'Create Form Validation';
 
     # Test object type
-    isa_ok( $form_obj, 'HTML::FormBuilder::Validation' );
+    isa_ok($form_obj, 'HTML::FormBuilder::Validation');
 
-    my $fieldset_index = $form_obj->add_fieldset( {} );
+    my $fieldset_index = $form_obj->add_fieldset({});
 
     my $input_field_name = {
         'label' => {
@@ -169,8 +151,7 @@ sub create_form_object {
             'id'    => 'error_name',
             'class' => 'errorfield',
         },
-        'validation' => [
-            {
+        'validation' => [{
                 'type'             => 'regexp',
                 'regexp'           => '[a-z]+',
                 'case_insensitive' => 1,
@@ -197,8 +178,7 @@ sub create_form_object {
             'id'    => 'error_amount',
             'class' => 'errorfield',
         },
-        'validation' => [
-            {
+        'validation' => [{
                 'type'    => 'regexp',
                 'regexp'  => '\w+',
                 'err_msg' => 'Not empty',
@@ -227,11 +207,10 @@ sub create_form_object {
     };
 
     my $select_curr = HTML::FormBuilder::Select->new(
-        'id'   => 'select_text_curr',
-        'name' => 'select_text_curr',
-        'type' => 'select',
-        'options' =>
-          [ { value => '' }, { value => 'USD' }, { value => 'EUR' } ],
+        'id'      => 'select_text_curr',
+        'name'    => 'select_text_curr',
+        'type'    => 'select',
+        'options' => [{value => ''}, {value => 'USD'}, {value => 'EUR'}],
     );
     my $input_amount = {
         'id'    => 'select_text_amount',
@@ -245,14 +224,13 @@ sub create_form_object {
             'for'      => 'select_text',
             'optional' => '0',
         },
-        'input' => [ $select_curr, $input_amount ],
+        'input' => [$select_curr, $input_amount],
         'error' => {
             'text'  => '',
             'id'    => 'error_select_text',
             'class' => 'errorfield',
         },
-        'validation' => [
-            {
+        'validation' => [{
                 'type'    => 'regexp',
                 'id'      => 'select_text_curr',
                 'regexp'  => '\w+',
@@ -280,8 +258,7 @@ sub create_form_object {
                 'id'    => 'error_general',
                 'class' => 'errorfield',
             },
-        }
-    );
+        });
 
     # Hidden fields
     my $input_hidden_field_broker = {
@@ -291,11 +268,11 @@ sub create_form_object {
         'value' => 'CR'
     };
 
-    my $hidden_fields = { 'input' => [ $input_hidden_field_broker, ] };
-    $form_obj->add_field( $fieldset_index, $hidden_fields );
-    $form_obj->add_field( $fieldset_index, $input_field_name );
-    $form_obj->add_field( $fieldset_index, $input_field_amount );
-    $form_obj->add_field( $fieldset_index, $input_field_select_text );
+    my $hidden_fields = {'input' => [$input_hidden_field_broker,]};
+    $form_obj->add_field($fieldset_index, $hidden_fields);
+    $form_obj->add_field($fieldset_index, $input_field_name);
+    $form_obj->add_field($fieldset_index, $input_field_amount);
+    $form_obj->add_field($fieldset_index, $input_field_select_text);
 
     return $form_obj;
 }

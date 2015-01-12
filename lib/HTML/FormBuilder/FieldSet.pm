@@ -19,7 +19,9 @@ has data => (
         my $data = shift;
         croak('data should be a hashref') unless ref($data) eq 'HASH';
     },
-    default => sub { {} },
+    default => sub {
+        {};
+    },
 );
 
 has fields => (
@@ -28,7 +30,9 @@ has fields => (
         my $fields = shift;
         croak('fields should be an arrayref') unless ref($fields) eq 'ARRAY';
     },
-    default => sub { [] },
+    default => sub {
+        [];
+    },
 );
 
 sub add_field {
@@ -37,9 +41,8 @@ sub add_field {
 
     my $field = HTML::FormBuilder::Field->new(
         data    => $_args,
-        classes => $self->{classes}
-    );
-    push @{ $self->{'fields'} }, $field;
+        classes => $self->{classes});
+    push @{$self->{'fields'}}, $field;
 
     return $field;
 }
@@ -62,7 +65,7 @@ sub build {
     my $fieldset_group = $data->{'group'};
     my $stacked = defined $data->{'stacked'} ? $data->{'stacked'} : 1;
 
-    if ( not $fieldset_group ) {
+    if (not $fieldset_group) {
         $fieldset_group = 'no-group';
     }
 
@@ -70,43 +73,35 @@ sub build {
 
     my $input_fields_html = '';
 
-    foreach my $input_field ( @{ $self->{'fields'} } ) {
-        $input_fields_html .= $input_field->build(
-            { stacked => $stacked, classes => $self->{classes} } );
+    foreach my $input_field (@{$self->{'fields'}}) {
+        $input_fields_html .= $input_field->build({
+                stacked => $stacked,
+                classes => $self->{classes}});
     }
 
-    if ( $stacked == 0 ) {
-        $input_fields_html =
-          $self->_build_element_and_attributes( 'div',
-            { class => $self->{classes}{'NoStackFieldParent'} },
-            $input_fields_html );
+    if ($stacked == 0) {
+        $input_fields_html = $self->_build_element_and_attributes('div', {class => $self->{classes}{'NoStackFieldParent'}}, $input_fields_html);
     }
 
     $fieldset_html .= $input_fields_html;
 
     # message at the bottom of the fieldset
-    if ( defined $data->{'footer'} ) {
+    if (defined $data->{'footer'}) {
         my $footer = delete $data->{'footer'};
-        $fieldset_html .=
-          qq{<div class="$self->{classes}{fieldset_footer}">$footer</div>};
+        $fieldset_html .= qq{<div class="$self->{classes}{fieldset_footer}">$footer</div>};
     }
 
-    $fieldset_html =
-      $self->_build_element_and_attributes( 'fieldset', $data, $fieldset_html );
+    $fieldset_html = $self->_build_element_and_attributes('fieldset', $data, $fieldset_html);
 
     if (
-        (
-            not $data->{'id'}
-            or $data->{'id'} ne 'formlayout'
-        )
-        and ( not $data->{'class'}
-            or $data->{'class'} !~ /no-wrap|invisible/ )
-      )
+        (not $data->{'id'} or $data->{'id'} ne 'formlayout')
+        and (not $data->{'class'}
+            or $data->{'class'} !~ /no-wrap|invisible/))
     {
         $fieldset_html = $self->_wrap_fieldset($fieldset_html);
 
     }
-    return ( $fieldset_group, $fieldset_html );
+    return ($fieldset_group, $fieldset_html);
 }
 
 #####################################################################
@@ -124,23 +119,22 @@ sub _build_fieldset_foreword {
 
     # fieldset legend
     my $legend = '';
-    if ( defined $data->{'legend'} ) {
+    if (defined $data->{'legend'}) {
         $legend = qq{<legend>$data->{legend}</legend>};
         undef $data->{'legend'};
     }
 
     # header at the top of the fieldset
     my $header = '';
-    if ( defined $data->{'header'} ) {
+    if (defined $data->{'header'}) {
         $header = qq{<h2>$data->{header}</h2>};
         undef $data->{'header'};
     }
 
     # message at the top of the fieldset
     my $comment = '';
-    if ( defined $data->{'comment'} ) {
-        $comment =
-qq{<div class="$self->{classes}{comment}"><p>$data->{comment}</p></div>};
+    if (defined $data->{'comment'}) {
+        $comment = qq{<div class="$self->{classes}{comment}"><p>$data->{comment}</p></div>};
         undef $data->{'comment'};
     }
 
@@ -155,7 +149,7 @@ qq{<div class="$self->{classes}{comment}"><p>$data->{comment}</p></div>};
 # See Also   :
 #####################################################################
 sub _wrap_fieldset {
-    my ( $self, $fieldset_html ) = @_;
+    my ($self, $fieldset_html) = @_;
     my $output            = '';
     my $fieldset_template = <<EOF;
 <div class="rbox form">
