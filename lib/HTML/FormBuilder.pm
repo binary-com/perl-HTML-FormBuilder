@@ -92,9 +92,10 @@ sub add_fieldset {
         if (ref $_args ne 'HASH');
 
     my $fieldset = HTML::FormBuilder::FieldSet->new(
-        data    => $_args,
-		  	classes => $self->classes,
-   	    localize => $self->localize);
+        data     => $_args,
+        classes  => $self->classes,
+        localize => $self->localize
+    );
 
     push @{$self->{fieldsets}}, $fieldset;
 

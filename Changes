@@ -1,6 +1,7 @@
 Revision history for HTML-FormBuilder
 
 {{$NEXT}}
+        - perltidy/critic
 
 0.02  2015-01-09 17:28:52 CST
         - no code changes
