@@ -3,22 +3,17 @@ use warnings;
 
 use Test::More;
 use Test::Exception;
+use FindBin qw/$Bin/;
+use lib "$Bin/../lib";
 
-package TestModule;
-use Moo;
-use namespace::clean;
-extends qw(HTML::FormBuilder::Base);
-
-1;
-
-package main;
+use BaseTest;
 
 my $obj;
-lives_ok( sub { $obj = TestModule->new() }, 'create obj ok' );
+lives_ok( sub { $obj = BaseTest->new() }, 'create obj ok' );
 is( $obj->_localize('test'), 'test', 'test localilze' );
 lives_ok(
     sub {
-        $obj = TestModule->new( localize => sub { return "hello" } );
+        $obj = BaseTest->new( localize => sub { return "hello" } );
     },
     'create obj ok'
 );
@@ -26,7 +21,7 @@ is( $obj->_localize('test'), 'hello', 'test localilze' );
 lives_ok(
     sub {
         $obj =
-          TestModule->new(
+          BaseTest->new(
             classes => { required_asterisk => 'required_asterisk' } );
     },
     'create obj ok'

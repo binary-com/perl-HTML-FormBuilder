@@ -1,4 +1,7 @@
 package TestHelper;
+use strict;
+use warnings;
+
 use Exporter 'import';
 our @EXPORT = qw($classes);
 

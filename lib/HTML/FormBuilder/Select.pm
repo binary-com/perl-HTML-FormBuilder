@@ -1,4 +1,6 @@
 package HTML::FormBuilder::Select;
+use strict;
+use warnings;
 
 our $VERSION = '0.01';
 
