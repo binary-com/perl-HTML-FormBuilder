@@ -40,9 +40,10 @@ sub add_field {
     my $_args = shift;
 
     my $field = HTML::FormBuilder::Field->new(
-        data    => $_args,
-				classes => $self->classes,
-				localize => $self->localize																		 );
+        data     => $_args,
+        classes  => $self->classes,
+        localize => $self->localize
+    );
     push @{$self->{'fields'}}, $field;
 
     return $field;
@@ -75,7 +76,7 @@ sub build {
     my $input_fields_html = '';
 
     foreach my $input_field (@{$self->{'fields'}}) {
-        $input_fields_html .= $input_field->build({stacked => $stacked });
+        $input_fields_html .= $input_field->build({stacked => $stacked});
     }
 
     if ($stacked == 0) {

@@ -87,6 +87,8 @@ EOF
 
 chomp($expected_result);
 is($form_obj->build, $expected_result, 'the result of build');
+$form_obj = create_form_object();
+lives_ok(sub {$form_obj->validate}, 'validate has no warnings');
 
 sub set_valid_input {
     my $arg_ref = shift;

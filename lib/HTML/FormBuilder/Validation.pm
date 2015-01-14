@@ -148,7 +148,7 @@ sub is_error_found_in {
 ########################################################################
 sub _set_has_error {
     my $self = shift;
- 
+
     $self->has_error_of(1);
     return;
 }
@@ -353,7 +353,7 @@ sub _validate_field {
             $input_element_id = $validation->{id} || $input_element->[0]{id};
 
             # Check with whitespace trimmed from both ends to make sure that it's reasonable.
-            $field_value = $self->get_field_value($input_element_id);
+            $field_value = $self->get_field_value($input_element_id) || '';
             # $field_value =~ s/^\s+|\s+$//g;
             $field_value =~ s/\A\s+//;
             $field_value =~ s/\s+\z//;
