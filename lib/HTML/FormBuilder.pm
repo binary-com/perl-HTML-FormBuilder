@@ -75,7 +75,7 @@ sub BUILDARGS {
 #####################################################################
 # Usage      : Add a new fieldset to the form
 # Purpose    : Allow the form object to carry more than 1 fieldsets
-# Returns    :
+# Returns    : Fieldset object
 # Parameters : Hash reference with keys in <fieldsets> supported attributes
 # Comments   : Fieldset works like a table, which allow one form to
 #              have more than 1 fieldset. Each Fieldset has its own
@@ -482,7 +482,7 @@ HTML::FormBuilder - A Multi-part HTML form
                            'comment' => 'please fill in',    #message at the top of the fieldset
                            'footer'  => '* - required',};    #message at the bottom of the fieldset
   };
-  $form->add_fieldset($fieldset_attributes);
+  my $fieldset = $form->add_fieldset($fieldset_attributes);
 
   ####################################
   #Create the input fields.
@@ -542,9 +542,9 @@ HTML::FormBuilder - A Multi-part HTML form
 
   #Then we add the input field into the Fieldset
   #You can add using index of the fieldset
-  $form->add_field(0, $input_text);
-  $form->add_field(0, $input_select);
-  $form->add_field(0, $input_submit_button);
+  $fieldset->add_field($input_text);
+  $fieldset->add_field($input_select);
+  $fieldset->add_field($input_submit_button);
 
   ###########################################################
   ### Field value accessors
@@ -665,10 +665,10 @@ The id is rquired for the form.
 
 =head2 add_fieldset
 
-    my $fieldset_index = $form->add_fieldset({id => 'fieldset1});
+    my $fieldsetx = $form->add_fieldset({id => 'fieldset1});
 
 the parameter is the fieldset attributes.
-It will return the fielset index.
+It will return the fielset object.
 
 =head2 add_field
 
