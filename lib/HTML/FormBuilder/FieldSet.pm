@@ -49,6 +49,16 @@ sub add_field {
     return $field;
 }
 
+sub add_fields{
+	my $self = shift;
+	my @field_args = @_;
+
+	for my $field_arg(@field_args){
+		$self->add_field($field_arg);
+	}
+	return scalar @field_args;
+}
+
 #####################################################################
 # Usage      : generate the form content for a fieldset
 # Purpose    : check and parse the parameters and generate the form
@@ -193,7 +203,13 @@ The fields included by this fieldset.
 
     $fieldset->add_field({input => {type => 'text', value => 'name'}});
 
-append the field into fieldsets.
+append the field into fieldset and return that field
+
+=head2 add_fields
+
+    $fieldset->add_fields({input => {type => 'text', value => 'name'}},{input => {type => 'text', value => 'address'}});
+
+append fields into fieldset and return the number of fields added.
 
 =head1 AUTHOR
 

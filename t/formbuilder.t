@@ -136,6 +136,12 @@ lives_ok(sub { $result = $form_obj->build }, 'build form with some args');
 like($result, qr{<span class="inputtrailing">This is trailling</span>}, 'has footer');
 
 ################################################################################
+# test add_fieldset
+$form_obj = HTML::FormBuilder->new(data => {id => 'testid'});
+$fieldset = $form_obj->add_fieldset({id => 'fieldset1'});
+isa_ok($fieldset,'HTML::FormBuilder::FieldSet', 'return a fieldset object');
+is($fieldset->data->{id}, 'fieldset1', 'fieldset value is correct');
+################################################################################
 # test add_field
 $form_obj = HTML::FormBuilder->new(data => {id => 'testid'});
 throws_ok(sub { $form_obj->add_field('0abc') }, qr/fieldset_index should be a number/, 'fieldset_index should be a number');
