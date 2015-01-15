@@ -82,7 +82,6 @@ sub BUILDARGS {
 #              input fields.
 # See Also   :
 #####################################################################
-# TODO return the created fieldset should be better
 sub add_fieldset {
     my $self  = shift;
     my $_args = shift;
@@ -99,8 +98,7 @@ sub add_fieldset {
 
     push @{$self->{fieldsets}}, $fieldset;
 
-    #return fieldset id/index that was created
-    return $#{$self->{fieldsets}};
+		return $fieldset;
 }
 
 #####################################################################

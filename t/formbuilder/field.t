@@ -11,8 +11,7 @@ BEGIN {
 }
 
 my $form     = HTML::FormBuilder->new(data => {id => 'testid'});
-my $index    = $form->add_fieldset({});
-my $fieldset = $form->{fieldsets}[$index];
+my $fieldset    = $form->add_fieldset({});
 my $field;
 lives_ok(
     sub {
