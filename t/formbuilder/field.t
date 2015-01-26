@@ -10,9 +10,8 @@ BEGIN {
     use_ok('HTML::FormBuilder::Field');
 }
 
-my $form     = HTML::FormBuilder->new(data => {id => 'testid'});
-my $index    = $form->add_fieldset({});
-my $fieldset = $form->{fieldsets}[$index];
+my $form = HTML::FormBuilder->new(data => {id => 'testid'});
+my $fieldset = $form->add_fieldset({});
 my $field;
 lives_ok(
     sub {

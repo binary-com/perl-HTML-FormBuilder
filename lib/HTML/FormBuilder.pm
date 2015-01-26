@@ -48,8 +48,8 @@ sub BUILDARGS {
 
     # set default class
     my @class_names = qw( fieldset_group
-        NoStackFieldParent
-        RowPadding
+        no_stack_field_parent
+        row_padding
         fieldset_footer
         comment
         row
@@ -75,14 +75,13 @@ sub BUILDARGS {
 #####################################################################
 # Usage      : Add a new fieldset to the form
 # Purpose    : Allow the form object to carry more than 1 fieldsets
-# Returns    :
+# Returns    : Fieldset object
 # Parameters : Hash reference with keys in <fieldsets> supported attributes
 # Comments   : Fieldset works like a table, which allow one form to
 #              have more than 1 fieldset. Each Fieldset has its own
 #              input fields.
 # See Also   :
 #####################################################################
-# TODO return the created fieldset should be better
 sub add_fieldset {
     my $self  = shift;
     my $_args = shift;
@@ -99,8 +98,7 @@ sub add_fieldset {
 
     push @{$self->{fieldsets}}, $fieldset;
 
-    #return fieldset id/index that was created
-    return $#{$self->{fieldsets}};
+    return $fieldset;
 }
 
 #####################################################################
@@ -458,10 +456,107 @@ HTML::FormBuilder - A Multi-part HTML form
 
 =head1 SYNOPSIS
 
+    #define a form
+    my $form = HTML::FormBuilder->new(
+        data =>{id    => 'formid',
+                class => 'formclass'},
+        classes => {row => 'rowdev'})
+
+    #create fieldset
+    my $fieldset = $form->add_fieldset({id => 'fieldset1});
+
+    #add field
+    $fieldset->({input => {name => 'name', type => 'text', value => 'Join'}});
+
+    #set field value
+    $form->set_field_value('name', 'Omid');
+
+    #output the form
+    print $form->build;
+
+=head1 DESCRIPTION
+
+Object-oriented module for displaying an HTML form.
+
+=head2 Overview of Form's HTML structure
+
+The root of the structure is the <form> element and follow by multiple <fieldset> elements.
+
+In each <fieldset>, you can create rows which contain label, different input types, error message and comment <p> element.
+
+Please refer to L</"A full sample result">
+
+=head1 Attributes
+
+=head2 data
+
+The form attributes. It should be a hashref.
+
+=head2 classes
+
+The form classes. It should be a hashref. You can customize the form's layout by  the classes.
+The class names used are:
+
+      fieldset_group
+      no_stack_field_parent
+      row_padding
+      fieldset_footer
+      comment
+      row
+      extra_tooltip_container
+      backbutton
+      required_asterisk
+      inputtrailing
+      label_column
+      input_column
+      hide_mobile
+
+=head2 localize
+
+The subroutine ref which can be called when translate something like 'Confirm'. The default value is no translating.
+
+=head2 fieldsets
+
+The fieldsets the form have.
+
+=head1 Methods
+
+=head2 new
+
+    my $form = HTML::FormBuilder->new(
+        data =>{id    => 'formid',
+                class => 'formclass'},
+        classes => {row => 'rowdev'})
+
+The id is rquired for the form.
+
+=head2 add_fieldset
+
+    my $fieldset = $form->add_fieldset({id => 'fieldset1});
+
+the parameter is the fieldset attributes.
+It will return the fielset object.
+
+=head2 add_field
+
+      $form->add_field(0, {input => {name => 'name', type => 'text', value => 'Join'}});
+
+The parameter is the fieldset index to which you want to add the filed and the field attributes.
+
+=head2 build
+
+      print $form->build;
+
+the data in the $form will be changed when build the form. So you cannot get the same result if you call build twice.
+
+=head1 Cookbook
+
+=head2 a full sample
+
   # Before create a form, create a classes hash for the form
   my $classes = {comment => 'comment', 'input_column' => 'column'};
   # And maybe you need a localize function to translate something
-  my $locaolize = sub {i18n(shift)};
+  my $localize = sub {i18n(shift)};
 
   # First, create the Form object. The keys in the HASH reference is the attributes of the form
   $form_attributes => {'id'     => 'id_of_the_form',
@@ -484,7 +579,7 @@ HTML::FormBuilder - A Multi-part HTML form
                            'comment' => 'please fill in',    #message at the top of the fieldset
                            'footer'  => '* - required',};    #message at the bottom of the fieldset
   };
-  $form->add_fieldset($fieldset_attributes);
+  my $fieldset = $form->add_fieldset($fieldset_attributes);
 
   ####################################
   #Create the input fields.
@@ -544,9 +639,9 @@ HTML::FormBuilder - A Multi-part HTML form
 
   #Then we add the input field into the Fieldset
   #You can add using index of the fieldset
-  $form->add_field(0, $input_text);
-  $form->add_field(0, $input_select);
-  $form->add_field(0, $input_submit_button);
+  $fieldset->add_field($input_text);
+  $fieldset->add_field($input_select);
+  $fieldset->add_field($input_submit_button);
 
   ###########################################################
   ### Field value accessors
@@ -568,17 +663,8 @@ HTML::FormBuilder - A Multi-part HTML form
   #Finally, we output the form
   print $form->build();
 
-=head1 DESCRIPTION
 
-Object-oriented module for displaying an HTML form.
-
-=head2 Overview of Form's HTML structure
-
-The root of the structure is the <form> element and follow by multiple <fieldset> elements.
-
-In each <fieldset>, you can create rows which contain label, different input types, error message and comment <p> element.
-
-=head2 Full sample based on form definition given in SYNOPSIS
+=head2 A full sample result
 
     <form id="onlineIDForm" method="post" action="">
        <fieldset id="fieldset_one" name="fieldset_one" class="formclass">
@@ -621,68 +707,10 @@ In each <fieldset>, you can create rows which contain label, different input typ
        </fieldset>
 	</form>
 
-=head1 Attributes
+=head2 How to create a form with validation
 
-=head2 data
+Please refer to <HTML::FormBuilder::Validation>
 
-The form attributes. It should be a hashref.
-
-=head2 classes
-
-The form classes. It should be a hashref. You can customize the form's layout by  the classes.
-The class names used are:
-
-      fieldset_group
-      NoStackFieldParent
-      RowPadding
-      fieldset_footer
-      comment
-      row
-      extra_tooltip_container
-      backbutton
-      required_asterisk
-      inputtrailing
-      label_column
-      input_column
-      hide_mobile
-
-=head2 localize
-
-The subroutine ref which can be called when translate something like 'Confirm'. The default value is no translating.
-
-=head2 fieldsets
-
-The fieldsets the form have.
-
-=head1 Methods
-
-=head2 new
-
-    my $form = HTML::FormBuilder->new(
-        data =>{id    => 'formid',
-                class => 'formclass'},
-        classes => {row => 'rowdev'})
-
-The id is rquired for the form.
-
-=head2 add_fieldset
-
-    my $fieldset_index = $form->add_fieldset({id => 'fieldset1});
-
-the parameter is the fieldset attributes.
-It will return the fielset index.
-
-=head2 add_field
-
-      $form->add_field(0, {input => {type => 'text', value => 'Join'}});
-
-The parameter is the fieldset index to which you want to add the filed and the field attributes.
-
-=head2 build
-
-      print $form->build;
-
-the data in the $form will be changed when build the form. So you cannot get the same result if you call build twice.
 
 =head1 AUTHOR
 

@@ -59,10 +59,8 @@ $form_obj = HTML::FormBuilder->new(
     data => {
         id => 'testid',
     });
-my $fieldset_index = $form_obj->add_fieldset({});
-$form_obj->add_field(
-    $fieldset_index,
-    {
+my $fieldset = $form_obj->add_fieldset({});
+$fieldset->add_field({
         label => {
             text          => "it is a label",
             required_mark => 1
@@ -80,8 +78,8 @@ $form_obj = HTML::FormBuilder->new(
     },
     classes => $classes,
 );
-$fieldset_index = $form_obj->add_fieldset({});
-$form_obj->add_field($fieldset_index, {label => {}});
+$fieldset = $form_obj->add_fieldset({});
+$fieldset->add_field({label => {}});
 
 lives_ok(sub { $result = $form_obj->build }, 'build form with some args');
 like($result,
@@ -96,7 +94,7 @@ $form_obj = HTML::FormBuilder->new(
     },
     classes => $classes,
 );
-$fieldset_index = $form_obj->add_fieldset({group => 'fieldsetgroup'});
+$fieldset = $form_obj->add_fieldset({group => 'fieldsetgroup'});
 lives_ok(sub { $result = $form_obj->build }, 'build form with some args');
 like($result, qr{<div id="fieldsetgroup" class="toggle-content">}, 'has fieldsetgroup');
 
@@ -108,8 +106,8 @@ $form_obj = HTML::FormBuilder->new(
     },
     classes => {test_class => 'test-class'},
 );
-is($form_obj->{classes}{'test_class'}, 'test-class', 'test class method ok');
-is($form_obj->{classes}{'RowPadding'}, 'RowPadding', 'test class method ok');
+is($form_obj->{classes}{'test_class'},  'test-class',  'test class method ok');
+is($form_obj->{classes}{'row_padding'}, 'row_padding', 'test class method ok');
 
 #is($form_obj->class('no_such_class'), '', 'test class method ok');
 
@@ -121,7 +119,7 @@ $form_obj = HTML::FormBuilder->new(
     },
     classes => $classes,
 );
-$fieldset_index = $form_obj->add_fieldset({footer => 'this is footer of fieldset'});
+$fieldset = $form_obj->add_fieldset({footer => 'this is footer of fieldset'});
 lives_ok(sub { $result = $form_obj->build }, 'build form with some args');
 like($result, qr{<div class="row comment">this is footer of fieldset</div></fieldset>}, 'has footer');
 
@@ -131,11 +129,17 @@ $form_obj = HTML::FormBuilder->new(
     data => {
         id => 'testid',
     });
-$fieldset_index = $form_obj->add_fieldset({});
-$form_obj->add_field($fieldset_index, {input => {trailing => "This is trailling"}});
+$fieldset = $form_obj->add_fieldset({});
+$fieldset->add_field({input => {trailing => "This is trailling"}});
 lives_ok(sub { $result = $form_obj->build }, 'build form with some args');
 like($result, qr{<span class="inputtrailing">This is trailling</span>}, 'has footer');
 
+################################################################################
+# test add_fieldset
+$form_obj = HTML::FormBuilder->new(data => {id => 'testid'});
+$fieldset = $form_obj->add_fieldset({id => 'fieldset1'});
+isa_ok($fieldset, 'HTML::FormBuilder::FieldSet', 'return a fieldset object');
+is($fieldset->data->{id}, 'fieldset1', 'fieldset value is correct');
 ################################################################################
 # test add_field
 $form_obj = HTML::FormBuilder->new(data => {id => 'testid'});
@@ -261,7 +265,7 @@ sub create_form_object {
     # Test object type
     Test::More::isa_ok($form_obj, 'HTML::FormBuilder');
 
-    my $fieldset_index = $form_obj->add_fieldset({});
+    my $fieldset = $form_obj->add_fieldset({});
 
     my $input_field_amount = {
         'label' => {
@@ -427,14 +431,14 @@ sub create_form_object {
         },
     };
 
-    $form_obj->add_field($fieldset_index, $input_field_amount);
-    $form_obj->add_field($fieldset_index, $input_field_gender);
-    $form_obj->add_field($fieldset_index, $input_field_select_text);
-    $form_obj->add_field($fieldset_index, $input_field_textarea);
-    $form_obj->add_field($fieldset_index, $input_field_password);
-    $form_obj->add_field($fieldset_index, $input_field_single_checkbox);
-    $form_obj->add_field($fieldset_index, $input_field_array_checkbox);
-    $form_obj->add_field($fieldset_index, $general_error_message_field);
+    $fieldset->add_field($input_field_amount);
+    $fieldset->add_field($input_field_gender);
+    $fieldset->add_field($input_field_select_text);
+    $fieldset->add_field($input_field_textarea);
+    $fieldset->add_field($input_field_password);
+    $fieldset->add_field($input_field_single_checkbox);
+    $fieldset->add_field($input_field_array_checkbox);
+    $fieldset->add_field($general_error_message_field);
 
     return $form_obj;
 }
