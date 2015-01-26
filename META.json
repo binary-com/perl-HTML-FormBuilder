@@ -52,7 +52,8 @@
          "requires" : {
             "Test::Exception" : "0",
             "Test::FailWarnings" : "0",
-            "Test::More" : "0.96"
+            "Test::More" : "0.96",
+            "Test::Perl::Critic" : "0"
          }
       }
    },
@@ -68,11 +69,12 @@
          "web" : "https://github.com/binary-com/perl-HTML-FormBuilder"
       }
    },
-   "version" : "0.04",
+   "version" : "0.05",
    "x_contributors" : [
       "Chylli <chylli.email@gmail.com>",
       "Fayland Lam <fayland@gmail.com>",
-      "Jean-Yves Sireau <jy@binary.com>"
+      "Jean-Yves Sireau <jy@binary.com>",
+      "chylli <chylli.email@gmail.com>"
    ]
 }
 

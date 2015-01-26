@@ -33,9 +33,10 @@ my %WriteMakefileArgs = (
   "TEST_REQUIRES" => {
     "Test::Exception" => 0,
     "Test::FailWarnings" => 0,
-    "Test::More" => "0.96"
+    "Test::More" => "0.96",
+    "Test::Perl::Critic" => 0
   },
-  "VERSION" => "0.04",
+  "VERSION" => "0.05",
   "test" => {
     "TESTS" => "t/*.t t/formbuilder/*.t"
   }
@@ -53,6 +54,7 @@ my %FallbackPrereqs = (
   "Test::Exception" => 0,
   "Test::FailWarnings" => 0,
   "Test::More" => "0.96",
+  "Test::Perl::Critic" => 0,
   "URI::Escape" => 0,
   "namespace::clean" => 0
 );
