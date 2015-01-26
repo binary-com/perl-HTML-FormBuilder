@@ -2,6 +2,11 @@ Revision history for HTML-FormBuilder
 
 {{$NEXT}}
 
+0.05  2015-01-1-26 12:38:00 CST
+        - FormBuilder add_fieldset will return a FormBuilder::FieldSet object
+				- amend the pod
+				- change some html class name
+
 0.04  2015-01-14 21:54:55 CST
         - small fixes
 
