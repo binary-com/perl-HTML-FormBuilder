@@ -98,7 +98,7 @@ sub add_fieldset {
 
     push @{$self->{fieldsets}}, $fieldset;
 
-		return $fieldset;
+    return $fieldset;
 }
 
 #####################################################################

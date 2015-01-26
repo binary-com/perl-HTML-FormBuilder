@@ -49,14 +49,13 @@ sub add_field {
     return $field;
 }
 
-sub add_fields{
-	my $self = shift;
-	my @field_args = @_;
+sub add_fields {
+    my ($self, @field_args) = @_;
 
-	for my $field_arg(@field_args){
-		$self->add_field($field_arg);
-	}
-	return scalar @field_args;
+    for my $field_arg (@field_args) {
+        $self->add_field($field_arg);
+    }
+    return scalar @field_args;
 }
 
 #####################################################################

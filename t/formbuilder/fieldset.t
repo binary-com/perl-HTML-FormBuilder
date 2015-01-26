@@ -9,8 +9,8 @@ BEGIN {
     use_ok('HTML::FormBuilder::FieldSet');
 }
 
-my $form     = HTML::FormBuilder->new(data => {id => 'testid'});
-my $fieldset    = $form->add_fieldset({});
+my $form = HTML::FormBuilder->new(data => {id => 'testid'});
+my $fieldset = $form->add_fieldset({});
 isa_ok($fieldset, 'HTML::FormBuilder::FieldSet');
 my $field;
 lives_ok(
@@ -19,18 +19,17 @@ lives_ok(
     },
     'add field ok'
 );
-is_deeply($fieldset->{fields}[0],$field,'field is correct');
+is_deeply($fieldset->{fields}[0], $field, 'field is correct');
 isa_ok($field, 'HTML::FormBuilder::Field', 'field is a Field');
 my $num;
 lives_ok(
     sub {
-			$num = $fieldset->add_fields({input => {name => "input2"}},
-																	 {input => {name => "input3"}});
+        $num = $fieldset->add_fields({input => {name => "input2"}}, {input => {name => "input3"}});
     },
     'add fields ok'
 );
 
 is($num, 2, 'add_fields return number of fields added');
 my $fields = $fieldset->fields;
-is_deeply([map {$_->data->{input}[0]{name}} @$fields], [qw(input1 input2 input3)], 'the fields are ok');
+is_deeply([map { $_->data->{input}[0]{name} } @$fields], [qw(input1 input2 input3)], 'the fields are ok');
 done_testing;

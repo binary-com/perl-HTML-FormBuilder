@@ -60,8 +60,7 @@ $form_obj = HTML::FormBuilder->new(
         id => 'testid',
     });
 my $fieldset = $form_obj->add_fieldset({});
-$fieldset->add_field(
-    {
+$fieldset->add_field({
         label => {
             text          => "it is a label",
             required_mark => 1
@@ -107,7 +106,7 @@ $form_obj = HTML::FormBuilder->new(
     },
     classes => {test_class => 'test-class'},
 );
-is($form_obj->{classes}{'test_class'}, 'test-class', 'test class method ok');
+is($form_obj->{classes}{'test_class'},  'test-class',  'test class method ok');
 is($form_obj->{classes}{'row_padding'}, 'row_padding', 'test class method ok');
 
 #is($form_obj->class('no_such_class'), '', 'test class method ok');
@@ -139,7 +138,7 @@ like($result, qr{<span class="inputtrailing">This is trailling</span>}, 'has foo
 # test add_fieldset
 $form_obj = HTML::FormBuilder->new(data => {id => 'testid'});
 $fieldset = $form_obj->add_fieldset({id => 'fieldset1'});
-isa_ok($fieldset,'HTML::FormBuilder::FieldSet', 'return a fieldset object');
+isa_ok($fieldset, 'HTML::FormBuilder::FieldSet', 'return a fieldset object');
 is($fieldset->data->{id}, 'fieldset1', 'fieldset value is correct');
 ################################################################################
 # test add_field
