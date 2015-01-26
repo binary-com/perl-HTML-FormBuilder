@@ -66,7 +66,7 @@ sub build {
         if ($data->{'type'} and $data->{'type'} eq 'hidden') {
             $stacked_attr->{class} = $class;
         } else {
-            $stacked_attr->{class} = "$classes->{RowPadding} $classes->{row} clear$class";
+            $stacked_attr->{class} = "$classes->{row_padding} $classes->{row} clear$class";
         }
     }
 

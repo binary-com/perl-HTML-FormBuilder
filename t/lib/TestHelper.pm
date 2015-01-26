@@ -7,8 +7,8 @@ our @EXPORT = qw($classes);
 
 our $classes = {
     fieldset_group          => 'toggle-content',
-    NoStackFieldParent      => 'grd-grid-12',
-    RowPadding              => 'grd-row-padding',
+    no_stack_field_parent   => 'grd-grid-12',
+    row_padding              => 'grd-row-padding',
     fieldset_footer         => 'row comment',
     comment                 => 'grd-grid-12',
     row                     => 'row',

@@ -48,8 +48,8 @@ sub BUILDARGS {
 
     # set default class
     my @class_names = qw( fieldset_group
-        NoStackFieldParent
-        RowPadding
+        no_stack_field_parent
+        row_padding
         fieldset_footer
         comment
         row
@@ -498,8 +498,8 @@ The form classes. It should be a hashref. You can customize the form's layout by
 The class names used are:
 
       fieldset_group
-      NoStackFieldParent
-      RowPadding
+      no_stack_field_parent
+      row_padding
       fieldset_footer
       comment
       row
@@ -709,7 +709,7 @@ the data in the $form will be changed when build the form. So you cannot get the
 
 =head2 How to create a form with validation
 
-Please rever to <HTML::FormBuilder::Validation>
+Please refer to <HTML::FormBuilder::Validation>
 
 
 =head1 AUTHOR

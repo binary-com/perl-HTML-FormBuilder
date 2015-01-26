@@ -90,7 +90,7 @@ sub build {
     }
 
     if ($stacked == 0) {
-        $input_fields_html = $self->_build_element_and_attributes('div', {class => $self->{classes}{'NoStackFieldParent'}}, $input_fields_html);
+        $input_fields_html = $self->_build_element_and_attributes('div', {class => $self->{classes}{'no_stack_field_parent'}}, $input_fields_html);
     }
 
     $fieldset_html .= $input_fields_html;
