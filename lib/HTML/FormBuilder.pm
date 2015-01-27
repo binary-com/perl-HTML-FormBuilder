@@ -466,7 +466,7 @@ HTML::FormBuilder - A Multi-part HTML form
     my $fieldset = $form->add_fieldset({id => 'fieldset1});
 
     #add field
-    $fieldset->({input => {name => 'name', type => 'text', value => 'Join'}});
+    $fieldset->add_field({input => {name => 'name', type => 'text', value => 'Join'}});
 
     #set field value
     $form->set_field_value('name', 'Omid');
