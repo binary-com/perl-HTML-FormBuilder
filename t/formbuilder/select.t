@@ -84,7 +84,6 @@ subtest "empty option can create select option", sub {
         },
         'create empty select list ok'
     );
-		is($select->widget_html, '<select id="basic" name="Basic"></select>', "correct content" );
 };
 
 subtest "check options data type", sub {
