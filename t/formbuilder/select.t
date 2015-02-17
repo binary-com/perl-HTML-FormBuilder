@@ -96,7 +96,7 @@ subtest "check options data type", sub {
                 options => ["hello",],
             );
         },
-        qr/is not ArrayRef\[HashRef\[Any\]\]/,
+        qr/is not ArrayRef\[Maybe\[HashRef\]\]/,
         "string is not correct"
     );
 
@@ -108,7 +108,7 @@ subtest "check options data type", sub {
                 options => "hello",
             );
         },
-        qr/is not ArrayRef\[HashRef\[Any\]\]/,
+        qr/is not ArrayRef\[Maybe\[HashRef\]\]/,
         "string is not correct"
     );
     throws_ok(
@@ -123,7 +123,7 @@ subtest "check options data type", sub {
                     "hello",
                 ]);
         },
-        qr/is not ArrayRef\[HashRef\[Any\]\]/,
+        qr/is not ArrayRef\[Maybe\[HashRef\]\]/,
         "string is not correct"
     );
 

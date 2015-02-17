@@ -66,7 +66,7 @@ has options => (
     is  => 'rw',
     isa => sub {
         my $arg = $_[0];
-        my $msg = Dumper($arg) . " is not ArrayRef[HashRef[Any]]";
+        my $msg = Dumper($arg) . " is not ArrayRef[Maybe[HashRef]]";
         die $msg if !ref($arg) || ref($arg) ne 'ARRAY';
         for my $elem (@$arg) {
             die $msg if (!ref($elem) || ref($elem) ne 'HASH');

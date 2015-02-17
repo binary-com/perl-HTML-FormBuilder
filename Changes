@@ -2,7 +2,7 @@ Revision history for HTML-FormBuilder
 
 {{$NEXT}}
 
-0.05  2015-02-17 16:22:00 CST
+0.06  2015-02-17 16:22:00 CST
     - fix bug: empty select options should not die
 
 0.05  2015-01-26 13:05:49 CST
