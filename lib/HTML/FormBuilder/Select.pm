@@ -6,6 +6,8 @@ our $VERSION = '0.05';
 
 use Carp;
 use Moo;
+use Data::Dumper;
+
 use namespace::clean;
 
 =head1 NAME
@@ -63,8 +65,15 @@ has name => (
 has options => (
     is  => 'rw',
     isa => sub {
-        die "$_[0] is not ArrayRef[HashRef[Any]]"
-            unless (ref($_[0]) eq 'ARRAY' && ref($_[0][0]) eq 'HASH');
+        my $arg = $_[0];
+        my $msg = Dumper($arg) . " is not ArrayRef[Maybe[HashRef]]";
+        die $msg if !ref($arg) || ref($arg) ne 'ARRAY';
+        for my $elem (@$arg) {
+            die $msg if (!ref($elem) || ref($elem) ne 'HASH');
+        }
+    },
+    default => sub {
+        [];
     },
 );
 

@@ -1,6 +1,7 @@
 
 use HTML::FormBuilder::Select;
-use Test::More tests => 24;
+use Test::More tests => 26;
+use Test::Exception;
 use strict;
 
 my $basicselect = HTML::FormBuilder::Select->new(
@@ -70,3 +71,73 @@ unlike $widget_html, qr/value="1" SELECTED/, 'widget_select shows correct value'
 like $widget_html,   qr/ id="basic"/,        'html shows correct id';
 like $widget_html,   qr/ name="Basic"/,      'html shows correct name';
 
+subtest "empty option can create select option", sub {
+    my $select;
+    lives_ok(
+        sub {
+            $select = HTML::FormBuilder::Select->new(
+                id      => 'basic',
+                name    => 'Basic',
+                options => [],
+            );
+
+        },
+        'create empty select list ok'
+    );
+    is($select->widget_html, '<select id="basic" name="Basic"></select>', "correct content");
+
+    lives_ok(
+        sub {
+            $select = HTML::FormBuilder::Select->new(
+                id   => 'basic',
+                name => 'Basic',
+            );
+
+        },
+        'create empty select list ok'
+    );
+    is($select->widget_html, '<select id="basic" name="Basic"></select>', "correct content");
+
+};
+
+subtest "check options data type", sub {
+    throws_ok(
+        sub {
+            HTML::FormBuilder::Select->new(
+                id      => 'basic',
+                name    => 'Basic',
+                options => ["hello",],
+            );
+        },
+        qr/is not ArrayRef\[Maybe\[HashRef\]\]/,
+        "string is not correct"
+    );
+
+    throws_ok(
+        sub {
+            HTML::FormBuilder::Select->new(
+                id      => 'basic',
+                name    => 'Basic',
+                options => "hello",
+            );
+        },
+        qr/is not ArrayRef\[Maybe\[HashRef\]\]/,
+        "string is not correct"
+    );
+    throws_ok(
+        sub {
+            HTML::FormBuilder::Select->new(
+                id      => 'basic',
+                name    => 'Basic',
+                options => [{
+                        value => 1,
+                        text  => 'one',
+                    },
+                    "hello",
+                ]);
+        },
+        qr/is not ArrayRef\[Maybe\[HashRef\]\]/,
+        "string is not correct"
+    );
+
+};
