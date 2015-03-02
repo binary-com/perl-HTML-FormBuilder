@@ -84,7 +84,20 @@ subtest "empty option can create select option", sub {
         },
         'create empty select list ok'
     );
-		is($select->widget_html, '<select id="basic" name="Basic"></select>', "correct content" );
+    is($select->widget_html, '<select id="basic" name="Basic"></select>', "correct content");
+
+    lives_ok(
+        sub {
+            $select = HTML::FormBuilder::Select->new(
+                id   => 'basic',
+                name => 'Basic',
+            );
+
+        },
+        'create empty select list ok'
+    );
+    is($select->widget_html, '<select id="basic" name="Basic"></select>', "correct content");
+
 };
 
 subtest "check options data type", sub {

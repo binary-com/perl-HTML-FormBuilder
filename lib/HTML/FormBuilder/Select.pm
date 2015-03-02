@@ -72,6 +72,9 @@ has options => (
             die $msg if (!ref($elem) || ref($elem) ne 'HASH');
         }
     },
+    default => sub {
+        [];
+    },
 );
 
 =head2 values - values (by value) selected
