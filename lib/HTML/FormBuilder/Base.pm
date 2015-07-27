@@ -9,12 +9,29 @@ use Carp;
 use Moo;
 use namespace::clean;
 
+our $CLASSES = {
+    fieldset_group          => 'fieldset_group',
+    no_stack_field_parent   => 'no_stack_field_parent',
+    row_padding             => 'row_padding',
+    fieldset_footer         => 'fieldset_footer',
+    comment                 => 'comment',
+    row                     => 'row',
+    extra_tooltip_container => 'extra_tooltip_container',
+    backbutton              => 'backbutton',
+    required_asterisk       => 'required_asterisk',
+    inputtrailing           => 'inputtrailing',
+    label_column            => 'label_column',
+    input_column            => 'input_column',
+    hide_mobile             => 'hide_mobile'
+};
+
 has classes => (
     is  => 'ro',
     isa => sub {
         my $classes = shift;
         croak('classes should be a hashref') unless ref($classes) eq 'HASH';
     });
+
 has localize => (
     is  => 'ro',
     isa => sub {
