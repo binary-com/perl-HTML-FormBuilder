@@ -47,7 +47,7 @@ sub BUILDARGS {
     my %args = (@args % 2) ? %{$args[0]} : @args;
 
     # set default class
-    my %classes = %{$CLASSES};
+    my %classes = %{$HTML::FormBuilder::Base::CLASSES};
     %classes = (%classes, %{$args{classes} || {}});
 
     $args{classes} = \%classes;

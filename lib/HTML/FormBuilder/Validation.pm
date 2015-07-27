@@ -82,7 +82,8 @@ sub build {
         }
     }
 
-    if (my $onsubmit_js_error = $self->onsubmit_js_error) {
+    my $onsubmit_js_error = $self->onsubmit_js_error;
+    if ($onsubmit_js_error) {
         $onsubmit_js_error = "if (bResult == false) { $onsubmit_js_error; }";
     }
     $self->{data}{'onsubmit'} = "function v() { var bResult = true; $javascript_validation; $onsubmit_js_error; return bResult; }; return v();";
