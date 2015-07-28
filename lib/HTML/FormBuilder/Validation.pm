@@ -86,7 +86,7 @@ sub build {
     if ($onsubmit_js_error) {
         $onsubmit_js_error = "if (bResult == false) { $onsubmit_js_error; }";
     }
-    $self->{data}{'onsubmit'} = "function v() { var bResult = true; $javascript_validation; $onsubmit_js_error; return bResult; }; return v();";
+    $self->{data}{'onsubmit'} = "function v() { var bResult = true; $javascript_validation; $onsubmit_js_error return bResult; }; return v();";
 
     return $self->SUPER::build();
 }
@@ -575,10 +575,7 @@ Here is just add fields to the form object like before.
 
 This javascript code will be run before onsubmit return false
 
-    $form_obj->onsubmit_js_error(qq~
-        $('#residence').attr('disabled', true);
-    ~);
-
+    $form_obj->onsubmit_js_error("\$('#residence').attr('disabled', true);");
     $form_obj->onsubmit_js_error('onsubmit_error_disable_fields()');
 
 =head2 Custom javascript validation
