@@ -35,7 +35,6 @@ HTML::FormBuilder::Select - Select Element Handling for BOM Forms
 
 has id => (
     is => 'ro',
-    #isa     => 'Str',
     isa     => \&is_str,
     lazy    => 1,
     builder => '_build_id'

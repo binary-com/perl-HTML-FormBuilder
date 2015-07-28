@@ -12,7 +12,7 @@ requires 'HTML::Entities';
 
 on test => sub {
     requires 'Test::More', '0.96';
-		requires 'Test::Exception';
-		requires 'Test::FailWarnings';
+    requires 'Test::Exception';
+    requires 'Test::FailWarnings';
     requires 'Test::Perl::Critic';
 };

@@ -221,9 +221,11 @@ HTML::FormBuilder::Field - Field container used by HTML::FormBuilder
 
     my $form = HTML::FormBuilder->new(data => {id => 'testform});
 
-    my $fieldset_index = $form->add_fieldset({id => 'fieldset1'});
+    my $fieldset = $form->add_fieldset({id => 'fieldset1'});
 
-    $form->add_field(fieldset_index, {input => {type => 'text', value => 'Join'}});
+    $fieldset->add_field({input => {type => 'text', value => 'Join'}});
+
+    $form->add_field($fieldset_index, {input => {type => 'text', value => 'Join'}});
 
 =head1 AUTHOR
 
