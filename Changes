@@ -1,11 +1,13 @@
 Revision history for HTML-FormBuilder
 
-{{$NEXT}}
+0.06  2015-07-30 13:05:49 CST
+        - HTML::FormBuilder::Validation add onsubmit_js_error
+        - classes mapping to use $HTML::FormBuilder::Base::CLASSES
 
 0.05  2015-01-26 13:05:49 CST
         - FormBuilder add_fieldset will return a FormBuilder::FieldSet object
-		- amend the pod
-		- change some html class name
+        - amend the pod
+        - change some html class name
 
 0.04  2015-01-14 21:54:55 CST
         - small fixes
