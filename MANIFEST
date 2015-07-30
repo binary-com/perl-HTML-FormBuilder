@@ -3,6 +3,7 @@
 Changes
 LICENSE
 Makefile.PL
+MANIFEST
 README.md
 lib/HTML/FormBuilder.pm
 lib/HTML/FormBuilder/Base.pm
