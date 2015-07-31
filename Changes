@@ -1,8 +1,8 @@
 Revision history for HTML-FormBuilder
 
-0.06  2015-07-30 13:05:49 CST
+0.06  2015-08-03 12:05:30 CST
         - HTML::FormBuilder::Validation add onsubmit_js_error
-        - classes mapping to use $HTML::FormBuilder::Base::CLASSES
+        - change class mapping to global var $HTML::FormBuilder::Base::CLASSES
 
 0.05  2015-01-26 13:05:49 CST
         - FormBuilder add_fieldset will return a FormBuilder::FieldSet object
