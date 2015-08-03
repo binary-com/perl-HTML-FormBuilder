@@ -255,8 +255,7 @@ sub _build_javascript_validation {
     {
         my $error_id = $data->{'error'}->{'id'};
 
-        $javascript = "var error_element_$error_id = document.getElementById('$error_id');"
-                    . "document.getElementById('$error_id').innerHTML = '';"
+        $javascript = "var error_element_$error_id = document.getElementById('$error_id');" . "document.getElementById('$error_id').innerHTML = '';";
     }
 
     return $javascript;
