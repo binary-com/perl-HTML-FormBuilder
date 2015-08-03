@@ -4,7 +4,7 @@
 
 An object-oriented module for building and displaying HTML form.
 
-```
+```perl
 my $form = HTML::FormBuilder->new(
     data => {
         name    => 'form_name',

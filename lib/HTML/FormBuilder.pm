@@ -47,10 +47,11 @@ sub BUILDARGS {
     my %args = (@args % 2) ? %{$args[0]} : @args;
 
     # set default class
-    my %classes = %{$HTML::FormBuilder::Base::CLASSES};
-    %classes = (%classes, %{$args{classes} || {}});
-
-    $args{classes} = \%classes;
+    if ($args{classes}) {
+        $args{classes} = {%{$HTML::FormBuilder::Base::CLASSES}, %{$args{classes}}};
+    } else {
+        $args{classes} = {%{$HTML::FormBuilder::Base::CLASSES}};
+    }
 
     $args{data}{method} ||= 'get';
     $args{data}{method} = 'get' if $args{data}{method} ne 'post';
