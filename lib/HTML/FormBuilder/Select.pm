@@ -34,7 +34,7 @@ HTML::FormBuilder::Select - Select Element Handling for BOM Forms
 =cut
 
 has id => (
-    is => 'ro',
+    is      => 'ro',
     isa     => \&is_str,
     lazy    => 1,
     builder => '_build_id'
