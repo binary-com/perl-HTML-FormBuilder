@@ -234,6 +234,7 @@ sub _build_javascript_validation {
 
         $javascript .=
               "var error_element_$error_element_id = document.getElementById('$error_element_id');"
+            . "document.getElementById('$error_element_id').innerHTML = '';"
             . "if ($input_element_conditions error_element_$error_element_id) {"
             . 'var regexp;'
             . 'var bInputResult = true;';
@@ -254,7 +255,8 @@ sub _build_javascript_validation {
     {
         my $error_id = $data->{'error'}->{'id'};
 
-        $javascript = "var error_element_$error_id = document.getElementById('$error_id');";
+        $javascript = "var error_element_$error_id = document.getElementById('$error_id');"
+                    . "document.getElementById('$error_id').innerHTML = '';"
     }
 
     return $javascript;
