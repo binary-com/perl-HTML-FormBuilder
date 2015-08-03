@@ -86,7 +86,7 @@ sub build {
     if ($onsubmit_js_error) {
         $onsubmit_js_error = "if (bResult == false) { $onsubmit_js_error; }";
     }
-    $self->{data}{'onsubmit'} = "return function () { var bResult = true; $javascript_validation; $onsubmit_js_error return bResult; };";
+    $self->{data}{'onsubmit'} = "return (function () { var bResult = true; $javascript_validation; $onsubmit_js_error return bResult; })();";
 
     return $self->SUPER::build();
 }
