@@ -1,5 +1,6 @@
 .travis.yml
 Changes
+example/app.psgi
 lib/HTML/FormBuilder.pm
 lib/HTML/FormBuilder/Base.pm
 lib/HTML/FormBuilder/Field.pm
@@ -10,6 +11,7 @@ LICENSE
 Makefile.PL
 MANIFEST
 README.md
+t/.perlcriticrc
 t/basic.t
 t/formbuilder.t
 t/formbuilder/base.t
