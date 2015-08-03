@@ -1,4 +1,4 @@
-use 5.006;
+use 5.014;
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
@@ -10,7 +10,7 @@ WriteMakefile(
     VERSION_FROM        => "lib/HTML/FormBuilder.pm",
     ABSTRACT_FROM       => "lib/HTML/FormBuilder.pm",
     LICENSE             => "apache_2",
-    MIN_PERL_VERSION    => "5.006",
+    MIN_PERL_VERSION    => "5.014",
     CONFIGURE_REQUIRES  => {
         "ExtUtils::MakeMaker" => 0
     },
