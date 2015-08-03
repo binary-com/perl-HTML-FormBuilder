@@ -86,7 +86,7 @@ sub build {
     if ($onsubmit_js_error) {
         $onsubmit_js_error = "if (bResult == false) { $onsubmit_js_error; }";
     }
-    $self->{data}{'onsubmit'} = "function v() { var bResult = true; $javascript_validation; $onsubmit_js_error return bResult; }; return v();";
+    $self->{data}{'onsubmit'} = "return function () { var bResult = true; $javascript_validation; $onsubmit_js_error return bResult; };";
 
     return $self->SUPER::build();
 }
@@ -233,10 +233,10 @@ sub _build_javascript_validation {
         }
 
         $javascript .=
-              "var error_element_$error_element_id = clearInputErrorField('$error_element_id');"
-            . "if ($input_element_conditions error_element_$error_element_id)" . '{'
+              "var error_element_$error_element_id = document.getElementById('$error_element_id').innerHTML;"
+            . "if ($input_element_conditions error_element_$error_element_id) {"
             . 'var regexp;'
-            . 'bInputResult = true;';
+            . 'var bInputResult = true;';
 
         foreach my $validation (@validations) {
             next
@@ -254,8 +254,7 @@ sub _build_javascript_validation {
     {
         my $error_id = $data->{'error'}->{'id'};
 
-        # Clear the error message
-        $javascript = "var error_element_$error_id = clearInputErrorField('$error_id');";
+        $javascript = "var error_element_$error_id = document.getElementById('$error_id').innerHTML;";
     }
 
     return $javascript;
