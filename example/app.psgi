@@ -115,13 +115,13 @@ my $app = sub {
         });
 
         if (not $form->validate()) {
-            my $html = '<html>' . $form->build() . '</html>';
+            my $html = '<html><body>' . $form->build() . '</body></html>';
             $response->body($html);
         } else {
             $response->body('OK');
         }
     } else {
-        my $html = '<html>' . get_form()->build() . '</html>';
+        my $html = '<html><body>' . get_form()->build() . '</body></html>';
         $response->body($html);
     }
     $response->finalize;

@@ -14,7 +14,7 @@ short_subroutine_statements=3
 allow=refs
 
 [CodeLayout::RequireTidyCode]
-perltidyrc=/home/git/regentmarkets/cpan/rc/.perltidyrc
+perltidyrc=.perltidyrc
 
 [ErrorHandling::RequireCheckingReturnValueOfEval]
 severity=4
