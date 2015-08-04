@@ -23,3 +23,5 @@ t/formbuilder_output.t
 t/lib/BaseTest.pm
 t/lib/TestHelper.pm
 t/perlcritic.t
+t/rc/.perlcriticrc
+t/rc/.perltidyrc
