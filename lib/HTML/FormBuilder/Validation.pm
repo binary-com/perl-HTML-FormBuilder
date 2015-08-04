@@ -2,7 +2,7 @@ package HTML::FormBuilder::Validation;
 
 use strict;
 use warnings;
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 use Carp;
 use Class::Std::Utils;
@@ -29,6 +29,11 @@ has custom_server_side_check_of => (
         croak('custom_server_side_check_of should be code')
             unless ref $_[0] eq 'CODE';
     });
+
+has onsubmit_js_error => (
+    is      => 'rw',
+    default => '',
+);
 
 ########################################################################
 # Usage      : $form_validation_obj->set_input_fields(\%input);
@@ -71,13 +76,17 @@ sub build {
         foreach my $input_field (@{$fieldset->{'fields'}}) {
 
             # build inputs javascript validation
-            my $valition = $self->_build_javascript_validation({'input_field' => $input_field})
+            my $validation = $self->_build_javascript_validation({'input_field' => $input_field})
                 || '';
-            $javascript_validation .= $valition;
+            $javascript_validation .= $validation;
         }
     }
 
-    $self->{data}{'onsubmit'} = "function v() { var bResult = true; $javascript_validation; return bResult; }; return v();";
+    my $onsubmit_js_error = $self->onsubmit_js_error;
+    if ($onsubmit_js_error) {
+        $onsubmit_js_error = "if (bResult == false) { $onsubmit_js_error; }";
+    }
+    $self->{data}{'onsubmit'} = "return (function () { var bResult = true; $javascript_validation; $onsubmit_js_error return bResult; })();";
 
     return $self->SUPER::build();
 }
@@ -124,7 +133,6 @@ sub validate {
 
     if ($self->custom_server_side_check_of) {
         $self->custom_server_side_check_of->();
-
     }
 
     return ($self->get_has_error) ? 0 : 1;
@@ -225,10 +233,11 @@ sub _build_javascript_validation {
         }
 
         $javascript .=
-              "var error_element_$error_element_id = clearInputErrorField('$error_element_id');"
-            . "if ($input_element_conditions error_element_$error_element_id)" . '{'
+              "var error_element_$error_element_id = document.getElementById('$error_element_id');"
+            . "document.getElementById('$error_element_id').innerHTML = '';"
+            . "if ($input_element_conditions error_element_$error_element_id) {"
             . 'var regexp;'
-            . 'bInputResult = true;';
+            . 'var bInputResult = true;';
 
         foreach my $validation (@validations) {
             next
@@ -246,8 +255,7 @@ sub _build_javascript_validation {
     {
         my $error_id = $data->{'error'}->{'id'};
 
-        # Clear the error message
-        $javascript = "var error_element_$error_id = clearInputErrorField('$error_id');";
+        $javascript = "var error_element_$error_id = document.getElementById('$error_id');" . "document.getElementById('$error_id').innerHTML = '';";
     }
 
     return $javascript;
@@ -271,7 +279,7 @@ sub _build_single_javascript_validation {
     my $javascript = '';
     my $err_msg    = _encode_text($validation->{'err_msg'});
 
-# if the id define in the validation hash, meaing input has more than 1 fields, the validation is validated against the id
+    # if the id define in the validation hash, meaning input has more than 1 fields, the validation is validated against the id
     if ($validation->{'id'} and length $validation->{'id'} > 0) {
         $input_element_id = $validation->{'id'};
     }
@@ -408,18 +416,18 @@ and also server-side validation after the form is POSTed
 First, create the Form object. The keys in the HASH reference is the attributes
 of the form.
 
- 	# Form attributes require to create new form object
-	my $form_attributes =
-	{
-		'name'     => 'name_test_form',
-		'id'       => 'id_test_form',
-		'method'   => 'post',
-		'action'   => "http://www.domain.com/contact.cgi",
-		'class'    => 'formObject',
-	};
-	my $form_obj = new HTML::FormBuilder::Validation($form_attributes);
+    # Form attributes require to create new form object
+    my $form_attributes =
+    {
+        'name'     => 'name_test_form',
+        'id'       => 'id_test_form',
+        'method'   => 'post',
+        'action'   => "http://www.domain.com/contact.cgi",
+        'class'    => 'formObject',
+    };
+    my $form_obj = new HTML::FormBuilder::Validation($form_attributes);
 
-	my $fieldset_index = $form_obj->add_fieldset({});
+    my $fieldset_index = $form_obj->add_fieldset({});
 
 
 =head2 Create the input fields with validation
@@ -439,129 +447,136 @@ in amount
 4. custom: Just the javascript function call with parameters should be given to.
 It only specifies client side validation.
 
-  	my $input_field_amount =
-	{
-		'label' =>
-		{
-			'text'     => 'Amount',
-			'for'      => 'amount',
-			'optional' => '0',
-		},
-		'input' =>
-		{
-			'type'      => 'text',
-			'id'        => 'amount',
-			'name'      => 'amount',
-			'maxlength' => 40,
-			'value'     => '',
-		},
-		'error' =>
-		{
-			'text' => '',
-			'id'    => 'error_amount',
-			'class' => 'errorfield',
-		},
-		'validation' =>
-		[
-			{
-				'type'    => 'regexp',
-				'regexp'  => '\w+',
-				'err_msg' => 'Not empty',
-			},
-			{
-				'type'    => 'regexp',
-				'regexp'  => '\d+',
-				'err_msg' => 'Must be digit',
-			},
-			{
-				'type'    => 'min_amount',
-				'amount'  => 50,
-				'err_msg' => 'Too little',
-			},
-			{
-				'type'    => 'max_amount',
-				'amount'  => 500,
-				'err_msg' => 'Too much',
-			},
- 			{
- 				'type' => 'custom',
- 				'function' => 'custom_amount_validation()',
- 				'err_msg' => 'It is not good',
- 			},
-		],
-	};
+    my $input_field_amount =
+    {
+        'label' =>
+        {
+            'text'     => 'Amount',
+            'for'      => 'amount',
+            'optional' => '0',
+        },
+        'input' =>
+        {
+            'type'      => 'text',
+            'id'        => 'amount',
+            'name'      => 'amount',
+            'maxlength' => 40,
+            'value'     => '',
+        },
+        'error' =>
+        {
+            'text' => '',
+            'id'    => 'error_amount',
+            'class' => 'errorfield',
+        },
+        'validation' =>
+        [
+            {
+                'type'    => 'regexp',
+                'regexp'  => '\w+',
+                'err_msg' => 'Not empty',
+            },
+            {
+                'type'    => 'regexp',
+                'regexp'  => '\d+',
+                'err_msg' => 'Must be digit',
+            },
+            {
+                'type'    => 'min_amount',
+                'amount'  => 50,
+                'err_msg' => 'Too little',
+            },
+            {
+                'type'    => 'max_amount',
+                'amount'  => 500,
+                'err_msg' => 'Too much',
+            },
+            {
+                'type' => 'custom',
+                'function' => 'custom_amount_validation()',
+                'err_msg' => 'It is not good',
+            },
+        ],
+    };
 
 Below is another example with two different fields. In this matter we need to
 indicate the id of each field in validation attributes.
 
-	my $select_curr =
-	{
-		'id'      => 'select_text_curr',
-		'name'    => 'select_text_curr',
-		'type'    => 'select',
-		'options' => '<option value=""></option><option value="USD">USD</option><option value="EUR">EUR</option>',
-	};
-	my $input_amount =
-	{
-		'id'    => 'select_text_amount',
-		'name'  => 'select_text_amount',
-		'type'  => 'text',
-		'value' => ''
-	};
-	my $input_field_select_text =
-	{
-		'label' =>
-		{
-			'text'     => 'select_text',
-			'for'      => 'select_text',
-		},
-		'input' => [ $select_curr, $input_amount ],
-		'error' =>
-		{
-			'text'  => '',
-			'id'    => 'error_select_text',
-			'class' => 'errorfield',
-		},
-		'validation' =>
-		[
-			{
-				'type' => 'regexp',
-				'id'   => 'select_text_curr',
-				'regexp'  => '\w+',
-				'err_msg' => 'Must be select',
-			},
-			{
-				'type' => 'regexp',
-				'id'   => 'select_text_amount',
-				'regexp'  => '\d+',
-				'err_msg' => 'Must be digits',
-			},
-			{
-				'type' => 'min_amount',
-				'id'   => 'select_text_amount',
-				'amount'  => 50,
-				'err_msg' => 'Too little',
-			},
-		],
-	};
+    my $select_curr =
+    {
+        'id'      => 'select_text_curr',
+        'name'    => 'select_text_curr',
+        'type'    => 'select',
+        'options' => '<option value=""></option><option value="USD">USD</option><option value="EUR">EUR</option>',
+    };
+    my $input_amount =
+    {
+        'id'    => 'select_text_amount',
+        'name'  => 'select_text_amount',
+        'type'  => 'text',
+        'value' => ''
+    };
+    my $input_field_select_text =
+    {
+        'label' =>
+        {
+            'text'     => 'select_text',
+            'for'      => 'select_text',
+        },
+        'input' => [ $select_curr, $input_amount ],
+        'error' =>
+        {
+            'text'  => '',
+            'id'    => 'error_select_text',
+            'class' => 'errorfield',
+        },
+        'validation' =>
+        [
+            {
+                'type' => 'regexp',
+                'id'   => 'select_text_curr',
+                'regexp'  => '\w+',
+                'err_msg' => 'Must be select',
+            },
+            {
+                'type' => 'regexp',
+                'id'   => 'select_text_amount',
+                'regexp'  => '\d+',
+                'err_msg' => 'Must be digits',
+            },
+            {
+                'type' => 'min_amount',
+                'id'   => 'select_text_amount',
+                'amount'  => 50,
+                'err_msg' => 'Too little',
+            },
+        ],
+    };
 
-	my $general_error_field =
-	{
-		'error' =>
-		{
-			'text' => '',
-			'id' => 'error_general',
-			'class' => 'errorfield'
-		},
-	};
+    my $general_error_field =
+    {
+        'error' =>
+        {
+            'text' => '',
+            'id' => 'error_general',
+            'class' => 'errorfield'
+        },
+    };
 
 =head2 Adding input fields to form object
 
 Here is just add fields to the form object like before.
 
-	$form_obj->add_field($fieldset_index, $general_error_field);
-	$form_obj->add_field($fieldset_index, $input_field_amount);
-	$form_obj->add_field($fieldset_index, $input_field_select_text);
+    $form_obj->add_field($fieldset_index, $general_error_field);
+    $form_obj->add_field($fieldset_index, $input_field_amount);
+    $form_obj->add_field($fieldset_index, $input_field_select_text);
+
+=head2 Define Javascript code to be run, during onsubmit input validation error
+
+This javascript code will be run before onsubmit return false
+
+    $form_obj->onsubmit_js_error("\$('#residence').attr('disabled', true);");
+    $form_obj->onsubmit_js_error('onsubmit_error_disable_fields()');
 
 =head2 Custom javascript validation
 
@@ -571,53 +586,53 @@ function call in validation attributes.
 
 You can see a sample below:
 
-	my $custom_javascript = qq~
-		function custom_amount_validation()
-		{
-			var input_amount = document.getElementById('amount');
-			if (input_amount.value == 100)
-			{
-				return false;
-			}
-			return true;
-		}~;
+    my $custom_javascript = qq~
+        function custom_amount_validation()
+        {
+            var input_amount = document.getElementById('amount');
+            if (input_amount.value == 100)
+            {
+                return false;
+            }
+            return true;
+        }~;
 
 =head2 Custom server side validation
 
 The custom server side validation is quite similar to javascript. A reference to
 a subrotine should be pass to form object.
 
-	my $custom_server_side_sub_ref = sub {
-		if ($form_obj->get_field_value('name') eq 'felix')
-		{
-			$form_obj->set_field_error_message('name', 'felix is not allow to use this page');
-			$form_obj->set_field_error_message('error_general', 'There is an error !!!');
-		}
-	};
+    my $custom_server_side_sub_ref = sub {
+        if ($form_obj->get_field_value('name') eq 'felix')
+        {
+            $form_obj->set_field_error_message('name', 'felix is not allow to use this page');
+            $form_obj->set_field_error_message('error_general', 'There is an error !!!');
+        }
+    };
 
-	$form_obj->set_server_side_checks($custom_server_side_sub_ref);
+    $form_obj->set_server_side_checks($custom_server_side_sub_ref);
 
 =head2 Use form object in cgi files
 
 Somewhere in cgi files you can just print the result of build().
 
-	print $form_obj->build();
+    print $form_obj->build();
 
 In submit you need to fill form values, use set_input_fields(\%input) and pass
 %input HASH and then show what ever you want in result of validation. Just like
-Below:
+below:
 
-	if (not $form_obj->validate())
-	{
-		print '<h1>Test Form</h1>';
-		print $form_obj->build();
-	}
-	else
-	{
-		print '<h1>Success !!!</h1>';
-	}
+    if (not $form_obj->validate())
+    {
+        print '<h1>Test Form</h1>';
+        print $form_obj->build();
+    }
+    else
+    {
+        print '<h1>Success !!!</h1>';
+    }
 
-	code_exit();
+    code_exit();
 
 =head1 Attributes
 
@@ -627,7 +642,11 @@ The tag that error happened during validation
 
 =head2 custom_server_side_check_of
 
-The cusotm server side subroutine that will be run on server side.
+The custom server side subroutine that will be run on server side.
+
+=head2 onsubmit_js_error
+
+javasript code to run during onsubmit error by javasript validation
 
 =head1 METHODS
 
