@@ -46,7 +46,7 @@ has after_form => (
 has csrf => (is => 'ro', default => sub { 0 });
 has '_csrftoken' => (is => 'rw', reader => 'get_csrf', writer => 'set_csrf', lazy => 1, builder => '__build_csrftoken');
 sub __build_csrftoken {
-    return String::Random::random_regex('[a-zA-Z0-9](16)');
+    return String::Random::random_regex('[a-zA-Z0-9]{16}');
 }
 
 sub BUILDARGS {
@@ -145,11 +145,6 @@ sub build {
     if (defined $print_fieldset_index) {
         push @fieldsets, $self->{'fieldsets'}[$print_fieldset_index];
     } else {
-        if ($self->csrf) {
-            $self->_get_input_field('csrftoken') or
-                $self->add_field(0, { input => {name => 'csrftoken', type => 'hidden', value => $self->get_csrf()} });
-        }
-
         @fieldsets = @{$self->{'fieldsets'}};
     }
 
@@ -174,6 +169,10 @@ sub build {
         if ($fieldset_group ne 'no-group') {
             $fieldsets_html .= '</div>';
         }
+    }
+
+    if ($self->csrf) {
+        $fieldsets_html .= sprintf qq(<input type="hidden" name="csrftoken" value="%s"/>), $self->get_csrf();
     }
 
     my $html = $self->_build_element_and_attributes('form', $self->{data}, $fieldsets_html);
