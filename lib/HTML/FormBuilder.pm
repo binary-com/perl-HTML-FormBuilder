@@ -3,7 +3,7 @@ package HTML::FormBuilder;
 use strict;
 use warnings;
 use 5.008_005;
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use Carp;
 use HTML::FormBuilder::FieldSet;
@@ -709,6 +709,9 @@ the data in the $form will be changed when build the form. So you cannot get the
 
 Please refer to <HTML::FormBuilder::Validation>
 
+=head2 CROSS SITE REQUEST FORGERY PROTECTION
+
+read <HTML::FormBuilder::Validation> for more details
 
 =head1 AUTHOR
 

@@ -2,7 +2,7 @@ package HTML::FormBuilder::Validation;
 
 use strict;
 use warnings;
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use Carp;
 use Class::Std::Utils;
@@ -444,7 +444,7 @@ of the form.
         'action'   => "http://www.domain.com/contact.cgi",
         'class'    => 'formObject',
     };
-    my $form_obj = new HTML::FormBuilder::Validation($form_attributes);
+    my $form_obj = new HTML::FormBuilder::Validation(data => $form_attributes);
 
     my $fieldset_index = $form_obj->add_fieldset({});
 
@@ -686,6 +686,40 @@ validate form input and return true or false
     $form_validation_obj->is_error_found_in($input_element_id);
 
 check the erorr is founded in the input element or not
+
+=head1 CROSS SITE REQUEST FORGERY PROTECTION
+
+To enable CSRF protection, follow steps below:
+
+=over 4
+
+=item * create form HTML
+
+We'll auto append generated csrftoken into form HTML on B<build>
+
+    my $form = HTML::FormBuilder::Validation->new(data => $form_attributes, csrftoken => 1);
+    ...
+    my $html = $form->build;
+
+    # save csrf token in session or cookie
+    session(__csrftoken => $form->csrftoken);
+
+=item * on form submit
+
+We'll validate the form params with session stored csrftoken
+
+    my $csrftoken = session('__csrftoken');
+    my $form = HTML::FormBuilder::Validation->new(data => $form_attributes, csrftoken => $csrftoken);
+    $form->validate_csrf() or die 'CSRF failed.';
+    # or call
+    if ( $form->validate() ) { # it calls validate_csrf inside
+        # Yap! it's ok
+    } else {
+        # NOTE we do not have error for csrf on form HTML build
+        # show form again with $form->build
+    }
+
+=back
 
 =head1 AUTHOR
 
