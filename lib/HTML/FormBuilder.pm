@@ -56,7 +56,7 @@ sub BUILDARGS {
         $args{classes} = {%{$HTML::FormBuilder::Base::CLASSES}};
     }
 
-    if ( ($args{csrftoken} // '') eq '1' ) {
+    if (($args{csrftoken} // '') eq '1') {
         $args{csrftoken} = String::Random::random_regex('[a-zA-Z0-9]{16}');
     }
 

@@ -104,7 +104,7 @@ sub build {
 # See Also   : n / a
 ########################################################################
 sub validate {
-    my $self      = shift;
+    my $self = shift;
 
     if ($self->csrftoken) {
         $self->validate_csrf() or return 0;
