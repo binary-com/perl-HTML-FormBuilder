@@ -52,7 +52,7 @@ sub set_input_fields {
 
     for my $element_id (keys %{$input}) {
         if ($element_id eq 'csrftoken') {
-            $self->{__csrftoken} = $input->{$element_id};
+            $self->{__input_csrftoken} = $input->{$element_id};
         } else {
             $self->set_field_value($element_id, $input->{$element_id});
         }
@@ -106,7 +106,7 @@ sub build {
 sub validate {
     my $self      = shift;
 
-    if ($self->csrf) {
+    if ($self->csrftoken) {
         $self->validate_csrf() or return 0;
     }
 
@@ -147,14 +147,14 @@ sub validate {
 }
 
 sub validate_csrf {
-    my ($self, $csrftoken) = @_;
+    my ($self) = @_;
 
-    $self->set_csrf($csrftoken) if $csrftoken;
-    if ( ($self->{__csrftoken} // '') ne $self->get_csrf()) {
-        $self->set_field_error_message('csrftoken', 'Incorrect csrftoken');
-        return 0;
+    if (($self->{__input_csrftoken} // '') eq $self->csrftoken) {
+        return 1;
     }
-    return 1;
+
+    $self->_set_has_error();
+    return 0;
 }
 
 sub is_error_found_in {

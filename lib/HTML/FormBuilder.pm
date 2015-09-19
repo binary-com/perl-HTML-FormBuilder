@@ -43,11 +43,7 @@ has after_form => (
         return !ref($_[0]);
     });
 
-has csrf => (is => 'ro', default => sub { 0 });
-has '_csrftoken' => (is => 'rw', reader => 'get_csrf', writer => 'set_csrf', lazy => 1, builder => '__build_csrftoken');
-sub __build_csrftoken {
-    return String::Random::random_regex('[a-zA-Z0-9]{16}');
-}
+has csrftoken => (is => 'ro');
 
 sub BUILDARGS {
     my ($class, @args) = @_;
@@ -58,6 +54,10 @@ sub BUILDARGS {
         $args{classes} = {%{$HTML::FormBuilder::Base::CLASSES}, %{$args{classes}}};
     } else {
         $args{classes} = {%{$HTML::FormBuilder::Base::CLASSES}};
+    }
+
+    if ( ($args{csrftoken} // '') eq '1' ) {
+        $args{csrftoken} = String::Random::random_regex('[a-zA-Z0-9]{16}');
     }
 
     $args{data}{method} ||= 'get';
@@ -171,8 +171,8 @@ sub build {
         }
     }
 
-    if ($self->csrf) {
-        $fieldsets_html .= sprintf qq(<input type="hidden" name="csrftoken" value="%s"/>), $self->get_csrf();
+    if ($self->csrftoken) {
+        $fieldsets_html .= sprintf qq(<input type="hidden" name="csrftoken" value="%s"/>), $self->csrftoken;
     }
 
     my $html = $self->_build_element_and_attributes('form', $self->{data}, $fieldsets_html);
