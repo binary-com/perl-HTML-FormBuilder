@@ -1,8 +1,7 @@
 #!perl
 
-if ( !require Test::Perl::Critic ) {
-    Test::More::plan(
-        skip_all => "Test::Perl::Critic required for testing PBP compliance" );
+if (!require Test::Perl::Critic) {
+    Test::More::plan(skip_all => "Test::Perl::Critic required for testing PBP compliance");
 }
 
 Test::Perl::Critic->import( -profile => 't/rc/.perlcriticrc' );
