@@ -101,8 +101,12 @@ sub build {
 ########################################################################
 sub validate {
     my $self      = shift;
-    my @fieldsets = @{$self->{'fieldsets'}};
 
+    if ($self->csrf) {
+        $self->validate_csrf() or return 0;
+    }
+
+    my @fieldsets = @{$self->{'fieldsets'}};
     foreach my $fieldset (@fieldsets) {
         INPUT_FIELD:
         foreach my $input_field (@{$fieldset->{'fields'}}) {
@@ -136,6 +140,17 @@ sub validate {
     }
 
     return ($self->get_has_error) ? 0 : 1;
+}
+
+sub validate_csrf {
+    my ($self, $csrftoken) = @_;
+
+    $self->set_csrf($csrftoken) if $csrftoken;
+    if ($self->get_field_value('csrftoken') ne $self->get_csrf()) {
+        $self->set_field_error_message('csrftoken', 'Incorrect csrftoken');
+        return 0;
+    }
+    return 1;
 }
 
 sub is_error_found_in {

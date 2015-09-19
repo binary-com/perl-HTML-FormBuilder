@@ -7,6 +7,7 @@ our $VERSION = '0.06';
 
 use Carp;
 use HTML::FormBuilder::FieldSet;
+use String::Random ();
 use Moo;
 use namespace::clean;
 extends qw(HTML::FormBuilder::Base);
@@ -41,6 +42,12 @@ has after_form => (
     isa => sub {
         return !ref($_[0]);
     });
+
+has csrf => (is => 'ro', default => sub { 0 });
+has '_csrftoken' => (is => 'rw', reader => 'get_csrf', writer => 'set_csrf', lazy => 1, builder => '__build_csrftoken');
+sub __build_csrftoken {
+    return String::Random::random_regex('[a-zA-Z0-9](16)');
+}
 
 sub BUILDARGS {
     my ($class, @args) = @_;
@@ -138,6 +145,11 @@ sub build {
     if (defined $print_fieldset_index) {
         push @fieldsets, $self->{'fieldsets'}[$print_fieldset_index];
     } else {
+        if ($self->csrf) {
+            $self->_get_input_field('csrftoken') or
+                $self->add_field(0, { input => {name => 'csrftoken', type => 'hidden', value => $self->get_csrf()} });
+        }
+
         @fieldsets = @{$self->{'fieldsets'}};
     }
 
@@ -163,6 +175,7 @@ sub build {
             $fieldsets_html .= '</div>';
         }
     }
+
     my $html = $self->_build_element_and_attributes('form', $self->{data}, $fieldsets_html);
 
     if ($self->after_form) {
