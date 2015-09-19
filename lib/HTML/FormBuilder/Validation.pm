@@ -689,13 +689,13 @@ check the erorr is founded in the input element or not
 
 =head1 CROSS SITE REQUEST FORGERY PROTECTION
 
-To enable CSRF protection, follow steps below:
+for plain CGI or other framework, read Dancer example below.
+
+=head2 CSRF and Dancer
 
 =over 4
 
-=item * create form HTML
-
-We'll auto append generated csrftoken into form HTML on B<build>
+=item * create form HTML and store csrftoken in session
 
     my $form = HTML::FormBuilder::Validation->new(data => $form_attributes, csrftoken => 1);
     ...
@@ -704,9 +704,7 @@ We'll auto append generated csrftoken into form HTML on B<build>
     # save csrf token in session or cookie
     session(__csrftoken => $form->csrftoken);
 
-=item * on form submit
-
-We'll validate the form params with session stored csrftoken
+=item * validate csrftoken on form submit
 
     my $csrftoken = session('__csrftoken');
     my $form = HTML::FormBuilder::Validation->new(data => $form_attributes, csrftoken => $csrftoken);
@@ -720,6 +718,14 @@ We'll validate the form params with session stored csrftoken
     }
 
 =back
+
+=head2 CSRF and Mojolicious
+
+if you're using L<Mojolicious> and have DefaultHelpers plugin enabled, it's simple to add csrftoken in Validation->new as below:
+
+    my $form = HTML::FormBuilder::Validation->new(data => $form_attributes, csrftoken => $c->csrftoken);
+
+Mojolicious $c->csrftoken will handle the session part for you.
 
 =head1 AUTHOR
 
