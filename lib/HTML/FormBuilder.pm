@@ -3,10 +3,11 @@ package HTML::FormBuilder;
 use strict;
 use warnings;
 use 5.008_005;
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use Carp;
 use HTML::FormBuilder::FieldSet;
+use String::Random ();
 use Moo;
 use namespace::clean;
 extends qw(HTML::FormBuilder::Base);
@@ -42,6 +43,8 @@ has after_form => (
         return !ref($_[0]);
     });
 
+has csrftoken => (is => 'ro');
+
 sub BUILDARGS {
     my ($class, @args) = @_;
     my %args = (@args % 2) ? %{$args[0]} : @args;
@@ -51,6 +54,10 @@ sub BUILDARGS {
         $args{classes} = {%{$HTML::FormBuilder::Base::CLASSES}, %{$args{classes}}};
     } else {
         $args{classes} = {%{$HTML::FormBuilder::Base::CLASSES}};
+    }
+
+    if (($args{csrftoken} // '') eq '1') {
+        $args{csrftoken} = String::Random::random_regex('[a-zA-Z0-9]{16}');
     }
 
     $args{data}{method} ||= 'get';
@@ -163,6 +170,11 @@ sub build {
             $fieldsets_html .= '</div>';
         }
     }
+
+    if ($self->csrftoken) {
+        $fieldsets_html .= sprintf qq(<input type="hidden" name="csrftoken" value="%s"/>), $self->csrftoken;
+    }
+
     my $html = $self->_build_element_and_attributes('form', $self->{data}, $fieldsets_html);
 
     if ($self->after_form) {
@@ -697,6 +709,9 @@ the data in the $form will be changed when build the form. So you cannot get the
 
 Please refer to <HTML::FormBuilder::Validation>
 
+=head2 CROSS SITE REQUEST FORGERY PROTECTION
+
+read <HTML::FormBuilder::Validation> for more details
 
 =head1 AUTHOR
 

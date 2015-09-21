@@ -28,7 +28,8 @@ WriteMakefile(
         "Moo" => 0,
         "Scalar::Util" => 0,
         "URI::Escape" => 0,
-        "namespace::clean" => 0
+        "namespace::clean" => 0,
+        "String::Random" => 0
     },
     dist    => { COMPRESS => 'gzip -9f', SUFFIX => 'gz' },
     clean   => { FILES => 'HTML-FormBuilder-*' },

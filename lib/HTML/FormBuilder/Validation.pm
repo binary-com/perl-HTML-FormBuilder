@@ -2,7 +2,7 @@ package HTML::FormBuilder::Validation;
 
 use strict;
 use warnings;
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use Carp;
 use Class::Std::Utils;
@@ -51,7 +51,11 @@ sub set_input_fields {
     my $input = shift;
 
     for my $element_id (keys %{$input}) {
-        $self->set_field_value($element_id, $input->{$element_id});
+        if ($element_id eq 'csrftoken') {
+            $self->{__input_csrftoken} = $input->{$element_id};
+        } else {
+            $self->set_field_value($element_id, $input->{$element_id});
+        }
     }
     return;
 }
@@ -100,9 +104,13 @@ sub build {
 # See Also   : n / a
 ########################################################################
 sub validate {
-    my $self      = shift;
-    my @fieldsets = @{$self->{'fieldsets'}};
+    my $self = shift;
 
+    if ($self->csrftoken) {
+        $self->validate_csrf() or return 0;
+    }
+
+    my @fieldsets = @{$self->{'fieldsets'}};
     foreach my $fieldset (@fieldsets) {
         INPUT_FIELD:
         foreach my $input_field (@{$fieldset->{'fields'}}) {
@@ -136,6 +144,17 @@ sub validate {
     }
 
     return ($self->get_has_error) ? 0 : 1;
+}
+
+sub validate_csrf {
+    my ($self) = @_;
+
+    if (($self->{__input_csrftoken} // '') eq $self->csrftoken) {
+        return 1;
+    }
+
+    $self->_set_has_error();
+    return 0;
 }
 
 sub is_error_found_in {
@@ -425,7 +444,7 @@ of the form.
         'action'   => "http://www.domain.com/contact.cgi",
         'class'    => 'formObject',
     };
-    my $form_obj = new HTML::FormBuilder::Validation($form_attributes);
+    my $form_obj = new HTML::FormBuilder::Validation(data => $form_attributes);
 
     my $fieldset_index = $form_obj->add_fieldset({});
 
@@ -667,6 +686,46 @@ validate form input and return true or false
     $form_validation_obj->is_error_found_in($input_element_id);
 
 check the erorr is founded in the input element or not
+
+=head1 CROSS SITE REQUEST FORGERY PROTECTION
+
+for plain CGI or other framework, read Dancer example below.
+
+=head2 CSRF and Dancer
+
+=over 4
+
+=item * create form HTML and store csrftoken in session
+
+    my $form = HTML::FormBuilder::Validation->new(data => $form_attributes, csrftoken => 1);
+    ...
+    my $html = $form->build;
+
+    # save csrf token in session or cookie
+    session(__csrftoken => $form->csrftoken);
+
+=item * validate csrftoken on form submit
+
+    my $csrftoken = session('__csrftoken');
+    my $form = HTML::FormBuilder::Validation->new(data => $form_attributes, csrftoken => $csrftoken);
+    $form->validate_csrf() or die 'CSRF failed.';
+    # or call
+    if ( $form->validate() ) { # it calls validate_csrf inside
+        # Yap! it's ok
+    } else {
+        # NOTE we do not have error for csrf on form HTML build
+        # show form again with $form->build
+    }
+
+=back
+
+=head2 CSRF and Mojolicious
+
+if you're using L<Mojolicious> and have DefaultHelpers plugin enabled, it's simple to add csrftoken in Validation->new as below:
+
+    my $form = HTML::FormBuilder::Validation->new(data => $form_attributes, csrftoken => $c->csrf_token);
+
+Mojolicious $c->csrf_token will handle the session part for you.
 
 =head1 AUTHOR
 

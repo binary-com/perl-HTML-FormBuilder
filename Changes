@@ -1,5 +1,8 @@
 Revision history for HTML-FormBuilder
 
+0.07  2015-09-20
+        - csrf supports
+
 0.06  2015-08-03 12:05:30 CST
         - HTML::FormBuilder::Validation add onsubmit_js_error
         - change class mapping to global var $HTML::FormBuilder::Base::CLASSES
