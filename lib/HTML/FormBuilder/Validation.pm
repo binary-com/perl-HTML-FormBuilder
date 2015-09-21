@@ -723,9 +723,9 @@ for plain CGI or other framework, read Dancer example below.
 
 if you're using L<Mojolicious> and have DefaultHelpers plugin enabled, it's simple to add csrftoken in Validation->new as below:
 
-    my $form = HTML::FormBuilder::Validation->new(data => $form_attributes, csrftoken => $c->csrftoken);
+    my $form = HTML::FormBuilder::Validation->new(data => $form_attributes, csrftoken => $c->csrf_token);
 
-Mojolicious $c->csrftoken will handle the session part for you.
+Mojolicious $c->csrf_token will handle the session part for you.
 
 =head1 AUTHOR
 
