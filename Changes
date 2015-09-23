@@ -1,5 +1,8 @@
 Revision history for HTML-FormBuilder
 
+0.08  2015-09-23
+        - csrf in build_confirmation_button_with_all_inputs_hidden
+
 0.07  2015-09-20
         - csrf supports
 

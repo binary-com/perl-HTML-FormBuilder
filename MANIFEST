@@ -9,9 +9,10 @@ lib/HTML/FormBuilder/Select.pm
 lib/HTML/FormBuilder/Validation.pm
 LICENSE
 Makefile.PL
-MANIFEST
+MANIFEST			This list of files
 README.md
 t/basic.t
+t/csrf.t
 t/formbuilder.t
 t/formbuilder/base.t
 t/formbuilder/field.t

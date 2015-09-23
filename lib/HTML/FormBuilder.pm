@@ -3,7 +3,7 @@ package HTML::FormBuilder;
 use strict;
 use warnings;
 use 5.008_005;
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 use Carp;
 use HTML::FormBuilder::FieldSet;
@@ -215,6 +215,10 @@ sub build_confirmation_button_with_all_inputs_hidden {
         my $n = $input->{'name'} || '';
         my $val = $self->get_field_value($input->{'id'}) || '';
         $html .= qq{<input type="hidden" name="$n" value="$val"/>};
+    }
+
+    if ($self->csrftoken) {
+        $html .= sprintf qq(<input type="hidden" name="csrftoken" value="%s"/>), $self->csrftoken;
     }
 
     $html .= '<input type="hidden" name="process" value="1"/>';
