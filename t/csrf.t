@@ -23,6 +23,10 @@ $fieldset->add_field({
 my $html = $form->build;
 ok(index($html, '<input type="hidden" name="csrftoken" value="') > -1);
 
+## test build_confirmation_button_with_all_inputs_hidden as well
+$html = $form->build_confirmation_button_with_all_inputs_hidden;
+ok(index($html, '<input type="hidden" name="csrftoken" value="') > -1);
+
 ## try validate
 $form = HTML::FormBuilder::Validation->new(
     data      => {id => 'test'},
