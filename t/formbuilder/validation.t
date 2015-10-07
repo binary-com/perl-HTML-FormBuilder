@@ -252,6 +252,25 @@ sub create_form_object {
             },
         ],
     };
+    my $checkbox_tnc = {
+        'label' => {
+            'text'     => 'I have read & agrre to the terms & condition.',
+            'for'      => 'tnc',
+        },
+        'input' => {
+            'type'  => 'checkbox',
+            'id'    => 'tnc',
+            'name'  => 'tnc'
+        },
+        'error' => {
+            'id'    => 'error_tnc',
+            'class' => 'errorfield',
+        },
+        'validation' => [{
+            'type'    => 'checkbox_checked',
+            'err_msg' => 'In order to proceed, please agree to the terms & condition',
+        }],
+    };
 
     $fieldset->add_field({
             'error' => {
@@ -273,6 +292,7 @@ sub create_form_object {
     $fieldset->add_field($input_field_name);
     $fieldset->add_field($input_field_amount);
     $fieldset->add_field($input_field_select_text);
+    $fieldset->add_field($checkbox_tnc);
 
     $form_obj->onsubmit_js_error("\$('#residence').attr('disabled', true)");
 
