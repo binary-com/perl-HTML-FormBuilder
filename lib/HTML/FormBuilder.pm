@@ -3,7 +3,7 @@ package HTML::FormBuilder;
 use strict;
 use warnings;
 use 5.008_005;
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 use Carp;
 use HTML::FormBuilder::FieldSet;
@@ -257,13 +257,14 @@ sub set_field_value {
     map {
         if ($_->{'id'} and $_->{'id'} eq $field_id) {
             if (eval { $_->can('value') }) {
+                # for select box
                 $_->value($field_value);
             } elsif ($_->{'type'} =~ /(?:text|textarea|password|hidden|file)/i) {
                 $_->{'value'} = $field_value;
-            } elsif ($_->{'type'} eq 'checkbox'
-                and $field_value eq $_->{'value'})
-            {
-                $_->{'checked'} = 'checked';
+            } elsif ($_->{'type'} eq 'checkbox') {
+                # if value not set during $fieldset->add_field(), default to browser default value for checkbox: 'on'
+                my $checkbox_value = $_->{'value'} // 'on';
+                $_->{'checked'} = 'checked' if ($field_value eq $checkbox_value);
             }
         }
     } @{$inputs};
@@ -295,7 +296,8 @@ sub get_field_value {
             if (   $input->{type} =~ /(?:text|textarea|password|hidden|file)/i
                 || $input->{type} eq 'checkbox' && $input->{checked} && $input->{checked} eq 'checked')
             {
-                return $input->{value};
+                # if value not set during $fieldset->add_field(), default to browser default value for checkbox: 'on'
+                return ($input->{value} // 'on');
             }
         }
     }

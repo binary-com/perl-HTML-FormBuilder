@@ -2,7 +2,7 @@ package HTML::FormBuilder::Validation;
 
 use strict;
 use warnings;
-our $VERSION = '0.07';
+our $VERSION = '0.09';
 
 use Carp;
 use Class::Std::Utils;
@@ -260,7 +260,7 @@ sub _build_javascript_validation {
 
         foreach my $validation (@validations) {
             next
-                unless ($validation->{'type'} =~ /(?:regexp|min_amount|max_amount|custom)/);
+                unless ($validation->{'type'} =~ /(?:regexp|min_amount|max_amount|checkbox_checked|custom)/);
             $javascript .= $self->_build_single_javascript_validation($validation, $input_element_id, $error_element_id);
         }
 
@@ -322,6 +322,11 @@ sub _build_single_javascript_validation {
         $test = qq[input_element_$input_element_id.value $op $validation->{amount}];
     }
 
+    # checkbox checked checking
+    elsif ($validation->{'type'} eq 'checkbox_checked') {
+        $test = qq[input_element_$input_element_id.checked === false];
+    }
+
     # Custom checking
     elsif ($validation->{'type'} eq 'custom') {
         $test = qq[${error_if_true}$validation->{function}];
@@ -372,7 +377,7 @@ sub _validate_field {
 
     foreach my $validation (@validations) {
         if (    $validation->{'type'}
-            and $validation->{'type'} =~ /(?:regexp|min_amount|max_amount)/)
+            and $validation->{'type'} =~ /(?:regexp|min_amount|max_amount|checkbox_checked)/)
         {
 
             # The input_element must be an array. so if validation no 'id', then we use the first element's id
@@ -402,6 +407,11 @@ sub _validate_field {
             elsif ($validation->{'type'} eq 'min_amount' && $field_value < $validation->{'amount'}
                 || $validation->{'type'} eq 'max_amount' && $field_value > $validation->{'amount'})
             {
+                $self->set_field_error_message($input_element_id, $validation->{'err_msg'});
+                return 0;
+            }
+
+            elsif ($validation->{'type'} eq 'checkbox_checked' && !$field_value) {
                 $self->set_field_error_message($input_element_id, $validation->{'err_msg'});
                 return 0;
             }
@@ -446,7 +456,7 @@ of the form.
     };
     my $form_obj = new HTML::FormBuilder::Validation(data => $form_attributes);
 
-    my $fieldset_index = $form_obj->add_fieldset({});
+    my $fieldset = $form_obj->add_fieldset({});
 
 
 =head2 Create the input fields with validation
@@ -463,7 +473,9 @@ in amount
 
 3. max_amount: Just like min_amount
 
-4. custom: Just the javascript function call with parameters should be given to.
+4. checkbox_checked: Ensure checkbox is checked by user
+
+5. custom: Just the javascript function call with parameters should be given to.
 It only specifies client side validation.
 
     my $input_field_amount =
@@ -514,6 +526,34 @@ It only specifies client side validation.
                 'type' => 'custom',
                 'function' => 'custom_amount_validation()',
                 'err_msg' => 'It is not good',
+            },
+        ],
+    };
+
+    my $terms_and_condition_checkbox =
+    {
+        'label' =>
+        {
+            'text'     => 'I have read & agree to the terms & condition of the site',
+            'for'      => 'tnc',
+        },
+        'input' =>
+        {
+            'type'      => 'checkbox',
+            'id'        => 'tnc',
+            'name'      => 'tnc',
+            'value'     => '1',             # optional
+        },
+        'error' =>
+        {
+            'id'    => 'error_tnc',
+            'class' => 'errorfield',
+        },
+        'validation' =>
+        [
+            {
+                'type'    => 'checkbox_checked',
+                'err_msg' => 'In order to proceed, you need to agree to the terms & condition',
             },
         ],
     };
@@ -730,6 +770,11 @@ Mojolicious $c->csrf_token will handle the session part for you.
 =head1 AUTHOR
 
 Chylli L<chylli@binary.com>
+
+=head1 CONTRIBUTOR
+
+Fayland Lam L<fayland@binary.com>
+Tee Shuwn Yuan L<shuwnyuan@binary.com>
 
 =head1 COPYRIGHT AND LICENSE
 
