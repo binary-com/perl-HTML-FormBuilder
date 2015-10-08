@@ -296,7 +296,8 @@ sub get_field_value {
             if (   $input->{type} =~ /(?:text|textarea|password|hidden|file)/i
                 || $input->{type} eq 'checkbox' && $input->{checked} && $input->{checked} eq 'checked')
             {
-                return $input->{value};
+                # if value not set during $fieldset->add_field(), default to browser default value for checkbox: 'on'
+                return ($input->{value} // 'on');
             }
         }
     }
