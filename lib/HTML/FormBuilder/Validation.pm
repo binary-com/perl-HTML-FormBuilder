@@ -320,8 +320,11 @@ sub _build_single_javascript_validation {
     elsif ($validation->{'type'} =~ /^(min|max)_amount$/) {
         my $op = $1 eq 'min' ? '<' : '>';
         $test = qq[input_element_$input_element_id.value $op $validation->{amount}];
-    } elsif ($validation->{'type'} eq 'checkbox_checked') {
-        $test = qq[input_element_$input_element_id.value === false];
+    }
+
+    # checkbox checked checking
+    elsif ($validation->{'type'} eq 'checkbox_checked') {
+        $test = qq[input_element_$input_element_id.checked === false];
     }
 
     # Custom checking

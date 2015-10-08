@@ -97,6 +97,7 @@ sub set_valid_input {
     ${$arg_ref}->set_field_value('amount',             '123');
     ${$arg_ref}->set_field_value('select_text_curr',   'USD');
     ${$arg_ref}->set_field_value('select_text_amount', '50');
+    ${$arg_ref}->set_field_value('tnc', 1);
 }
 
 sub check_existance_on_builded_html {

@@ -257,6 +257,7 @@ sub set_field_value {
     map {
         if ($_->{'id'} and $_->{'id'} eq $field_id) {
             if (eval { $_->can('value') }) {
+                # for select box
                 $_->value($field_value);
             } elsif ($_->{'type'} =~ /(?:text|textarea|password|hidden|file)/i) {
                 $_->{'value'} = $field_value;
