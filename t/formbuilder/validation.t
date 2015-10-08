@@ -21,6 +21,7 @@ is($form_obj->get_has_error(), 0, '[get_has_error=0]');
 is($form_obj->get_field_value('amount'),           123,   'amount=123');
 is($form_obj->get_field_value('select_text_curr'), 'USD', 'select_text_curr=USD');
 is($form_obj->get_field_value('w'),                'CR',  'w=CR');                   # test hidden value
+is($form_obj->get_field_value('tnc'),              '1',   'tnc=1');                  # test checkbox value
 
 set_valid_input(\$form_obj);
 $form_obj->set_field_value('amount', 5);
