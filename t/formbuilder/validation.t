@@ -261,7 +261,8 @@ sub create_form_object {
         'input' => {
             'type'  => 'checkbox',
             'id'    => 'tnc',
-            'name'  => 'tnc'
+            'name'  => 'tnc',
+            'value' => 1,
         },
         'error' => {
             'id'    => 'error_tnc',
