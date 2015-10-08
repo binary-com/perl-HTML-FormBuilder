@@ -542,6 +542,7 @@ It only specifies client side validation.
             'type'      => 'checkbox',
             'id'        => 'tnc',
             'name'      => 'tnc',
+            'value'     => '1',             # optional
         },
         'error' =>
         {

@@ -261,10 +261,10 @@ sub set_field_value {
                 $_->value($field_value);
             } elsif ($_->{'type'} =~ /(?:text|textarea|password|hidden|file)/i) {
                 $_->{'value'} = $field_value;
-            } elsif ($_->{'type'} eq 'checkbox'
-                and $field_value eq $_->{'value'})
-            {
-                $_->{'checked'} = 'checked';
+            } elsif ($_->{'type'} eq 'checkbox') {
+                # if value not set during $fieldset->add_field(), default to browser default value for checkbox: 'on'
+                my $checkbox_value = $_->{'value'} // 'on';
+                $_->{'checked'} = 'checked' if ($field_value eq $checkbox_value);
             }
         }
     } @{$inputs};
