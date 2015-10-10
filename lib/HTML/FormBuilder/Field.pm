@@ -50,6 +50,7 @@ sub build {
     my $div_span     = "div";
     my $label_column = $classes->{label_column};
     my $input_column = $classes->{input_column};
+    $input_column = $data->{override_input_class} if ($data->{override_input_class});
 
     if ($stacked == 0) {
         $div_span     = "span";
@@ -154,6 +155,12 @@ sub _build_input {
     my $heading  = delete $input_field->{'heading'};
     my $trailing = delete $input_field->{'trailing'};
 
+    # wrap <input>, heading & trailing <span> in <div>
+    my ($wrap_input, $wrap_heading, $wrap_trailing);
+    if ($input_field->{wrap_in_div_class}) {
+        ($wrap_input, $wrap_heading, $wrap_trailing) = @{$input_field->{wrap_in_div_class}}{'input', 'heading', 'trailing'};
+    }
+
     #create the filed input
     if (eval { $input_field->can('widget_html') }) {
         $html = $input_field->widget_html;
@@ -178,19 +185,31 @@ sub _build_input {
             $html = qq{<span class="$input_field->{class}">$html</span>};
         }
     }
+    if ($wrap_div) {
+        $html = qq{<div class="$wrap_div">$html</div>};
+    }
 
     if ($heading) {
+        my $heading_html = qq{<span id="inputheading">$heading</span>};
+        if ($wrap_heading) {
+            $heading_html = qq{<div class="$wrap_heading">$heading_html</div>};
+        }
+
         if ($input_field->{'type'}
             && ($input_field->{'type'} =~ /radio|checkbox/i))
         {
-            $html .= qq{<span id="inputheading">$heading</span><br />};
+            $html .= qq{$heading_html<br />};
         } else {
-            $html = qq{<span id="inputheading">$heading</span>$html};
+            $html = $heading_html.$html;
         }
     }
 
     if ($trailing) {
-        $html .= qq{<span class="$self->{classes}{inputtrailing}">$trailing</span>};
+        my $trailing_html = qq{<span class="$self->{classes}{inputtrailing}">$trailing</span>};
+        if ($wrap_trailing) {
+            $trailing_html = qq{<div class="$wrap_trailing">$trailing_html</div>};
+        }
+        $html .= $trailing_html;
     }
 
     return $html;
@@ -230,6 +249,12 @@ HTML::FormBuilder::Field - Field container used by HTML::FormBuilder
 =head1 AUTHOR
 
 Chylli L<chylli@binary.com>
+
+=head1 CONTRIBUTOR
+
+Fayland Lam L<fayland@binary.com>
+
+Tee Shuwn Yuan L<shuwnyuan@binary.com>
 
 =head1 COPYRIGHT AND LICENSE
 
