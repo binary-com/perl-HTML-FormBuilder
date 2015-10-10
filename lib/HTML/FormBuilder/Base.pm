@@ -71,7 +71,7 @@ sub _build_element_and_attributes {
             or ref($attributes->{$key}) eq 'ARRAY');
 
         # skip attributes that are not intended for HTML
-        next if ($key =~ /^(?:option|text|hide_required_text|localize)/i);
+        next if ($key =~ /^(?:option|text|hide_required_text|localize|wrap_in_div_class)/i);
         if ($attributes->{$key}) {
             $html .= ' ' . $key . '="' . $attributes->{$key} . '"';
         }
