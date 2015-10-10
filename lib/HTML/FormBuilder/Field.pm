@@ -3,7 +3,7 @@ package HTML::FormBuilder::Field;
 use strict;
 use warnings;
 use 5.008_005;
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 use Carp;
 use Scalar::Util qw(weaken blessed);
