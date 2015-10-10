@@ -200,7 +200,7 @@ sub _build_input {
         {
             $html .= qq{$heading_html<br />};
         } else {
-            $html = $heading_html.$html;
+            $html = $heading_html . $html;
         }
     }
 
