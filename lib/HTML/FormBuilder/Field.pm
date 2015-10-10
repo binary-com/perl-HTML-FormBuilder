@@ -185,8 +185,8 @@ sub _build_input {
             $html = qq{<span class="$input_field->{class}">$html</span>};
         }
     }
-    if ($wrap_div) {
-        $html = qq{<div class="$wrap_div">$html</div>};
+    if ($wrap_input) {
+        $html = qq{<div class="$wrap_input">$html</div>};
     }
 
     if ($heading) {
