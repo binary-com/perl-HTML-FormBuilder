@@ -244,6 +244,31 @@ HTML::FormBuilder::Field - Field container used by HTML::FormBuilder
 
     $fieldset->add_field({input => {type => 'text', value => 'Join'}});
 
+    # checkbox & explanation text
+    $fieldset->add_field({
+        input => {
+            id                  => 'tnc',
+            name                => 'tnc',
+            type                => 'checkbox',
+            trailing            => 'I have read & agree to all terms & condition.',
+            # wrap <input> & trailing <span> respectively in <div>, with class:
+            wrap_in_div_class   => {
+                input    => 'grd-grid-1',
+                trailing => 'grd-grid-11'
+            },
+        },
+        error => {
+            id    => 'error_tnc',
+            class => 'errorfield',
+         },
+        validation => [{
+            type    => 'checkbox_checked',
+            err_msg => localize('Please agree in order to proceed.'),
+        }],
+        # override div container class for input
+        override_input_class => 'grd-grid-12',
+    });
+
     $form->add_field($fieldset_index, {input => {type => 'text', value => 'Join'}});
 
 =head1 AUTHOR
