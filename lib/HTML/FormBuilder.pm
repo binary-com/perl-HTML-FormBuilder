@@ -3,7 +3,7 @@ package HTML::FormBuilder;
 use strict;
 use warnings;
 use 5.008_005;
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 use Carp;
 use HTML::FormBuilder::FieldSet;
@@ -722,6 +722,12 @@ read <HTML::FormBuilder::Validation> for more details
 =head1 AUTHOR
 
 Chylli L<chylli@binary.com>
+
+=head1 CONTRIBUTOR
+
+Fayland Lam L<fayland@binary.com>
+
+Tee Shuwn Yuan L<shuwnyuan@binary.com>
 
 =head1 COPYRIGHT AND LICENSE
 

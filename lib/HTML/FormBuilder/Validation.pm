@@ -2,7 +2,7 @@ package HTML::FormBuilder::Validation;
 
 use strict;
 use warnings;
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 use Carp;
 use Class::Std::Utils;
@@ -774,6 +774,7 @@ Chylli L<chylli@binary.com>
 =head1 CONTRIBUTOR
 
 Fayland Lam L<fayland@binary.com>
+
 Tee Shuwn Yuan L<shuwnyuan@binary.com>
 
 =head1 COPYRIGHT AND LICENSE

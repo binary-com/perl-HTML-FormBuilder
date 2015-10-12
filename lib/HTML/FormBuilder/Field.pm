@@ -3,7 +3,7 @@ package HTML::FormBuilder::Field;
 use strict;
 use warnings;
 use 5.008_005;
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 use Carp;
 use Scalar::Util qw(weaken blessed);
@@ -50,6 +50,7 @@ sub build {
     my $div_span     = "div";
     my $label_column = $classes->{label_column};
     my $input_column = $classes->{input_column};
+    $input_column = $data->{override_input_class} if ($data->{override_input_class});
 
     if ($stacked == 0) {
         $div_span     = "span";
@@ -103,8 +104,12 @@ sub build {
     }
 
     if (defined $data->{'comment'}) {
-        $data->{'comment'}{'class'} ||= '';
-        $input_fields_html .= '<br>' . $self->_build_element_and_attributes('p', $data->{'comment'}, $data->{'comment'}->{'text'});
+        $data->{'comment'}->{'class'} ||= '';
+
+        unless ($data->{comment}->{no_new_line}) {
+            $input_fields_html .= '<br>';
+        }
+        $input_fields_html .= $self->_build_element_and_attributes('p', $data->{'comment'}, $data->{'comment'}->{'text'});
     }
 
     if (defined $data->{'error'}) {
@@ -154,6 +159,12 @@ sub _build_input {
     my $heading  = delete $input_field->{'heading'};
     my $trailing = delete $input_field->{'trailing'};
 
+    # wrap <input>, heading & trailing <span> in <div>
+    my ($wrap_input, $wrap_heading, $wrap_trailing);
+    if ($input_field->{wrap_in_div_class}) {
+        ($wrap_input, $wrap_heading, $wrap_trailing) = @{$input_field->{wrap_in_div_class}}{'input', 'heading', 'trailing'};
+    }
+
     #create the filed input
     if (eval { $input_field->can('widget_html') }) {
         $html = $input_field->widget_html;
@@ -178,19 +189,31 @@ sub _build_input {
             $html = qq{<span class="$input_field->{class}">$html</span>};
         }
     }
+    if ($wrap_input) {
+        $html = qq{<div class="$wrap_input">$html</div>};
+    }
 
     if ($heading) {
+        my $heading_html = qq{<span id="inputheading">$heading</span>};
+        if ($wrap_heading) {
+            $heading_html = qq{<div class="$wrap_heading">$heading_html</div>};
+        }
+
         if ($input_field->{'type'}
             && ($input_field->{'type'} =~ /radio|checkbox/i))
         {
-            $html .= qq{<span id="inputheading">$heading</span><br />};
+            $html .= qq{$heading_html<br />};
         } else {
-            $html = qq{<span id="inputheading">$heading</span>$html};
+            $html = $heading_html . $html;
         }
     }
 
     if ($trailing) {
-        $html .= qq{<span class="$self->{classes}{inputtrailing}">$trailing</span>};
+        my $trailing_html = qq{<span class="$self->{classes}{inputtrailing}">$trailing</span>};
+        if ($wrap_trailing) {
+            $trailing_html = qq{<div class="$wrap_trailing">$trailing_html</div>};
+        }
+        $html .= $trailing_html;
     }
 
     return $html;
@@ -225,11 +248,52 @@ HTML::FormBuilder::Field - Field container used by HTML::FormBuilder
 
     $fieldset->add_field({input => {type => 'text', value => 'Join'}});
 
+    # Text only, without input fields
+    $fieldset->add_field({
+        comment => {
+            text        => 'Please check on checkbox below:',
+            class       => 'grd-grid-12',
+            # no extra <br/> before <span> for comment
+            no_new_line => 1,
+        },
+    });
+
+    # checkbox & explanation text
+    $fieldset->add_field({
+        input => {
+            id                  => 'tnc',
+            name                => 'tnc',
+            type                => 'checkbox',
+            trailing            => 'I have read & agree to all terms & condition.',
+            # wrap <input> & trailing <span> respectively in <div>, with class:
+            wrap_in_div_class   => {
+                input    => 'grd-grid-1',
+                trailing => 'grd-grid-11'
+            },
+        },
+        error => {
+            id    => 'error_tnc',
+            class => 'errorfield',
+         },
+        validation => [{
+            type    => 'checkbox_checked',
+            err_msg => localize('Please agree in order to proceed.'),
+        }],
+        # override div container class for input
+        override_input_class => 'grd-grid-12',
+    });
+
     $form->add_field($fieldset_index, {input => {type => 'text', value => 'Join'}});
 
 =head1 AUTHOR
 
 Chylli L<chylli@binary.com>
+
+=head1 CONTRIBUTOR
+
+Fayland Lam L<fayland@binary.com>
+
+Tee Shuwn Yuan L<shuwnyuan@binary.com>
 
 =head1 COPYRIGHT AND LICENSE
 

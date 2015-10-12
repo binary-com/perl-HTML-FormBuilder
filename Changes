@@ -1,5 +1,9 @@
 Revision history for HTML-FormBuilder
 
+0.10  2015-10-12
+        - allow <input>, heading /traling text to be wrapped in <div>, for better checkbox styling
+        - Add no_new_line option for comment only field
+
 0.09  2015-10-08
         - add validation type "checkbox_checked", ensure checkbox is checked
 
