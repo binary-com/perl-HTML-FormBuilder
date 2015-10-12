@@ -104,8 +104,12 @@ sub build {
     }
 
     if (defined $data->{'comment'}) {
-        $data->{'comment'}{'class'} ||= '';
-        $input_fields_html .= '<br>' . $self->_build_element_and_attributes('p', $data->{'comment'}, $data->{'comment'}->{'text'});
+        $data->{'comment'}->{'class'} ||= '';
+
+        unless ($data->{comment}->{no_new_line}) {
+            $input_fields_html .= '<br>';
+        }
+        $input_fields_html .= $self->_build_element_and_attributes('p', $data->{'comment'}, $data->{'comment'}->{'text'});
     }
 
     if (defined $data->{'error'}) {
@@ -243,6 +247,16 @@ HTML::FormBuilder::Field - Field container used by HTML::FormBuilder
     my $fieldset = $form->add_fieldset({id => 'fieldset1'});
 
     $fieldset->add_field({input => {type => 'text', value => 'Join'}});
+
+    # Text only, without input fields
+    $fieldset->add_field({
+        comment => {
+            text        => 'Please check on checkbox below:',
+            class       => 'grd-grid-12',
+            # no extra <br/> before <span> for comment
+            no_new_line => 1,
+        },
+    });
 
     # checkbox & explanation text
     $fieldset->add_field({
