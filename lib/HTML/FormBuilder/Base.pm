@@ -130,6 +130,12 @@ please refer to L<HTML::FormBuilder>.
 
 Chylli L<chylli@binary.com>
 
+=head1 CONTRIBUTOR
+
+Fayland Lam L<fayland@binary.com>
+
+Tee Shuwn Yuan L<shuwnyuan@binary.com>
+
 =head1 COPYRIGHT AND LICENSE
 
 =cut
