@@ -10,6 +10,7 @@ use HTML::FormBuilder::FieldSet;
 use String::Random ();
 use Moo;
 use namespace::clean;
+use HTML::Entities;
 extends qw(HTML::FormBuilder::Base);
 
 has data => (
