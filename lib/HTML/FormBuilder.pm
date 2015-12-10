@@ -260,7 +260,7 @@ sub set_field_value {
                 # for select box
                 $_->value($field_value);
             } elsif ($_->{'type'} =~ /(?:text|textarea|password|hidden|file)/i) {
-                $_->{'value'} = $field_value;
+                $_->{'value'} = HTML::Entities::encode_entities($field_value // '');
             } elsif ($_->{'type'} eq 'checkbox') {
                 # if value not set during $fieldset->add_field(), default to browser default value for checkbox: 'on'
                 my $checkbox_value = $_->{'value'} // 'on';
@@ -293,9 +293,10 @@ sub get_field_value {
                 return $input->value;
             }
             return unless $input->{type};
-            if (   $input->{type} =~ /(?:text|textarea|password|hidden|file)/i
-                || $input->{type} eq 'checkbox' && $input->{checked} && $input->{checked} eq 'checked')
-            {
+
+            if ($input->{type} =~ /(?:text|textarea|password|hidden|file)/i) {
+                return HTML::Entities::decode_entities($input->{value} // '');
+            } elsif ($input->{type} eq 'checkbox' && $input->{checked} && $input->{checked} eq 'checked') {
                 # if value not set during $fieldset->add_field(), default to browser default value for checkbox: 'on'
                 return ($input->{value} // 'on');
             }
