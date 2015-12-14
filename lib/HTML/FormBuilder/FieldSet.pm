@@ -3,7 +3,7 @@ package HTML::FormBuilder::FieldSet;
 use strict;
 use warnings;
 use 5.008_005;
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 use HTML::FormBuilder::Field;
 use Carp;
@@ -215,6 +215,12 @@ append fields into fieldset and return the number of fields added.
 =head1 AUTHOR
 
 Chylli L<chylli@binary.com>
+
+=head1 CONTRIBUTOR
+
+Fayland Lam L<fayland@binary.com>
+
+Tee Shuwn Yuan L<shuwnyuan@binary.com>
 
 =head1 COPYRIGHT AND LICENSE
 
