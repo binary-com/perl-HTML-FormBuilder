@@ -1,6 +1,6 @@
 # HTML::FormBuilder
 [![Build Status](https://travis-ci.org/binary-com/perl-HTML-FormBuilder.svg?branch=master)](https://travis-ci.org/binary-com/perl-HTML-FormBuilder)
-[![Coverage Status](https://coveralls.io/repos/binary-com/perl-HTML-FormBuilder/badge.png?branch=master)](https://coveralls.io/r/binary-com/perl-HTML-FormBuilder?branch=master)
+[![codecov](https://codecov.io/gh/binary-com/perl-HTML-FormBuilder/branch/master/graph/badge.svg)](https://codecov.io/gh/binary-com/perl-HTML-FormBuilder)
 
 An object-oriented module for building and displaying HTML form.
 
