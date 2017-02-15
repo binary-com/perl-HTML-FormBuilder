@@ -769,7 +769,7 @@ for plain CGI or other framework, read Dancer example below.
 
 =head2 CSRF and Mojolicious
 
-if you're using L<Mojolicious> and have DefaultHelpers plugin enabled, it's simple to add csrftoken in Validation->new as below:
+if you're using Mojolicious and have DefaultHelpers plugin enabled, it's simple to add csrftoken in Validation->new as below:
 
     my $form = HTML::FormBuilder::Validation->new(data => $form_attributes, csrftoken => $c->csrf_token);
 
