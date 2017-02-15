@@ -128,13 +128,13 @@ please refer to L<HTML::FormBuilder>.
 
 =head1 AUTHOR
 
-Chylli L<chylli@binary.com>
+Chylli L<mailto:chylli@binary.com>
 
 =head1 CONTRIBUTOR
 
-Fayland Lam L<fayland@binary.com>
+Fayland Lam L<mailto:fayland@binary.com>
 
-Tee Shuwn Yuan L<shuwnyuan@binary.com>
+Tee Shuwn Yuan L<mailto:shuwnyuan@binary.com>
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -554,6 +554,20 @@ The parameter is the fieldset index to which you want to add the field and the f
 
 the data in the $form will be changed when build the form. So you cannot get the same result if you call build twice.
 
+=head2 BUILDARGS
+
+=head2 build_confirmation_button_with_all_inputs_hidden
+
+=head2 csrftoken
+
+=head2 get_field_error_message
+
+=head2 get_field_value
+
+=head2 set_field_error_message
+
+=head2 set_field_value
+
 =head1 Cookbook
 
 =head2 a full sample
@@ -722,13 +736,13 @@ read <HTML::FormBuilder::Validation> for more details
 
 =head1 AUTHOR
 
-Chylli L<chylli@binary.com>
+Chylli L<mailto:chylli@binary.com>
 
 =head1 CONTRIBUTOR
 
-Fayland Lam L<fayland@binary.com>
+Fayland Lam L<mailto:fayland@binary.com>
 
-Tee Shuwn Yuan L<shuwnyuan@binary.com>
+Tee Shuwn Yuan L<mailto:shuwnyuan@binary.com>
 
 =head1 COPYRIGHT AND LICENSE
 

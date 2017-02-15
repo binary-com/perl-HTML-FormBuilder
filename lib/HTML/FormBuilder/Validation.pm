@@ -726,6 +726,14 @@ validate form input and return true or false
 
 check the erorr is founded in the input element or not
 
+=head2 get_has_error
+
+=head2 set_field_error_message
+
+=head2 set_server_side_checks
+
+=head2 validate_csrf
+
 =head1 CROSS SITE REQUEST FORGERY PROTECTION
 
 for plain CGI or other framework, read Dancer example below.
@@ -768,13 +776,13 @@ Mojolicious $c->csrf_token will handle the session part for you.
 
 =head1 AUTHOR
 
-Chylli L<chylli@binary.com>
+Chylli L<mailto:chylli@binary.com>
 
 =head1 CONTRIBUTOR
 
-Fayland Lam L<fayland@binary.com>
+Fayland Lam L<mailto:fayland@binary.com>
 
-Tee Shuwn Yuan L<shuwnyuan@binary.com>
+Tee Shuwn Yuan L<mailto:shuwnyuan@binary.com>
 
 =head1 COPYRIGHT AND LICENSE
 
