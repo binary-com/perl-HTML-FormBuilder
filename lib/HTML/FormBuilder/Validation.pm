@@ -2,7 +2,6 @@ package HTML::FormBuilder::Validation;
 
 use strict;
 use warnings;
-our $VERSION = '0.11';
 
 use Carp;
 use Class::Std::Utils;
@@ -14,6 +13,8 @@ use HTML::Entities;
 use Moo;
 use namespace::clean;
 extends qw(HTML::FormBuilder);
+
+## VERSION
 
 has has_error_of => (
     is      => 'rw',

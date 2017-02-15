@@ -3,7 +3,6 @@ package HTML::FormBuilder::FieldSet;
 use strict;
 use warnings;
 use 5.008_005;
-our $VERSION = '0.11';
 
 use HTML::FormBuilder::Field;
 use Carp;
@@ -12,6 +11,8 @@ use Scalar::Util qw(weaken blessed);
 use Moo;
 use namespace::clean;
 extends qw(HTML::FormBuilder::Base);
+
+## VERSION
 
 has data => (
     is  => 'ro',

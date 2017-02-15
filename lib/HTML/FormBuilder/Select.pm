@@ -2,11 +2,11 @@ package HTML::FormBuilder::Select;
 use strict;
 use warnings;
 
-our $VERSION = '0.11';
-
 use Carp;
 use Moo;
 use namespace::clean;
+
+## VERSION
 
 =head1 NAME
 
