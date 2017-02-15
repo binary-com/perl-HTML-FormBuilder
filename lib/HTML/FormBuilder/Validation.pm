@@ -64,7 +64,6 @@ sub build {
     my $self                 = shift;
     my $print_fieldset_index = shift;
 
-    my $html;
     my $javascript_validation = '';
 
     # build the fieldset, if $print_fieldset_index is specifed then we only generate that praticular fieldset with that index
@@ -437,7 +436,7 @@ sub _encode_text {
 
 =head1 NAME
 
-HTML::FormBuilder::Validation - An extention of the Form object, to allow for javascript-side validation of inputs
+HTML::FormBuilder::Validation - An extension of the Form object, to allow for javascript-side validation of inputs
 and also server-side validation after the form is POSTed
 
 =head1 SYNOPSIS

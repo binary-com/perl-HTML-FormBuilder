@@ -159,7 +159,7 @@ sub _build_fieldset_foreword {
 #####################################################################
 sub _wrap_fieldset {
     my ($self, $fieldset_html) = @_;
-    my $output            = '';
+
     my $fieldset_template = <<EOF;
 <div class="rbox form">
     <div class="rbox-wrap">

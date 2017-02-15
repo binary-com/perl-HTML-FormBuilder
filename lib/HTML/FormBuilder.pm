@@ -47,7 +47,7 @@ has after_form => (
 has csrftoken => (is => 'ro');
 
 sub BUILDARGS {
-    my ($class, @args) = @_;
+    my (undef, @args) = @_;
     my %args = (@args % 2) ? %{$args[0]} : @args;
 
     # set default class
@@ -441,7 +441,6 @@ sub _link_button {
 #####################################################################
 sub _wrap_fieldset {
     my ($self, $fieldset_html) = @_;
-    my $output            = '';
     my $fieldset_template = <<EOF;
 <div class="rbox form">
     <div class="rbox-wrap">

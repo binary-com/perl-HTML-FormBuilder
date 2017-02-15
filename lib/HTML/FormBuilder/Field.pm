@@ -24,7 +24,7 @@ has data => (
 );
 
 sub BUILDARGS {
-    my ($class, @args) = @_;
+    my (undef, @args) = @_;
     my %args = (@args % 2) ? %{$args[0]} : @args;
 
     my $data = $args{data};
@@ -150,7 +150,6 @@ sub build {
 sub _build_input {
     my $self        = shift;
     my $input_field = shift;
-    my $env         = shift;
 
     my $html = '';
 
