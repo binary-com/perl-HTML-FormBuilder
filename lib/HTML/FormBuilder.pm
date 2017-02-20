@@ -3,7 +3,7 @@ package HTML::FormBuilder;
 use strict;
 use warnings;
 use 5.008_005;
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 
 use Carp;
 use HTML::FormBuilder::FieldSet;
