@@ -3,11 +3,12 @@ package HTML::FormBuilder::Base;
 use strict;
 use warnings;
 use 5.008_005;
-our $VERSION = '0.11';
 
 use Carp;
 use Moo;
 use namespace::clean;
+
+## VERSION
 
 our $CLASSES = {
     fieldset_group          => 'fieldset_group',
@@ -128,13 +129,13 @@ please refer to L<HTML::FormBuilder>.
 
 =head1 AUTHOR
 
-Chylli L<chylli@binary.com>
+Chylli L<mailto:chylli@binary.com>
 
 =head1 CONTRIBUTOR
 
-Fayland Lam L<fayland@binary.com>
+Fayland Lam L<mailto:fayland@binary.com>
 
-Tee Shuwn Yuan L<shuwnyuan@binary.com>
+Tee Shuwn Yuan L<mailto:shuwnyuan@binary.com>
 
 =head1 COPYRIGHT AND LICENSE
 

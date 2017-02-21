@@ -2,7 +2,6 @@ package HTML::FormBuilder::Validation;
 
 use strict;
 use warnings;
-our $VERSION = '0.11';
 
 use Carp;
 use Class::Std::Utils;
@@ -14,6 +13,8 @@ use HTML::Entities;
 use Moo;
 use namespace::clean;
 extends qw(HTML::FormBuilder);
+
+## VERSION
 
 has has_error_of => (
     is      => 'rw',
@@ -64,7 +65,6 @@ sub build {
     my $self                 = shift;
     my $print_fieldset_index = shift;
 
-    my $html;
     my $javascript_validation = '';
 
     # build the fieldset, if $print_fieldset_index is specifed then we only generate that praticular fieldset with that index
@@ -437,7 +437,7 @@ sub _encode_text {
 
 =head1 NAME
 
-HTML::FormBuilder::Validation - An extention of the Form object, to allow for javascript-side validation of inputs
+HTML::FormBuilder::Validation - An extension of the Form object, to allow for javascript-side validation of inputs
 and also server-side validation after the form is POSTed
 
 =head1 SYNOPSIS
@@ -727,6 +727,14 @@ validate form input and return true or false
 
 check the erorr is founded in the input element or not
 
+=head2 get_has_error
+
+=head2 set_field_error_message
+
+=head2 set_server_side_checks
+
+=head2 validate_csrf
+
 =head1 CROSS SITE REQUEST FORGERY PROTECTION
 
 for plain CGI or other framework, read Dancer example below.
@@ -761,7 +769,7 @@ for plain CGI or other framework, read Dancer example below.
 
 =head2 CSRF and Mojolicious
 
-if you're using L<Mojolicious> and have DefaultHelpers plugin enabled, it's simple to add csrftoken in Validation->new as below:
+if you're using Mojolicious and have DefaultHelpers plugin enabled, it's simple to add csrftoken in Validation->new as below:
 
     my $form = HTML::FormBuilder::Validation->new(data => $form_attributes, csrftoken => $c->csrf_token);
 
@@ -769,13 +777,13 @@ Mojolicious $c->csrf_token will handle the session part for you.
 
 =head1 AUTHOR
 
-Chylli L<chylli@binary.com>
+Chylli L<mailto:chylli@binary.com>
 
 =head1 CONTRIBUTOR
 
-Fayland Lam L<fayland@binary.com>
+Fayland Lam L<mailto:fayland@binary.com>
 
-Tee Shuwn Yuan L<shuwnyuan@binary.com>
+Tee Shuwn Yuan L<mailto:shuwnyuan@binary.com>
 
 =head1 COPYRIGHT AND LICENSE
 

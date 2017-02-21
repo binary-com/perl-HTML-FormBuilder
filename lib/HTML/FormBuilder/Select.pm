@@ -2,11 +2,11 @@ package HTML::FormBuilder::Select;
 use strict;
 use warnings;
 
-our $VERSION = '0.11';
-
 use Carp;
 use Moo;
 use namespace::clean;
+
+## VERSION
 
 =head1 NAME
 
@@ -124,6 +124,10 @@ sub hidden_html {
     my $self = shift;
     return '<input type="hidden" id="' . $self->id . '" name="' . $self->name . '" value="' . ($self->value // '') . '" />';
 }
+
+=head2 is_str
+
+=cut
 
 sub is_str {
     die "$_[0] is not a string" unless defined($_[0]) && !ref($_[0]);

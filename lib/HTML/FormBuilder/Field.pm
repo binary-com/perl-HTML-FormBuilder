@@ -3,7 +3,6 @@ package HTML::FormBuilder::Field;
 use strict;
 use warnings;
 use 5.008_005;
-our $VERSION = '0.11';
 
 use Carp;
 use Scalar::Util qw(weaken blessed);
@@ -11,6 +10,8 @@ use Scalar::Util qw(weaken blessed);
 use Moo;
 use namespace::clean;
 extends qw(HTML::FormBuilder::Base);
+
+## VERSION
 
 has data => (
     is  => 'ro',
@@ -24,7 +25,7 @@ has data => (
 );
 
 sub BUILDARGS {
-    my ($class, @args) = @_;
+    my (undef, @args) = @_;
     my %args = (@args % 2) ? %{$args[0]} : @args;
 
     my $data = $args{data};
@@ -150,7 +151,6 @@ sub build {
 sub _build_input {
     my $self        = shift;
     my $input_field = shift;
-    my $env         = shift;
 
     my $html = '';
 
@@ -285,15 +285,23 @@ HTML::FormBuilder::Field - Field container used by HTML::FormBuilder
 
     $form->add_field($fieldset_index, {input => {type => 'text', value => 'Join'}});
 
+=head1 METHODS
+
+=head2 BUILDARGS
+
+=head2 build
+
+=head2 data
+
 =head1 AUTHOR
 
-Chylli L<chylli@binary.com>
+Chylli L<mailto:chylli@binary.com>
 
 =head1 CONTRIBUTOR
 
-Fayland Lam L<fayland@binary.com>
+Fayland Lam L<mailto:fayland@binary.com>
 
-Tee Shuwn Yuan L<shuwnyuan@binary.com>
+Tee Shuwn Yuan L<mailto:shuwnyuan@binary.com>
 
 =head1 COPYRIGHT AND LICENSE
 

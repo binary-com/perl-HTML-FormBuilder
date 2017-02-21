@@ -3,7 +3,6 @@ package HTML::FormBuilder::FieldSet;
 use strict;
 use warnings;
 use 5.008_005;
-our $VERSION = '0.11';
 
 use HTML::FormBuilder::Field;
 use Carp;
@@ -12,6 +11,8 @@ use Scalar::Util qw(weaken blessed);
 use Moo;
 use namespace::clean;
 extends qw(HTML::FormBuilder::Base);
+
+## VERSION
 
 has data => (
     is  => 'ro',
@@ -159,7 +160,7 @@ sub _build_fieldset_foreword {
 #####################################################################
 sub _wrap_fieldset {
     my ($self, $fieldset_html) = @_;
-    my $output            = '';
+
     my $fieldset_template = <<EOF;
 <div class="rbox form">
     <div class="rbox-wrap">
@@ -212,15 +213,17 @@ append the field into fieldset and return that field
 
 append fields into fieldset and return the number of fields added.
 
+=head2 data
+
 =head1 AUTHOR
 
-Chylli L<chylli@binary.com>
+Chylli L<mailto:chylli@binary.com>
 
 =head1 CONTRIBUTOR
 
-Fayland Lam L<fayland@binary.com>
+Fayland Lam L<mailto:fayland@binary.com>
 
-Tee Shuwn Yuan L<shuwnyuan@binary.com>
+Tee Shuwn Yuan L<mailto:shuwnyuan@binary.com>
 
 =head1 COPYRIGHT AND LICENSE
 

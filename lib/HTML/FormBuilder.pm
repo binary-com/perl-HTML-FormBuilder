@@ -3,7 +3,7 @@ package HTML::FormBuilder;
 use strict;
 use warnings;
 use 5.008_005;
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 
 use Carp;
 use HTML::FormBuilder::FieldSet;
@@ -47,7 +47,7 @@ has after_form => (
 has csrftoken => (is => 'ro');
 
 sub BUILDARGS {
-    my ($class, @args) = @_;
+    my (undef, @args) = @_;
     my %args = (@args % 2) ? %{$args[0]} : @args;
 
     # set default class
@@ -441,7 +441,6 @@ sub _link_button {
 #####################################################################
 sub _wrap_fieldset {
     my ($self, $fieldset_html) = @_;
-    my $output            = '';
     my $fieldset_template = <<EOF;
 <div class="rbox form">
     <div class="rbox-wrap">
@@ -554,6 +553,20 @@ The parameter is the fieldset index to which you want to add the field and the f
       print $form->build;
 
 the data in the $form will be changed when build the form. So you cannot get the same result if you call build twice.
+
+=head2 BUILDARGS
+
+=head2 build_confirmation_button_with_all_inputs_hidden
+
+=head2 csrftoken
+
+=head2 get_field_error_message
+
+=head2 get_field_value
+
+=head2 set_field_error_message
+
+=head2 set_field_value
 
 =head1 Cookbook
 
@@ -723,13 +736,13 @@ read <HTML::FormBuilder::Validation> for more details
 
 =head1 AUTHOR
 
-Chylli L<chylli@binary.com>
+Chylli L<mailto:chylli@binary.com>
 
 =head1 CONTRIBUTOR
 
-Fayland Lam L<fayland@binary.com>
+Fayland Lam L<mailto:fayland@binary.com>
 
-Tee Shuwn Yuan L<shuwnyuan@binary.com>
+Tee Shuwn Yuan L<mailto:shuwnyuan@binary.com>
 
 =head1 COPYRIGHT AND LICENSE
 
