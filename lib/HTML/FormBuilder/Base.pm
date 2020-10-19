@@ -76,7 +76,7 @@ sub _build_element_and_attributes {
         next if not defined $attributes->{$key};
         next if $attributes->{$key} eq '';
 
-        $html .= ' ' . $key . '="' . $attributes->{$key} . '"';
+        $html .= qq[ $key="$attributes->{$key}"];
     }
     if ($element_tag eq 'button') {
         $html .= '>' . $attributes->{'value'} . '</' . $element_tag . '>';
