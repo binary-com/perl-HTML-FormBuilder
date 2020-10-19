@@ -74,7 +74,7 @@ sub _build_element_and_attributes {
         # skip attributes that are not intended for HTML
         next if ($key =~ /^(?:option|text|hide_required_text|localize|wrap_in_div_class)/i);
         next if not defined $attributes->{$key};
-        next if '' . $attributes->{$key} eq '';
+        next if $attributes->{$key} eq '';
 
         $html .= ' ' . $key . '="' . $attributes->{$key} . '"';
     }
