@@ -1,4 +1,6 @@
 Revision history for HTML-FormBuilder
+{{$NEXT}}
+       - fix several bugs
 
 0.11  2015-12-10
         - encode / decode HTML entities in get / set field
